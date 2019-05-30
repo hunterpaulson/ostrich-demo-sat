@@ -18,6 +18,7 @@ int main(int argc, char* argv[]) {
 
     U32 addr = 0;
     char device[80];
+    device[0] = 0;
 
     while ((c = getopt (argc, argv, "hd:a:")) != -1) {
         switch (c) {
@@ -36,7 +37,7 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    printf("Address: %d (0x%08X) Device: %s\n",addr,addr,device);
+    printf("Address: %d (0x%02X) Device: %s\n",addr,addr,device);
 
     for (int i = optind; i < argc; i++) {
         printf("Data: %s\n",argv[i]);

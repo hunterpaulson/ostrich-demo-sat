@@ -17,3 +17,6 @@ include $(BUILD_ROOT)/mk/makefiles/module_targets.mk
 ut_raspian_cross:
 	@$(TIME) $(MAKE) -f $(BUILD_ROOT)/mk/makefiles/Makefile COMP=gcc-cross BUILD=RASPIAN test_$(MODULE)testut
 	
+ut_raspian_cross_clean:
+	@$(TIME) $(MAKE) -f $(BUILD_ROOT)/mk/makefiles/Makefile COMP=gcc-cross BUILD=RASPIAN test_$(MODULE)testut_clean
+	
