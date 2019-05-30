@@ -13,7 +13,7 @@
 #ifndef LinuxI2cDriver_HPP
 #define LinuxI2cDriver_HPP
 
-#include "Drv/LinuxI2cDriver/LinuxI2CDriverComponentAc.hpp"
+#include "Drv/LinuxI2cDriver/LinuxI2cDriverComponentAc.hpp"
 
 namespace Drv {
 

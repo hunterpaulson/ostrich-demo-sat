@@ -30,9 +30,9 @@
 |---|---|---|---|---|---|---|
 |AA_ClawAngleCmd|0 (0x0)|Claw Angle commanded| | | | |
 | | | |angle|F32||The commanded angle|
-|AA_BaseAngleCmd|0 (0x0)|Base Angle commanded| | | | |
+|AA_BaseAngleCmd|1 (0x1)|Base Angle commanded| | | | |
 | | | |angle|F32||The commanded angle|
-|AA_ArmAngleCmd|0 (0x0)|Arm Angle commanded| | | | |
+|AA_ArmAngleCmd|2 (0x2)|Arm Angle commanded| | | | |
 | | | |angle|F32||The commanded angle|
-|AA_ClawTiltAngleCmd|0 (0x0)|Claw tilt angle commanded| | | | |
+|AA_ClawTiltAngleCmd|3 (0x3)|Claw tilt angle commanded| | | | |
 | | | |angle|F32||The commanded angle|

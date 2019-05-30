@@ -5,7 +5,7 @@
     <import_port_type>RobotArm/ServoPort/ServoPortAi.xml</import_port_type>
     <comment>Arm Demo App component</comment>
     <ports>
-        <port name="position" data_type="RobotArm::ServoSet" kind="output">
+        <port name="position" data_type="RobotArm::ServoSet" kind="output" max_number="4">
             <comment>
             Servo position port
             </comment>
@@ -70,7 +70,7 @@
 	        </args>
 	    </event>
 	    <!-- Commanded base angle event -->
-	    <event id="0" name="AA_BaseAngleCmd" severity="ACTIVITY_HI" format_string = "Base commanded to %f"  >
+	    <event id="1" name="AA_BaseAngleCmd" severity="ACTIVITY_HI" format_string = "Base commanded to %f"  >
 	        <comment>
 	        Base Angle commanded
 	        </comment>
@@ -81,7 +81,7 @@
 	        </args>
 	    </event>
 	    <!-- Commanded arm angle event -->
-	    <event id="0" name="AA_ArmAngleCmd" severity="ACTIVITY_HI" format_string = "Arm commanded to %f"  >
+	    <event id="2" name="AA_ArmAngleCmd" severity="ACTIVITY_HI" format_string = "Arm commanded to %f"  >
 	        <comment>
 	        Arm Angle commanded
 	        </comment>
@@ -92,7 +92,7 @@
 	        </args>
 	    </event>
 	    <!-- Commanded claw tilt angle event -->
-	    <event id="0" name="AA_ClawTiltAngleCmd" severity="ACTIVITY_HI" format_string = "Claw tilt commanded to %f"  >
+	    <event id="3" name="AA_ClawTiltAngleCmd" severity="ACTIVITY_HI" format_string = "Claw tilt commanded to %f"  >
 	        <comment>
 	        Claw tilt angle commanded
 	        </comment>

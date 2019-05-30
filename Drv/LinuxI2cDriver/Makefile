@@ -13,3 +13,7 @@ export BUILD_ROOT
 include $(BUILD_ROOT)/mk/makefiles/module_targets.mk
 
 # Add module specific targets here
+
+ut_raspian_cross:
+	@$(TIME) $(MAKE) -f $(BUILD_ROOT)/mk/makefiles/Makefile COMP=gcc-cross BUILD=RASPIAN test_$(MODULE)testut
+	
