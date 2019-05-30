@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?oxygen RNGSchema="file:../xml/ISF_Component_Schema.rnc" type="compact"?>
+
+<component name="ArmApp" kind="active" namespace="RobotArm">
+    <import_port_type>RobotArm/ServoPort/ServoPortAi.xml</import_port_type>
+    <comment>Arm Demo App component</comment>
+    <ports>
+        <port name="position" data_type="RobotArm::ServoSet" kind="output">
+            <comment>
+            Servo position port
+            </comment>
+        </port>
+    </ports>
+    <commands>
+        <!-- Claw Angle command -->
+        <command kind="async" opcode="0x0" mnemonic="AA_CLAW_ANG" >
+            <comment>
+            Claw angle command
+            </comment>
+            <args>
+                <arg name="angle" type="F32">
+                    <comment>The commanded angle</comment>
+                </arg>
+             </args>
+        </command>
+        <!-- Base Angle command -->
+        <command kind="async" opcode="0x1" mnemonic="AA_BASE_ANG" >
+            <comment>
+            Base angle command
+            </comment>
+            <args>
+                <arg name="angle" type="F32">
+                    <comment>The commanded angle</comment>
+                </arg>
+             </args>
+        </command>
+        <!-- Arm Angle command -->
+        <command kind="async" opcode="0x2" mnemonic="AA_ARM_ANG" >
+            <comment>
+            ARM angle command
+            </comment>
+            <args>
+                <arg name="angle" type="F32">
+                    <comment>The commanded angle</comment>
+                </arg>
+             </args>
+        </command>
+        <!-- Claw Tilt Angle command -->
+        <command kind="async" opcode="0x3" mnemonic="AA_CLAW_TILT_ANG" >
+            <comment>
+            Claw tilt angle command
+            </comment>
+            <args>
+                <arg name="angle" type="F32">
+                    <comment>The commanded angle</comment>
+                </arg>
+             </args>
+        </command>
+    </commands>
+    <events>
+	    <!-- Commanded claw angle event -->
+	    <event id="0" name="AA_ClawAngleCmd" severity="ACTIVITY_HI" format_string = "Claw commanded to %f"  >
+	        <comment>
+	        Claw Angle commanded
+	        </comment>
+	        <args>
+	            <arg name="angle" type="F32">
+	                <comment>The commanded angle</comment>
+	            </arg>
+	        </args>
+	    </event>
+	    <!-- Commanded base angle event -->
+	    <event id="0" name="AA_BaseAngleCmd" severity="ACTIVITY_HI" format_string = "Base commanded to %f"  >
+	        <comment>
+	        Base Angle commanded
+	        </comment>
+	        <args>
+	            <arg name="angle" type="F32">
+	                <comment>The commanded angle</comment>
+	            </arg>
+	        </args>
+	    </event>
+	    <!-- Commanded arm angle event -->
+	    <event id="0" name="AA_ArmAngleCmd" severity="ACTIVITY_HI" format_string = "Arm commanded to %f"  >
+	        <comment>
+	        Arm Angle commanded
+	        </comment>
+	        <args>
+	            <arg name="angle" type="F32">
+	                <comment>The commanded angle</comment>
+	            </arg>
+	        </args>
+	    </event>
+	    <!-- Commanded claw tilt angle event -->
+	    <event id="0" name="AA_ClawTiltAngleCmd" severity="ACTIVITY_HI" format_string = "Claw tilt commanded to %f"  >
+	        <comment>
+	        Claw tilt angle commanded
+	        </comment>
+	        <args>
+	            <arg name="angle" type="F32">
+	                <comment>The commanded angle</comment>
+	            </arg>
+	        </args>
+	    </event>
+	</events>    
+    <telemetry>
+        <channel id="0" name="AA_ClawAngle" data_type="F32">
+            <comment>
+            Commanded angle
+            </comment>
+        </channel>
+        <channel id="1" name="AA_BaseAngle" data_type="F32">
+            <comment>
+            Commanded angle
+            </comment>
+        </channel>
+        <channel id="2" name="AA_ArmAngle" data_type="F32">
+            <comment>
+            Commanded angle
+            </comment>
+        </channel>
+        <channel id="3" name="AA_ClawTiltAngle" data_type="F32">
+            <comment>
+            Commanded angle
+            </comment>
+        </channel>
+    </telemetry>
+    
+</component>
+
