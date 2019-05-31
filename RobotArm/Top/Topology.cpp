@@ -95,10 +95,10 @@ void constructApp(int port_number, char* hostname) {
 
     i2cDrv.init(0);
 
-    clawServo.init(0);
-    baseServo.init(0);
-    armServo.init(0);
-    clawTiltServo.init(0);
+    clawServo.init(10,0);
+    baseServo.init(10,0);
+    armServo.init(10,0);
+    clawTiltServo.init(10,0);
 
     armDemo.init(10,0);
 
@@ -115,6 +115,9 @@ void constructApp(int port_number, char* hostname) {
     baseServo.regCommands();
     armServo.regCommands();
     clawTiltServo.regCommands();
+
+    // open i2c driver
+    i2cDrv.open("/dev/i2c-1");
 
     // configure servos
 
@@ -144,8 +147,6 @@ void constructApp(int port_number, char* hostname) {
     baseServo.start(0, 100, 10*1024);
     armServo.start(0, 100, 10*1024);
     clawTiltServo.start(0, 100, 10*1024);
-
-    i2cDrv.open("/dev/i2c-1");
 
     // Initialize socket server
     sockGndIf.startSocketTask(100, 10*1024, port_number, hostname, Svc::SocketGndIfImpl::SEND_UDP);

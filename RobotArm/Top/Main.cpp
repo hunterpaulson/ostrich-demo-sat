@@ -14,6 +14,7 @@ void print_usage() {
 volatile sig_atomic_t terminate = 0;
 
 static void sighandler(int signum) {
+	printf("Signal %d!\n",signum);
     exitTasks();
     terminate = 1;
 }
