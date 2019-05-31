@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-#include <RPI/Top/Components.hpp>
+#include <RobotArm/Top/Components.hpp>
 
 void print_usage() {
     (void) printf("Usage: ./RPI [options]\n-p\tport_number\n-a\thostname/IP address\n");
@@ -54,7 +54,7 @@ int main(int argc, char* argv[]) {
     signal(SIGINT,sighandler);
     signal(SIGTERM,sighandler);
 
-    linuxTimer.startTimer(100); //!< 10Hz
+    linuxTimer.startTimer(1000); //!< 1Hz
 
     // Give time for threads to exit
     (void) printf("Waiting for threads...\n");

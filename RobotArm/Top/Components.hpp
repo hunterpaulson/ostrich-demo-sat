@@ -1,7 +1,7 @@
-#ifndef __RPI_COMPONENTS_HEADER__
-#define __RPI_COMPONENTS_HEADER__
+#ifndef __ROBOTARM_COMPONENTS_HEADER__
+#define __ROBOTARM_COMPONENTS_HEADER__
 
-void constructRPIArchitecture(void);
+void constructRobotArmArchitecture(void);
 void exitTasks(void);
 void constructApp(int port_number, char* hostname);
 
@@ -29,15 +29,15 @@ void constructApp(int port_number, char* hostname);
 
 // Drivers
 
-#include <Drv/LinuxSerialDriver/LinuxSerialDriverComponentImpl.hpp>
-#include <Drv/LinuxSpiDriver/LinuxSpiDriverComponentImpl.hpp>
-#include <Drv/LinuxGpioDriver/LinuxGpioDriverComponentImpl.hpp>
+#include <Drv/LinuxI2cDriver/LinuxI2cDriverComponentImpl.hpp>
+
+// servo controller
+#include <RobotArm/PcaServo/PcaServoComponentImpl.hpp>
 
 // Main app
-#include <RPI/RpiDemo/RpiDemoComponentImpl.hpp>
+#include <RobotArm/ArmApp/ArmAppComponentImpl.hpp>
 
 extern Svc::RateGroupDriverImpl rateGroupDriverComp;
-extern Svc::ActiveRateGroupImpl rateGroup10HzComp;
 extern Svc::ActiveRateGroupImpl rateGroup1HzComp;
 extern Svc::CmdSequencerComponentImpl cmdSeq;
 extern Svc::SocketGndIfImpl sockGndIf;
@@ -47,25 +47,19 @@ extern Svc::LinuxTimeImpl linuxTime;
 extern Svc::LinuxTimerComponentImpl linuxTimer;
 extern Svc::TlmChanImpl chanTlm;
 extern Svc::CommandDispatcherImpl cmdDisp;
-extern Svc::PrmDbImpl prmDb;
-extern Svc::FileUplink fileUplink;
-extern Svc::FileDownlink fileDownlink;
-extern Svc::BufferManager fileDownlinkBufferManager;
-extern Svc::BufferManager fileUplinkBufferManager;
 extern Svc::AssertFatalAdapterComponentImpl fatalAdapter;
 extern Svc::FatalHandlerComponentImpl fatalHandler;
-extern Svc::HealthImpl health;
 
-extern Drv::LinuxSerialDriverComponentImpl uartDrv;
-extern Drv::LinuxSpiDriverComponentImpl spiDrv;
-extern Drv::LinuxGpioDriverComponentImpl ledDrv;
-extern Drv::LinuxGpioDriverComponentImpl gpio23Drv;
-extern Drv::LinuxGpioDriverComponentImpl gpio24Drv;
-extern Drv::LinuxGpioDriverComponentImpl gpio25Drv;
-extern Drv::LinuxGpioDriverComponentImpl gpio17Drv;
+// i2c driver
+extern Drv::LinuxI2cDriverComponentImpl i2cDrv;
 
-extern Rpi::RpiDemoComponentImpl rpiDemo;
+// servo controllers
+extern RobotArm::PcaServoComponentImpl clawServo;
+extern RobotArm::PcaServoComponentImpl baseServo;
+extern RobotArm::PcaServoComponentImpl armServo;
+extern RobotArm::PcaServoComponentImpl clawTiltServo;
 
-
+// arm demo component
+extern RobotArm::ArmAppComponentImpl armDemo;
 
 #endif

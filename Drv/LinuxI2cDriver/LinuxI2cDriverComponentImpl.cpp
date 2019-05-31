@@ -56,7 +56,7 @@ namespace Drv {
 
   }
 
-  void LinuxI2cDriverComponentImpl::open(char* device) {
+  void LinuxI2cDriverComponentImpl::open(const char* device) {
 	  FW_ASSERT(device);
 	  this->m_fd = ::open(device, O_RDWR);
 	  FW_ASSERT(-1 != this->m_fd);

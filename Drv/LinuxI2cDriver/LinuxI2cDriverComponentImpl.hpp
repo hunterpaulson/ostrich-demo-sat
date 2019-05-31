@@ -43,7 +43,7 @@ namespace Drv {
           const NATIVE_INT_TYPE instance = 0 /*!< The instance number*/
       );
 
-      void open(char* device);
+      void open(const char* device);
       //! Destroy object LinuxI2cDriver
       //!
       ~LinuxI2cDriverComponentImpl(void);

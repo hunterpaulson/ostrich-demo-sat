@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../Autocoders/schema/ISF/topology_schema.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<assembly name = "RobotArm">
+
+    <!-- Immport component declarations -->
+
+   <import_component_type>Svc/FatalHandler/FatalHandlerComponentAi.xml</import_component_type>
+   <import_component_type>Svc/ActiveRateGroup/ActiveRateGroupComponentAi.xml</import_component_type>
+   <import_component_type>Svc/TlmChan/TlmChanComponentAi.xml</import_component_type>
+   <import_component_type>Svc/CmdDispatcher/CommandDispatcherComponentAi.xml</import_component_type>
+   <import_component_type>Svc/ActiveRateGroup/ActiveRateGroupComponentAi.xml</import_component_type>
+   <import_component_type>Svc/CmdSequencer/CmdSequencerComponentAi.xml</import_component_type>
+   <import_component_type>Svc/ActiveRateGroup/ActiveRateGroupComponentAi.xml</import_component_type>
+   <import_component_type>Svc/AssertFatalAdapter/AssertFatalAdapterComponentAi.xml</import_component_type>
+   <import_component_type>Svc/GndIf/GndIfComponentAi.xml</import_component_type>
+   <import_component_type>Svc/ActiveLogger/ActiveLoggerComponentAi.xml</import_component_type>
+   <import_component_type>Svc/LinuxTimer/LinuxTimerComponentAi.xml</import_component_type>
+   <import_component_type>Svc/Time/TimeComponentAi.xml</import_component_type>
+   <import_component_type>Svc/RateGroupDriver/RateGroupDriverComponentAi.xml</import_component_type>
+   <import_component_type>Svc/PassiveTextLogger/PassiveTextLoggerComponentAi.xml</import_component_type>
+   <import_component_type>Drv/LinuxI2cDriver/LinuxI2cDriverComponentAi.xml</import_component_type>
+
+   <import_component_type>RobotArm/ArmApp/ArmAppComponentAi.xml</import_component_type>
+   
+   <import_component_type>RobotArm/PcaServo/PcaServoComponentAi.xml</import_component_type>
+
+   <!-- Declare component instances - must match names in Components.hpp -->
+
+   <instance namespace="Svc" name="fatalHandler" type="FatalHandler" base_id="100"  base_id_window="20" />
+   
+   <instance namespace="Svc" name="rateGroup1HzComp" type="ActiveRateGroup" base_id="300"  base_id_window="20" />
+
+   <instance namespace="Svc" name="chanTlm" type="TlmChan" base_id="400"  base_id_window="20" />
+   
+   <instance namespace="Svc" name="cmdDisp" type="CommandDispatcher" base_id="500"  base_id_window="20" />
+   
+   <instance namespace="Svc" name="cmdSeq" type="CmdSequencer" base_id="700"  base_id_window="23" />
+   
+   <instance namespace="Svc" name="fatalAdapter" type="AssertFatalAdapter" base_id="1000"  base_id_window="20" />
+   
+   <instance namespace="Svc" name="sockGndIf" type="GndIf" base_id="1200"  base_id_window="20" />
+   
+   <instance namespace="Svc" name="eventLogger" type="ActiveLogger" base_id="1400"  base_id_window="20" />
+   
+   <instance namespace="Svc" name="linuxTime" type="Time" base_id="1500"  base_id_window="20" />
+   
+   <instance namespace="Svc" name="linuxTimer" type="LinuxTimer" base_id="1600"  base_id_window="20" />
+
+   <instance namespace="Svc" name="rateGroupDriverComp" type="RateGroupDriver" base_id="1700"  base_id_window="20" />
+   
+   <instance namespace="Svc" name="textLogger" type="PassiveTextLogger" base_id="1900"  base_id_window="20" />
+   
+   <instance namespace="Drv" name="i2cDrv" type="LinuxI2cDriver" base_id="2000"  base_id_window="20" />
+   
+   <instance namespace="RobotArm" name="armDemo" type="ArmApp" base_id="2700"  base_id_window="100" />
+
+   <instance namespace="RobotArm" name="clawServo" type="PcaServo" base_id="2800"  base_id_window="100" />
+
+   <instance namespace="RobotArm" name="baseServo" type="PcaServo" base_id="2900"  base_id_window="100" />
+
+   <instance namespace="RobotArm" name="armServo" type="PcaServo" base_id="3000"  base_id_window="100" />
+
+   <instance namespace="RobotArm" name="clawTiltServo" type="PcaServo" base_id="3100"  base_id_window="100" />
+
+   <!-- Command Registration/Dispatch/Reply Connections -->
+   
+   <!-- Command Registration Ports - Registration port number must match dispatch port for each component -->
+
+   <connection name = "EventLoggerReg">
+        <source component = "eventLogger" port = "CmdReg" type = "CmdReg" num = "0"/>
+        <target component = "cmdDisp" port = "compCmdReg" type = "CmdReg" num = "0"/>
+   </connection>
+   <connection name = "CmdDispReg">
+        <source component = "cmdDisp" port = "CmdReg" type = "CmdReg" num = "0"/>
+        <target component = "cmdDisp" port = "compCmdReg" type = "CmdReg" num = "1"/>
+   </connection>
+   <connection name = "CmdSeqReg">
+        <source component = "cmdSeq" port = "cmdRegOut" type = "CmdReg" num = "0"/>
+        <target component = "cmdDisp" port = "compCmdReg" type = "CmdReg" num = "4"/>
+   </connection>
+   <connection name = "ArmDemoReg">
+        <source component = "armDemo" port = "CmdReg" type = "CmdReg" num = "0"/>
+        <target component = "cmdDisp" port = "compCmdReg" type = "CmdReg" num = "6"/>
+   </connection>
+
+    <!-- Command Dispatch Ports - Dispatch port number must match registration port for each component -->
+
+   <connection name = "EventLoggerDisp">
+        <source component = "cmdDisp" port = "compCmdSend" type = "Cmd" num = "0"/>
+        <target component = "eventLogger" port = "CmdDisp" type = "Cmd" num = "0"/>
+   </connection>
+   <connection name = "CmdDispDisp">
+        <source component = "cmdDisp" port = "compCmdSend" type = "Cmd" num = "1"/>
+        <target component = "cmdDisp" port = "CmdDisp" type = "Cmd" num = "0"/>
+   </connection>
+   <connection name = "CmdSeqDisp">
+        <source component = "cmdDisp" port = "compCmdSend" type = "Cmd" num = "4"/>
+        <target component = "cmdSeq"  port = "cmdIn"       type = "Cmd" num = "0"/>
+   </connection>
+   <connection name = "ArmDemoDisp">
+        <source component = "cmdDisp" port = "compCmdSend" type = "Cmd" num = "6"/>
+        <target component = "armDemo" port = "CmdDisp" type = "Cmd" num = "0"/>
+   </connection>
+   
+    <!-- Command Reply Ports - Go to the same response port on the dispatcher -->
+
+   <connection name = "EventLoggerReply">
+      <source component = "eventLogger" port = "CmdStatus" type = "CmdResponse" num = "0"/>
+      <target component = "cmdDisp" port = "compCmdStat" type = "CmdResponse" num = "0"/>
+   </connection>
+   <connection name = "CmdSeqReply">
+      <source component = "cmdSeq" port = "cmdResponseOut" type = "CmdResponse" num = "0"/>
+      <target component = "cmdDisp" port = "compCmdStat" type = "CmdResponse" num = "0"/>
+   </connection>
+   <connection name = "CmdDispReply">
+       <source component = "cmdDisp" port = "CmdStatus" type = "CmdResponse" num = "0"/>
+        <target component = "cmdDisp" port = "compCmdStat" type = "CmdResponse" num = "0"/>
+   </connection>
+   <connection name = "ArmDemoReply">
+       <source component = "armDemo" port = "CmdStatus" type = "CmdResponse" num = "0"/>
+        <target component = "cmdDisp" port = "compCmdStat" type = "CmdResponse" num = "0"/>
+   </connection>
+
+   <!-- Sequencer Connections - should not conflict with uplink port -->
+
+   <connection name = "SeqCompStatus">
+       <source component = "cmdDisp" port = "seqCmdStatus" type = "CmdResponse" num = "1"/>
+        <target component = "cmdSeq" port = "cmdResponseIn" type = "CmdResponse" num = "0"/>
+   </connection>
+   <!-- Input port number needs to be the same as previous dispatch -->
+   <connection name = "SeqCmdSend">
+       <source component = "cmdSeq" port = "comCmdOut" type = "Com" num = "0"/>
+        <target component = "cmdDisp" port = "seqCmdBuff" type = "Com" num = "1"/>
+   </connection>
+   
+   <!-- Event Logger Binary Connections -->
+   
+   <connection name = "SockGndIfLog">
+       <source component = "sockGndIf" port = "Log" type = "Log" num = "0"/>
+        <target component = "eventLogger" port = "LogRecv" type = "Log" num = "0"/>
+   </connection>
+   <connection name = "EventLoggerLog">
+       <source component = "eventLogger" port = "Log" type = "Log" num = "0"/>
+        <target component = "eventLogger" port = "LogRecv" type = "Log" num = "0"/>
+   </connection>
+   <connection name = "CmdDispLog">
+       <source component = "cmdDisp" port = "Log" type = "Log" num = "0"/>
+        <target component = "eventLogger" port = "LogRecv" type = "Log" num = "0"/>
+   </connection>
+   <connection name = "CmdSeqLog">
+       <source component = "cmdSeq" port = "logOut" type = "Log" num = "0"/>
+        <target component = "eventLogger" port = "LogRecv" type = "Log" num = "0"/>
+   </connection>
+   <connection name = "FatalAdapterLog">
+       <source component = "fatalAdapter" port = "Log" type = "Log" num = "0"/>
+        <target component = "eventLogger" port = "LogRecv" type = "Log" num = "0"/>
+   </connection>
+   <connection name = "RateGroup1HzCompLog">
+       <source component = "rateGroup1HzComp" port = "Log" type = "Log" num = "0"/>
+        <target component = "eventLogger" port = "LogRecv" type = "Log" num = "0"/>
+   </connection>
+   <connection name = "ArmDemoLog">
+       <source component = "armDemo" port = "Log" type = "Log" num = "0"/>
+        <target component = "eventLogger" port = "LogRecv" type = "Log" num = "0"/>
+   </connection>
+   
+   <!-- Event Logger Text Connections -->
+   
+   <connection name = "CmdSeqTextLog">
+       <source component = "cmdSeq" port = "LogText" type = "LogText" num = "0"/>
+        <target component = "textLogger" port = "TextLogger" type = "LogText" num = "0"/>
+   </connection>
+   <connection name = "EventLoggerTextLog">
+       <source component = "eventLogger" port = "LogText" type = "LogText" num = "0"/>
+        <target component = "textLogger" port = "TextLogger" type = "LogText" num = "0"/>
+   </connection>
+   <connection name = "SockGndIfTextLog">
+       <source component = "sockGndIf" port = "LogText" type = "LogText" num = "0"/>
+        <target component = "textLogger" port = "TextLogger" type = "LogText" num = "0"/>
+   </connection>
+   <connection name = "FatalAdapterTextLog">
+       <source component = "fatalAdapter" port = "LogText" type = "LogText" num = "0"/>
+        <target component = "textLogger" port = "TextLogger" type = "LogText" num = "0"/>
+   </connection>
+   <connection name = "rateGroup1HzCompTextLog">
+       <source component = "rateGroup1HzComp" port = "LogText" type = "LogText" num = "0"/>
+        <target component = "textLogger" port = "TextLogger" type = "LogText" num = "0"/>
+   </connection>
+   <connection name = "CmdDispTextLogger">
+       <source component = "cmdDisp" port = "LogText" type = "LogText" num = "0"/>
+        <target component = "textLogger" port = "TextLogger" type = "LogText" num = "0"/>
+   </connection>
+   <connection name = "ArmDemoTextLogger">
+       <source component = "armDemo" port = "LogText" type = "LogText" num = "0"/>
+        <target component = "textLogger" port = "TextLogger" type = "LogText" num = "0"/>
+   </connection>
+
+   <!-- Telemetry Connections -->
+
+   <connection name = "cmdSeqTlm">
+       <source component = "cmdSeq" port = "tlmOut" type = "Tlm" num = "0"/>
+        <target component = "chanTlm" port = "TlmRecv" type = "Tlm" num = "0"/>
+   </connection>
+   <connection name = "cmdDispTlm">
+       <source component = "cmdDisp" port = "Tlm" type = "Tlm" num = "0"/>
+        <target component = "chanTlm" port = "TlmRecv" type = "Tlm" num = "0"/>
+   </connection>
+   <connection name = "rateGroup1HzCompTlm">
+       <source component = "rateGroup1HzComp" port = "Tlm" type = "Tlm" num = "0"/>
+        <target component = "chanTlm" port = "TlmRecv" type = "Tlm" num = "0"/>
+   </connection>
+   <connection name = "ArmDemoTlm">
+       <source component = "rpiDemo" port = "Tlm" type = "Tlm" num = "0"/>
+        <target component = "chanTlm" port = "TlmRecv" type = "Tlm" num = "0"/>
+   </connection>
+
+   <!-- Time Connections -->
+
+   <connection name = "eventLoggerTime">
+       <source component = "eventLogger" port = "Time" type = "Time" num = "0"/>
+        <target component = "linuxTime" port = "timeGetPort" type = "Time" num = "0"/>
+   </connection>
+   <connection name = "rateGroup1HzCompTime">
+       <source component = "rateGroup1HzComp" port = "Time" type = "Time" num = "0"/>
+        <target component = "linuxTime" port = "timeGetPort" type = "Time" num = "0"/>
+   </connection>
+   <connection name = "cmdSeqTime">
+       <source component = "cmdSeq" port = "timeCaller" type = "Time" num = "0"/>
+        <target component = "linuxTime" port = "timeGetPort" type = "Time" num = "0"/>
+   </connection>
+   <connection name = "cmdDispTime">
+       <source component = "cmdDisp" port = "Time" type = "Time" num = "0"/>
+        <target component = "linuxTime" port = "timeGetPort" type = "Time" num = "0"/>
+   </connection>
+   <connection name = "fatalAdapterTime">
+       <source component = "fatalAdapter" port = "Time" type = "Time" num = "0"/>
+        <target component = "linuxTime" port = "timeGetPort" type = "Time" num = "0"/>
+   </connection>
+   <connection name = "sockGndIfTime">
+       <source component = "sockGndIf" port = "Time" type = "Time" num = "0"/>
+        <target component = "linuxTime" port = "timeGetPort" type = "Time" num = "0"/>
+   </connection>
+   <connection name = "ArmDemoTime">
+       <source component = "armDemo" port = "Time" type = "Time" num = "0"/>
+        <target component = "linuxTime" port = "timeGetPort" type = "Time" num = "0"/>
+   </connection>
+
+   <!-- Rate Group Connections -->
+   
+   <!-- Linux Timer Connection -->
+   <connection name = "LinuxTimer">
+       <source component = "linuxTimer" port = "CycleOut" type = "Cycle" num = "0"/>
+        <target component = "rateGroupDriverComp" port = "CycleIn" type = "Cycle" num = "0"/>
+   </connection>
+
+   <!-- 1Hz Rate Group -->
+   <connection name = "rateGroupDriverCompRg1Hz">
+       <source component = "rateGroupDriverComp" port = "CycleOut" type = "Cycle" num = "1"/>
+        <target component = "rateGroup1HzComp" port = "CycleIn" type = "Cycle" num = "0"/>
+   </connection>
+   <connection name = "chanTlmRg">
+       <source component = "rateGroup1HzComp" port = "RateGroupMemberOut" type = "Sched" num = "0"/>
+        <target component = "chanTlm" port = "Run" type = "Sched" num = "0"/>
+   </connection>
+   
+
+   <!-- Socket Ground System Connections -->
+
+   <!-- Uplink Connections -->
+   
+   <!-- Uplink connection to command dispatcher should not conflict with command sequencer -->
+   <connection name = "cmdDispPkts">
+       <source component = "sockGndIf" port = "uplinkPort" type = "Com" num = "0"/>
+        <target component = "cmdDisp" port = "seqCmdBuff" type = "Com" num = "0"/>
+   </connection>
+
+   <!-- Downlink Connections -->
+
+   <connection name = "eventLoggerPkts">
+       <source component = "eventLogger" port = "PktSend" type = "Com" num = "0"/>
+        <target component = "sockGndIf" port = "downlinkPort" type = "Com" num = "0"/>
+   </connection>
+   
+   <connection name = "chanTlmPkts">
+       <source component = "chanTlm" port = "PktSend" type = "Com" num = "0"/>
+        <target component = "sockGndIf" port = "downlinkPort" type = "Com" num = "0"/>
+   </connection>
+   
+   <!-- Fault Connectionss -->
+   <connection name = "eventLoggerFatalOut">
+       <source component = "eventLogger" port = "FatalAnnounce" type = "FatalEvent" num = "0"/>
+        <target component = "fatalHandler" port = "FatalReceive" type = "FatalEvent" num = "0"/>
+   </connection>
+   
+   <!-- Driver connections -->
+   
+   <!-- I2C connections -->
+
+</assembly>
