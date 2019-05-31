@@ -116,6 +116,16 @@ void constructApp(int port_number, char* hostname) {
     armServo.regCommands();
     clawTiltServo.regCommands();
 
+    // configure servos
+
+    // set servo instance for each servo
+    clawServo.configure(0,0x40);
+    baseServo.configure(1,0x40);
+    armServo.configure(2,0x40);
+    clawTiltServo.configure(3,0x40);
+    // configure card with one of the servos
+    clawServo.configChip();
+
 
     // Active component startup
     // start rate groups
