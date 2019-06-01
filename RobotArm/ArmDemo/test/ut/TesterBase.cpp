@@ -1,7 +1,7 @@
 // ======================================================================
-// \title  ArmApp/test/ut/TesterBase.cpp
+// \title  ArmDemo/test/ut/TesterBase.cpp
 // \author Auto-generated
-// \brief  cpp file for ArmApp component test harness base class
+// \brief  cpp file for ArmDemo component test harness base class
 //
 // \copyright
 // Copyright 2009-2016, by the California Institute of Technology.
@@ -20,8 +20,8 @@ namespace RobotArm {
   // Construction, initialization, and destruction
   // ----------------------------------------------------------------------
 
-  ArmAppTesterBase ::
-    ArmAppTesterBase(
+  ArmDemoTesterBase ::
+    ArmDemoTesterBase(
 #if FW_OBJECT_NAMES == 1
         const char *const compName,
         const U32 maxHistorySize
@@ -42,10 +42,12 @@ namespace RobotArm {
       new History<TlmEntry_AA_ClawAngle>(maxHistorySize);
     this->tlmHistory_AA_BaseAngle =
       new History<TlmEntry_AA_BaseAngle>(maxHistorySize);
-    this->tlmHistory_AA_ArmAngle =
-      new History<TlmEntry_AA_ArmAngle>(maxHistorySize);
-    this->tlmHistory_AA_ClawTiltAngle =
-      new History<TlmEntry_AA_ClawTiltAngle>(maxHistorySize);
+    this->tlmHistory_AA_ArmHeightAngle =
+      new History<TlmEntry_AA_ArmHeightAngle>(maxHistorySize);
+    this->tlmHistory_AA_ArmLengthAngle =
+      new History<TlmEntry_AA_ArmLengthAngle>(maxHistorySize);
+    this->tlmHistory_AA_Cycles =
+      new History<TlmEntry_AA_Cycles>(maxHistorySize);
     // Initialize event histories
 #if FW_ENABLE_TEXT_LOGGING
     this->textLogHistory = new History<TextLogEntry>(maxHistorySize);
@@ -54,10 +56,10 @@ namespace RobotArm {
       new History<EventEntry_AA_ClawAngleCmd>(maxHistorySize);
     this->eventHistory_AA_BaseAngleCmd =
       new History<EventEntry_AA_BaseAngleCmd>(maxHistorySize);
-    this->eventHistory_AA_ArmAngleCmd =
-      new History<EventEntry_AA_ArmAngleCmd>(maxHistorySize);
-    this->eventHistory_AA_ClawTiltAngleCmd =
-      new History<EventEntry_AA_ClawTiltAngleCmd>(maxHistorySize);
+    this->eventHistory_AA_ArmLengthAngleCmd =
+      new History<EventEntry_AA_ArmLengthAngleCmd>(maxHistorySize);
+    this->eventHistory_AA_ArmHeightAngleCmd =
+      new History<EventEntry_AA_ArmHeightAngleCmd>(maxHistorySize);
     // Initialize histories for typed user output ports
     this->fromPortHistory_position =
       new History<FromPortEntry_position>(maxHistorySize);
@@ -65,27 +67,28 @@ namespace RobotArm {
     this->clearHistory();
   }
 
-  ArmAppTesterBase ::
-    ~ArmAppTesterBase(void)
+  ArmDemoTesterBase ::
+    ~ArmDemoTesterBase(void)
   {
     // Destroy command history
     delete this->cmdResponseHistory;
     // Destroy telemetry histories
     delete this->tlmHistory_AA_ClawAngle;
     delete this->tlmHistory_AA_BaseAngle;
-    delete this->tlmHistory_AA_ArmAngle;
-    delete this->tlmHistory_AA_ClawTiltAngle;
+    delete this->tlmHistory_AA_ArmHeightAngle;
+    delete this->tlmHistory_AA_ArmLengthAngle;
+    delete this->tlmHistory_AA_Cycles;
     // Destroy event histories
 #if FW_ENABLE_TEXT_LOGGING
     delete this->textLogHistory;
 #endif
     delete this->eventHistory_AA_ClawAngleCmd;
     delete this->eventHistory_AA_BaseAngleCmd;
-    delete this->eventHistory_AA_ArmAngleCmd;
-    delete this->eventHistory_AA_ClawTiltAngleCmd;
+    delete this->eventHistory_AA_ArmLengthAngleCmd;
+    delete this->eventHistory_AA_ArmHeightAngleCmd;
   }
 
-  void ArmAppTesterBase ::
+  void ArmDemoTesterBase ::
     init(
         const NATIVE_INT_TYPE instance
     )
@@ -300,56 +303,85 @@ namespace RobotArm {
     }
 #endif
 
+    // Initialize output port Run
+
+    for (
+        NATIVE_INT_TYPE _port = 0;
+        _port < this->getNum_to_Run();
+        ++_port
+    ) {
+      this->m_to_Run[_port].init();
+
+#if FW_OBJECT_NAMES == 1
+      char _portName[80];
+      snprintf(
+          _portName,
+          sizeof(_portName),
+          "%s_to_Run[%d]",
+          this->m_objName,
+          _port
+      );
+      this->m_to_Run[_port].setObjName(_portName);
+#endif
+
+    }
+
   }
 
   // ----------------------------------------------------------------------
   // Getters for port counts
   // ----------------------------------------------------------------------
 
-  NATIVE_INT_TYPE ArmAppTesterBase ::
+  NATIVE_INT_TYPE ArmDemoTesterBase ::
     getNum_from_position(void) const
   {
     return (NATIVE_INT_TYPE) FW_NUM_ARRAY_ELEMENTS(this->m_from_position);
   }
 
-  NATIVE_INT_TYPE ArmAppTesterBase ::
+  NATIVE_INT_TYPE ArmDemoTesterBase ::
+    getNum_to_Run(void) const
+  {
+    return (NATIVE_INT_TYPE) FW_NUM_ARRAY_ELEMENTS(this->m_to_Run);
+  }
+
+  NATIVE_INT_TYPE ArmDemoTesterBase ::
     getNum_to_CmdDisp(void) const
   {
     return (NATIVE_INT_TYPE) FW_NUM_ARRAY_ELEMENTS(this->m_to_CmdDisp);
   }
 
-  NATIVE_INT_TYPE ArmAppTesterBase ::
+  NATIVE_INT_TYPE ArmDemoTesterBase ::
     getNum_from_CmdStatus(void) const
   {
     return (NATIVE_INT_TYPE) FW_NUM_ARRAY_ELEMENTS(this->m_from_CmdStatus);
   }
 
-  NATIVE_INT_TYPE ArmAppTesterBase ::
+  NATIVE_INT_TYPE ArmDemoTesterBase ::
     getNum_from_CmdReg(void) const
   {
     return (NATIVE_INT_TYPE) FW_NUM_ARRAY_ELEMENTS(this->m_from_CmdReg);
   }
 
-  NATIVE_INT_TYPE ArmAppTesterBase ::
+  NATIVE_INT_TYPE ArmDemoTesterBase ::
     getNum_from_Tlm(void) const
   {
     return (NATIVE_INT_TYPE) FW_NUM_ARRAY_ELEMENTS(this->m_from_Tlm);
   }
 
-  NATIVE_INT_TYPE ArmAppTesterBase ::
+  NATIVE_INT_TYPE ArmDemoTesterBase ::
     getNum_from_Time(void) const
   {
     return (NATIVE_INT_TYPE) FW_NUM_ARRAY_ELEMENTS(this->m_from_Time);
   }
 
-  NATIVE_INT_TYPE ArmAppTesterBase ::
+  NATIVE_INT_TYPE ArmDemoTesterBase ::
     getNum_from_Log(void) const
   {
     return (NATIVE_INT_TYPE) FW_NUM_ARRAY_ELEMENTS(this->m_from_Log);
   }
 
 #if FW_ENABLE_TEXT_LOGGING == 1
-  NATIVE_INT_TYPE ArmAppTesterBase ::
+  NATIVE_INT_TYPE ArmDemoTesterBase ::
     getNum_from_LogText(void) const
   {
     return (NATIVE_INT_TYPE) FW_NUM_ARRAY_ELEMENTS(this->m_from_LogText);
@@ -360,7 +392,17 @@ namespace RobotArm {
   // Connectors for to ports
   // ----------------------------------------------------------------------
 
-  void ArmAppTesterBase ::
+  void ArmDemoTesterBase ::
+    connect_to_Run(
+        const NATIVE_INT_TYPE portNum,
+        Svc::InputSchedPort *const Run
+    )
+  {
+    FW_ASSERT(portNum < this->getNum_to_Run(),static_cast<AssertArg>(portNum));
+    this->m_to_Run[portNum].addCallPort(Run);
+  }
+
+  void ArmDemoTesterBase ::
     connect_to_CmdDisp(
         const NATIVE_INT_TYPE portNum,
         Fw::InputCmdPort *const CmdDisp
@@ -372,10 +414,34 @@ namespace RobotArm {
 
 
   // ----------------------------------------------------------------------
+  // Invocation functions for to ports
+  // ----------------------------------------------------------------------
+
+  void ArmDemoTesterBase ::
+    invoke_to_Run(
+        const NATIVE_INT_TYPE portNum,
+        NATIVE_UINT_TYPE context
+    )
+  {
+    FW_ASSERT(portNum < this->getNum_to_Run(),static_cast<AssertArg>(portNum));
+    FW_ASSERT(portNum < this->getNum_to_Run(),static_cast<AssertArg>(portNum));
+    this->m_to_Run[portNum].invoke(
+        context
+    );
+  }
+
+  // ----------------------------------------------------------------------
   // Connection status for to ports
   // ----------------------------------------------------------------------
 
-  bool ArmAppTesterBase ::
+  bool ArmDemoTesterBase ::
+    isConnected_to_Run(const NATIVE_INT_TYPE portNum)
+  {
+    FW_ASSERT(portNum < this->getNum_to_Run(), static_cast<AssertArg>(portNum));
+    return this->m_to_Run[portNum].isConnected();
+  }
+
+  bool ArmDemoTesterBase ::
     isConnected_to_CmdDisp(const NATIVE_INT_TYPE portNum)
   {
     FW_ASSERT(portNum < this->getNum_to_CmdDisp(), static_cast<AssertArg>(portNum));
@@ -386,42 +452,42 @@ namespace RobotArm {
   // Getters for from ports
   // ----------------------------------------------------------------------
 
-  RobotArm::InputServoSetPort *ArmAppTesterBase ::
+  RobotArm::InputServoSetPort *ArmDemoTesterBase ::
     get_from_position(const NATIVE_INT_TYPE portNum)
   {
     FW_ASSERT(portNum < this->getNum_from_position(),static_cast<AssertArg>(portNum));
     return &this->m_from_position[portNum];
   }
 
-  Fw::InputCmdResponsePort *ArmAppTesterBase ::
+  Fw::InputCmdResponsePort *ArmDemoTesterBase ::
     get_from_CmdStatus(const NATIVE_INT_TYPE portNum)
   {
     FW_ASSERT(portNum < this->getNum_from_CmdStatus(),static_cast<AssertArg>(portNum));
     return &this->m_from_CmdStatus[portNum];
   }
 
-  Fw::InputCmdRegPort *ArmAppTesterBase ::
+  Fw::InputCmdRegPort *ArmDemoTesterBase ::
     get_from_CmdReg(const NATIVE_INT_TYPE portNum)
   {
     FW_ASSERT(portNum < this->getNum_from_CmdReg(),static_cast<AssertArg>(portNum));
     return &this->m_from_CmdReg[portNum];
   }
 
-  Fw::InputTlmPort *ArmAppTesterBase ::
+  Fw::InputTlmPort *ArmDemoTesterBase ::
     get_from_Tlm(const NATIVE_INT_TYPE portNum)
   {
     FW_ASSERT(portNum < this->getNum_from_Tlm(),static_cast<AssertArg>(portNum));
     return &this->m_from_Tlm[portNum];
   }
 
-  Fw::InputTimePort *ArmAppTesterBase ::
+  Fw::InputTimePort *ArmDemoTesterBase ::
     get_from_Time(const NATIVE_INT_TYPE portNum)
   {
     FW_ASSERT(portNum < this->getNum_from_Time(),static_cast<AssertArg>(portNum));
     return &this->m_from_Time[portNum];
   }
 
-  Fw::InputLogPort *ArmAppTesterBase ::
+  Fw::InputLogPort *ArmDemoTesterBase ::
     get_from_Log(const NATIVE_INT_TYPE portNum)
   {
     FW_ASSERT(portNum < this->getNum_from_Log(),static_cast<AssertArg>(portNum));
@@ -429,7 +495,7 @@ namespace RobotArm {
   }
 
 #if FW_ENABLE_TEXT_LOGGING == 1
-  Fw::InputLogTextPort *ArmAppTesterBase ::
+  Fw::InputLogTextPort *ArmDemoTesterBase ::
     get_from_LogText(const NATIVE_INT_TYPE portNum)
   {
     FW_ASSERT(portNum < this->getNum_from_LogText(),static_cast<AssertArg>(portNum));
@@ -441,7 +507,7 @@ namespace RobotArm {
   // Static functions for from ports
   // ----------------------------------------------------------------------
 
-  void ArmAppTesterBase ::
+  void ArmDemoTesterBase ::
     from_position_static(
         Fw::PassiveComponentBase *const callComp,
         const NATIVE_INT_TYPE portNum,
@@ -449,15 +515,15 @@ namespace RobotArm {
     )
   {
     FW_ASSERT(callComp);
-    ArmAppTesterBase* _testerBase =
-      static_cast<ArmAppTesterBase*>(callComp);
+    ArmDemoTesterBase* _testerBase =
+      static_cast<ArmDemoTesterBase*>(callComp);
     _testerBase->from_position_handlerBase(
         portNum,
         angle
     );
   }
 
-  void ArmAppTesterBase ::
+  void ArmDemoTesterBase ::
     from_CmdStatus_static(
         Fw::PassiveComponentBase *const component,
         const NATIVE_INT_TYPE portNum,
@@ -466,12 +532,12 @@ namespace RobotArm {
         const Fw::CommandResponse response
     )
   {
-    ArmAppTesterBase* _testerBase =
-      static_cast<ArmAppTesterBase*>(component);
+    ArmDemoTesterBase* _testerBase =
+      static_cast<ArmDemoTesterBase*>(component);
     _testerBase->cmdResponseIn(opCode, cmdSeq, response);
   }
 
-  void ArmAppTesterBase ::
+  void ArmDemoTesterBase ::
     from_CmdReg_static(
         Fw::PassiveComponentBase *const component,
         const NATIVE_INT_TYPE portNum,
@@ -481,7 +547,7 @@ namespace RobotArm {
 
   }
 
-  void ArmAppTesterBase ::
+  void ArmDemoTesterBase ::
     from_Tlm_static(
         Fw::PassiveComponentBase *const component,
         NATIVE_INT_TYPE portNum,
@@ -490,12 +556,12 @@ namespace RobotArm {
         Fw::TlmBuffer &val
     )
   {
-    ArmAppTesterBase* _testerBase =
-      static_cast<ArmAppTesterBase*>(component);
+    ArmDemoTesterBase* _testerBase =
+      static_cast<ArmDemoTesterBase*>(component);
     _testerBase->dispatchTlm(id, timeTag, val);
   }
 
-  void ArmAppTesterBase ::
+  void ArmDemoTesterBase ::
     from_Log_static(
         Fw::PassiveComponentBase *const component,
         const NATIVE_INT_TYPE portNum,
@@ -505,13 +571,13 @@ namespace RobotArm {
         Fw::LogBuffer &args
     )
   {
-    ArmAppTesterBase* _testerBase =
-      static_cast<ArmAppTesterBase*>(component);
+    ArmDemoTesterBase* _testerBase =
+      static_cast<ArmDemoTesterBase*>(component);
     _testerBase->dispatchEvents(id, timeTag, severity, args);
   }
 
 #if FW_ENABLE_TEXT_LOGGING == 1
-  void ArmAppTesterBase ::
+  void ArmDemoTesterBase ::
     from_LogText_static(
         Fw::PassiveComponentBase *const component,
         const NATIVE_INT_TYPE portNum,
@@ -521,21 +587,21 @@ namespace RobotArm {
         Fw::TextLogString &text
     )
   {
-    ArmAppTesterBase* _testerBase =
-      static_cast<ArmAppTesterBase*>(component);
+    ArmDemoTesterBase* _testerBase =
+      static_cast<ArmDemoTesterBase*>(component);
     _testerBase->textLogIn(id,timeTag,severity,text);
   }
 #endif
 
-  void ArmAppTesterBase ::
+  void ArmDemoTesterBase ::
     from_Time_static(
         Fw::PassiveComponentBase *const component,
         const NATIVE_INT_TYPE portNum,
         Fw::Time& time
     )
   {
-    ArmAppTesterBase* _testerBase =
-      static_cast<ArmAppTesterBase*>(component);
+    ArmDemoTesterBase* _testerBase =
+      static_cast<ArmDemoTesterBase*>(component);
     time = _testerBase->m_testTime;
   }
 
@@ -543,7 +609,7 @@ namespace RobotArm {
   // Histories for typed from ports
   // ----------------------------------------------------------------------
 
-  void ArmAppTesterBase ::
+  void ArmDemoTesterBase ::
     clearFromPortHistory(void)
   {
     this->fromPortHistorySize = 0;
@@ -554,7 +620,7 @@ namespace RobotArm {
   // From port: position
   // ----------------------------------------------------------------------
 
-  void ArmAppTesterBase ::
+  void ArmDemoTesterBase ::
     pushFromPortEntry_position(
         F32 angle
     )
@@ -570,7 +636,7 @@ namespace RobotArm {
   // Handler base functions for from ports
   // ----------------------------------------------------------------------
 
-  void ArmAppTesterBase ::
+  void ArmDemoTesterBase ::
     from_position_handlerBase(
         const NATIVE_INT_TYPE portNum,
         F32 angle
@@ -587,7 +653,7 @@ namespace RobotArm {
   // Command response handling
   // ----------------------------------------------------------------------
 
-  void ArmAppTesterBase ::
+  void ArmDemoTesterBase ::
     cmdResponseIn(
         const FwOpcodeType opCode,
         const U32 seq,
@@ -602,7 +668,7 @@ namespace RobotArm {
   // Command: AA_CLAW_ANG
   // ----------------------------------------------------------------------
 
-  void ArmAppTesterBase ::
+  void ArmDemoTesterBase ::
     sendCmd_AA_CLAW_ANG(
         const NATIVE_INT_TYPE instance,
         const U32 cmdSeq,
@@ -621,7 +687,7 @@ namespace RobotArm {
 
     FwOpcodeType _opcode;
     const U32 idBase = this->getIdBase();
-    _opcode = ArmAppComponentBase::OPCODE_AA_CLAW_ANG + idBase;
+    _opcode = ArmDemoComponentBase::OPCODE_AA_CLAW_ANG + idBase;
 
     if (this->m_to_CmdDisp[0].isConnected()) {
       this->m_to_CmdDisp[0].invoke(
@@ -640,7 +706,7 @@ namespace RobotArm {
   // Command: AA_BASE_ANG
   // ----------------------------------------------------------------------
 
-  void ArmAppTesterBase ::
+  void ArmDemoTesterBase ::
     sendCmd_AA_BASE_ANG(
         const NATIVE_INT_TYPE instance,
         const U32 cmdSeq,
@@ -659,7 +725,7 @@ namespace RobotArm {
 
     FwOpcodeType _opcode;
     const U32 idBase = this->getIdBase();
-    _opcode = ArmAppComponentBase::OPCODE_AA_BASE_ANG + idBase;
+    _opcode = ArmDemoComponentBase::OPCODE_AA_BASE_ANG + idBase;
 
     if (this->m_to_CmdDisp[0].isConnected()) {
       this->m_to_CmdDisp[0].invoke(
@@ -675,11 +741,11 @@ namespace RobotArm {
   }
 
   // ----------------------------------------------------------------------
-  // Command: AA_ARM_ANG
+  // Command: AA_ARM_HEIGHT_ANG
   // ----------------------------------------------------------------------
 
-  void ArmAppTesterBase ::
-    sendCmd_AA_ARM_ANG(
+  void ArmDemoTesterBase ::
+    sendCmd_AA_ARM_HEIGHT_ANG(
         const NATIVE_INT_TYPE instance,
         const U32 cmdSeq,
         F32 angle
@@ -697,7 +763,7 @@ namespace RobotArm {
 
     FwOpcodeType _opcode;
     const U32 idBase = this->getIdBase();
-    _opcode = ArmAppComponentBase::OPCODE_AA_ARM_ANG + idBase;
+    _opcode = ArmDemoComponentBase::OPCODE_AA_ARM_HEIGHT_ANG + idBase;
 
     if (this->m_to_CmdDisp[0].isConnected()) {
       this->m_to_CmdDisp[0].invoke(
@@ -713,11 +779,11 @@ namespace RobotArm {
   }
 
   // ----------------------------------------------------------------------
-  // Command: AA_CLAW_TILT_ANG
+  // Command: AA_ARM_LENGTH_ANG
   // ----------------------------------------------------------------------
 
-  void ArmAppTesterBase ::
-    sendCmd_AA_CLAW_TILT_ANG(
+  void ArmDemoTesterBase ::
+    sendCmd_AA_ARM_LENGTH_ANG(
         const NATIVE_INT_TYPE instance,
         const U32 cmdSeq,
         F32 angle
@@ -735,7 +801,7 @@ namespace RobotArm {
 
     FwOpcodeType _opcode;
     const U32 idBase = this->getIdBase();
-    _opcode = ArmAppComponentBase::OPCODE_AA_CLAW_TILT_ANG + idBase;
+    _opcode = ArmDemoComponentBase::OPCODE_AA_ARM_LENGTH_ANG + idBase;
 
     if (this->m_to_CmdDisp[0].isConnected()) {
       this->m_to_CmdDisp[0].invoke(
@@ -751,7 +817,7 @@ namespace RobotArm {
   }
 
 
-  void ArmAppTesterBase ::
+  void ArmDemoTesterBase ::
     sendRawCmd(FwOpcodeType opcode, U32 cmdSeq, Fw::CmdArgBuffer& args) {
 
     const U32 idBase = this->getIdBase();
@@ -773,7 +839,7 @@ namespace RobotArm {
   // History
   // ----------------------------------------------------------------------
 
-  void ArmAppTesterBase ::
+  void ArmDemoTesterBase ::
     clearHistory()
   {
     this->cmdResponseHistory->clear();
@@ -787,7 +853,7 @@ namespace RobotArm {
   // Time
   // ----------------------------------------------------------------------
 
-  void ArmAppTesterBase ::
+  void ArmDemoTesterBase ::
     setTestTime(const Fw::Time& time)
   {
     this->m_testTime = time;
@@ -797,7 +863,7 @@ namespace RobotArm {
   // Telemetry dispatch
   // ----------------------------------------------------------------------
 
-  void ArmAppTesterBase ::
+  void ArmDemoTesterBase ::
     dispatchTlm(
         const FwChanIdType id,
         const Fw::Time &timeTag,
@@ -812,7 +878,7 @@ namespace RobotArm {
 
     switch (id - idBase) {
 
-      case ArmAppComponentBase::CHANNELID_AA_CLAWANGLE:
+      case ArmDemoComponentBase::CHANNELID_AA_CLAWANGLE:
       {
         F32 arg;
         const Fw::SerializeStatus _status = val.deserialize(arg);
@@ -824,7 +890,7 @@ namespace RobotArm {
         break;
       }
 
-      case ArmAppComponentBase::CHANNELID_AA_BASEANGLE:
+      case ArmDemoComponentBase::CHANNELID_AA_BASEANGLE:
       {
         F32 arg;
         const Fw::SerializeStatus _status = val.deserialize(arg);
@@ -836,27 +902,39 @@ namespace RobotArm {
         break;
       }
 
-      case ArmAppComponentBase::CHANNELID_AA_ARMANGLE:
+      case ArmDemoComponentBase::CHANNELID_AA_ARMHEIGHTANGLE:
       {
         F32 arg;
         const Fw::SerializeStatus _status = val.deserialize(arg);
         if (_status != Fw::FW_SERIALIZE_OK) {
-          printf("Error deserializing AA_ArmAngle: %d\n", _status);
+          printf("Error deserializing AA_ArmHeightAngle: %d\n", _status);
           return;
         }
-        this->tlmInput_AA_ArmAngle(timeTag, arg);
+        this->tlmInput_AA_ArmHeightAngle(timeTag, arg);
         break;
       }
 
-      case ArmAppComponentBase::CHANNELID_AA_CLAWTILTANGLE:
+      case ArmDemoComponentBase::CHANNELID_AA_ARMLENGTHANGLE:
       {
         F32 arg;
         const Fw::SerializeStatus _status = val.deserialize(arg);
         if (_status != Fw::FW_SERIALIZE_OK) {
-          printf("Error deserializing AA_ClawTiltAngle: %d\n", _status);
+          printf("Error deserializing AA_ArmLengthAngle: %d\n", _status);
           return;
         }
-        this->tlmInput_AA_ClawTiltAngle(timeTag, arg);
+        this->tlmInput_AA_ArmLengthAngle(timeTag, arg);
+        break;
+      }
+
+      case ArmDemoComponentBase::CHANNELID_AA_CYCLES:
+      {
+        U32 arg;
+        const Fw::SerializeStatus _status = val.deserialize(arg);
+        if (_status != Fw::FW_SERIALIZE_OK) {
+          printf("Error deserializing AA_Cycles: %d\n", _status);
+          return;
+        }
+        this->tlmInput_AA_Cycles(timeTag, arg);
         break;
       }
 
@@ -869,21 +947,22 @@ namespace RobotArm {
 
   }
 
-  void ArmAppTesterBase ::
+  void ArmDemoTesterBase ::
     clearTlm(void)
   {
     this->tlmSize = 0;
     this->tlmHistory_AA_ClawAngle->clear();
     this->tlmHistory_AA_BaseAngle->clear();
-    this->tlmHistory_AA_ArmAngle->clear();
-    this->tlmHistory_AA_ClawTiltAngle->clear();
+    this->tlmHistory_AA_ArmHeightAngle->clear();
+    this->tlmHistory_AA_ArmLengthAngle->clear();
+    this->tlmHistory_AA_Cycles->clear();
   }
 
   // ----------------------------------------------------------------------
   // Channel: AA_ClawAngle
   // ----------------------------------------------------------------------
 
-  void ArmAppTesterBase ::
+  void ArmDemoTesterBase ::
     tlmInput_AA_ClawAngle(
         const Fw::Time& timeTag,
         const F32& val
@@ -898,7 +977,7 @@ namespace RobotArm {
   // Channel: AA_BaseAngle
   // ----------------------------------------------------------------------
 
-  void ArmAppTesterBase ::
+  void ArmDemoTesterBase ::
     tlmInput_AA_BaseAngle(
         const Fw::Time& timeTag,
         const F32& val
@@ -910,32 +989,47 @@ namespace RobotArm {
   }
 
   // ----------------------------------------------------------------------
-  // Channel: AA_ArmAngle
+  // Channel: AA_ArmHeightAngle
   // ----------------------------------------------------------------------
 
-  void ArmAppTesterBase ::
-    tlmInput_AA_ArmAngle(
+  void ArmDemoTesterBase ::
+    tlmInput_AA_ArmHeightAngle(
         const Fw::Time& timeTag,
         const F32& val
     )
   {
-    TlmEntry_AA_ArmAngle e = { timeTag, val };
-    this->tlmHistory_AA_ArmAngle->push_back(e);
+    TlmEntry_AA_ArmHeightAngle e = { timeTag, val };
+    this->tlmHistory_AA_ArmHeightAngle->push_back(e);
     ++this->tlmSize;
   }
 
   // ----------------------------------------------------------------------
-  // Channel: AA_ClawTiltAngle
+  // Channel: AA_ArmLengthAngle
   // ----------------------------------------------------------------------
 
-  void ArmAppTesterBase ::
-    tlmInput_AA_ClawTiltAngle(
+  void ArmDemoTesterBase ::
+    tlmInput_AA_ArmLengthAngle(
         const Fw::Time& timeTag,
         const F32& val
     )
   {
-    TlmEntry_AA_ClawTiltAngle e = { timeTag, val };
-    this->tlmHistory_AA_ClawTiltAngle->push_back(e);
+    TlmEntry_AA_ArmLengthAngle e = { timeTag, val };
+    this->tlmHistory_AA_ArmLengthAngle->push_back(e);
+    ++this->tlmSize;
+  }
+
+  // ----------------------------------------------------------------------
+  // Channel: AA_Cycles
+  // ----------------------------------------------------------------------
+
+  void ArmDemoTesterBase ::
+    tlmInput_AA_Cycles(
+        const Fw::Time& timeTag,
+        const U32& val
+    )
+  {
+    TlmEntry_AA_Cycles e = { timeTag, val };
+    this->tlmHistory_AA_Cycles->push_back(e);
     ++this->tlmSize;
   }
 
@@ -943,7 +1037,7 @@ namespace RobotArm {
   // Event dispatch
   // ----------------------------------------------------------------------
 
-  void ArmAppTesterBase ::
+  void ArmDemoTesterBase ::
     dispatchEvents(
         const FwEventIdType id,
         Fw::Time &timeTag,
@@ -958,7 +1052,7 @@ namespace RobotArm {
     FW_ASSERT(id >= idBase, id, idBase);
     switch (id - idBase) {
 
-      case ArmAppComponentBase::EVENTID_AA_CLAWANGLECMD:
+      case ArmDemoComponentBase::EVENTID_AA_CLAWANGLECMD:
       {
 
         Fw::SerializeStatus _status = Fw::FW_SERIALIZE_OK;
@@ -999,7 +1093,7 @@ namespace RobotArm {
 
       }
 
-      case ArmAppComponentBase::EVENTID_AA_BASEANGLECMD:
+      case ArmDemoComponentBase::EVENTID_AA_BASEANGLECMD:
       {
 
         Fw::SerializeStatus _status = Fw::FW_SERIALIZE_OK;
@@ -1040,7 +1134,7 @@ namespace RobotArm {
 
       }
 
-      case ArmAppComponentBase::EVENTID_AA_ARMANGLECMD:
+      case ArmDemoComponentBase::EVENTID_AA_ARMLENGTHANGLECMD:
       {
 
         Fw::SerializeStatus _status = Fw::FW_SERIALIZE_OK;
@@ -1075,13 +1169,13 @@ namespace RobotArm {
             static_cast<AssertArg>(_status)
         );
 
-        this->logIn_ACTIVITY_HI_AA_ArmAngleCmd(angle);
+        this->logIn_ACTIVITY_HI_AA_ArmLengthAngleCmd(angle);
 
         break;
 
       }
 
-      case ArmAppComponentBase::EVENTID_AA_CLAWTILTANGLECMD:
+      case ArmDemoComponentBase::EVENTID_AA_ARMHEIGHTANGLECMD:
       {
 
         Fw::SerializeStatus _status = Fw::FW_SERIALIZE_OK;
@@ -1116,7 +1210,7 @@ namespace RobotArm {
             static_cast<AssertArg>(_status)
         );
 
-        this->logIn_ACTIVITY_HI_AA_ClawTiltAngleCmd(angle);
+        this->logIn_ACTIVITY_HI_AA_ArmHeightAngleCmd(angle);
 
         break;
 
@@ -1131,14 +1225,14 @@ namespace RobotArm {
 
   }
 
-  void ArmAppTesterBase ::
+  void ArmDemoTesterBase ::
     clearEvents(void)
   {
     this->eventsSize = 0;
     this->eventHistory_AA_ClawAngleCmd->clear();
     this->eventHistory_AA_BaseAngleCmd->clear();
-    this->eventHistory_AA_ArmAngleCmd->clear();
-    this->eventHistory_AA_ClawTiltAngleCmd->clear();
+    this->eventHistory_AA_ArmLengthAngleCmd->clear();
+    this->eventHistory_AA_ArmHeightAngleCmd->clear();
   }
 
 #if FW_ENABLE_TEXT_LOGGING
@@ -1147,7 +1241,7 @@ namespace RobotArm {
   // Text events
   // ----------------------------------------------------------------------
 
-  void ArmAppTesterBase ::
+  void ArmDemoTesterBase ::
     textLogIn(
         const U32 id,
         Fw::Time &timeTag,
@@ -1159,7 +1253,7 @@ namespace RobotArm {
     textLogHistory->push_back(e);
   }
 
-  void ArmAppTesterBase ::
+  void ArmDemoTesterBase ::
     printTextLogHistoryEntry(
         const TextLogEntry& e,
         FILE* file
@@ -1206,7 +1300,7 @@ namespace RobotArm {
 
   }
 
-  void ArmAppTesterBase ::
+  void ArmDemoTesterBase ::
     printTextLogHistory(FILE *file)
   {
     for (U32 i = 0; i < this->textLogHistory->size(); ++i) {
@@ -1223,7 +1317,7 @@ namespace RobotArm {
   // Event: AA_ClawAngleCmd
   // ----------------------------------------------------------------------
 
-  void ArmAppTesterBase ::
+  void ArmDemoTesterBase ::
     logIn_ACTIVITY_HI_AA_ClawAngleCmd(
         F32 angle
     )
@@ -1239,7 +1333,7 @@ namespace RobotArm {
   // Event: AA_BaseAngleCmd
   // ----------------------------------------------------------------------
 
-  void ArmAppTesterBase ::
+  void ArmDemoTesterBase ::
     logIn_ACTIVITY_HI_AA_BaseAngleCmd(
         F32 angle
     )
@@ -1252,34 +1346,34 @@ namespace RobotArm {
   }
 
   // ----------------------------------------------------------------------
-  // Event: AA_ArmAngleCmd
+  // Event: AA_ArmLengthAngleCmd
   // ----------------------------------------------------------------------
 
-  void ArmAppTesterBase ::
-    logIn_ACTIVITY_HI_AA_ArmAngleCmd(
+  void ArmDemoTesterBase ::
+    logIn_ACTIVITY_HI_AA_ArmLengthAngleCmd(
         F32 angle
     )
   {
-    EventEntry_AA_ArmAngleCmd e = {
+    EventEntry_AA_ArmLengthAngleCmd e = {
       angle
     };
-    eventHistory_AA_ArmAngleCmd->push_back(e);
+    eventHistory_AA_ArmLengthAngleCmd->push_back(e);
     ++this->eventsSize;
   }
 
   // ----------------------------------------------------------------------
-  // Event: AA_ClawTiltAngleCmd
+  // Event: AA_ArmHeightAngleCmd
   // ----------------------------------------------------------------------
 
-  void ArmAppTesterBase ::
-    logIn_ACTIVITY_HI_AA_ClawTiltAngleCmd(
+  void ArmDemoTesterBase ::
+    logIn_ACTIVITY_HI_AA_ArmHeightAngleCmd(
         F32 angle
     )
   {
-    EventEntry_AA_ClawTiltAngleCmd e = {
+    EventEntry_AA_ArmHeightAngleCmd e = {
       angle
     };
-    eventHistory_AA_ClawTiltAngleCmd->push_back(e);
+    eventHistory_AA_ArmHeightAngleCmd->push_back(e);
     ++this->eventsSize;
   }
 

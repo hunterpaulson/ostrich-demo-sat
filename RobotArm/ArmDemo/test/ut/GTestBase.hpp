@@ -1,7 +1,7 @@
 // ======================================================================
-// \title  ArmApp/test/ut/GTestBase.hpp
+// \title  ArmDemo/test/ut/GTestBase.hpp
 // \author Auto-generated
-// \brief  hpp file for ArmApp component Google Test harness base class
+// \brief  hpp file for ArmDemo component Google Test harness base class
 //
 // \copyright
 // Copyright 2009-2015, by the California Institute of Technology.
@@ -10,8 +10,8 @@
 //
 // ======================================================================
 
-#ifndef ArmApp_GTEST_BASE_HPP
-#define ArmApp_GTEST_BASE_HPP
+#ifndef ArmDemo_GTEST_BASE_HPP
+#define ArmDemo_GTEST_BASE_HPP
 
 #include "TesterBase.hpp"
 #include "gtest/gtest.h"
@@ -45,17 +45,23 @@
 #define ASSERT_TLM_AA_BaseAngle(index, value) \
   this->assertTlm_AA_BaseAngle(__FILE__, __LINE__, index, value)
 
-#define ASSERT_TLM_AA_ArmAngle_SIZE(size) \
-  this->assertTlm_AA_ArmAngle_size(__FILE__, __LINE__, size)
+#define ASSERT_TLM_AA_ArmHeightAngle_SIZE(size) \
+  this->assertTlm_AA_ArmHeightAngle_size(__FILE__, __LINE__, size)
 
-#define ASSERT_TLM_AA_ArmAngle(index, value) \
-  this->assertTlm_AA_ArmAngle(__FILE__, __LINE__, index, value)
+#define ASSERT_TLM_AA_ArmHeightAngle(index, value) \
+  this->assertTlm_AA_ArmHeightAngle(__FILE__, __LINE__, index, value)
 
-#define ASSERT_TLM_AA_ClawTiltAngle_SIZE(size) \
-  this->assertTlm_AA_ClawTiltAngle_size(__FILE__, __LINE__, size)
+#define ASSERT_TLM_AA_ArmLengthAngle_SIZE(size) \
+  this->assertTlm_AA_ArmLengthAngle_size(__FILE__, __LINE__, size)
 
-#define ASSERT_TLM_AA_ClawTiltAngle(index, value) \
-  this->assertTlm_AA_ClawTiltAngle(__FILE__, __LINE__, index, value)
+#define ASSERT_TLM_AA_ArmLengthAngle(index, value) \
+  this->assertTlm_AA_ArmLengthAngle(__FILE__, __LINE__, index, value)
+
+#define ASSERT_TLM_AA_Cycles_SIZE(size) \
+  this->assertTlm_AA_Cycles_size(__FILE__, __LINE__, size)
+
+#define ASSERT_TLM_AA_Cycles(index, value) \
+  this->assertTlm_AA_Cycles(__FILE__, __LINE__, index, value)
 
 // ----------------------------------------------------------------------
 // Macros for event history assertions
@@ -76,17 +82,17 @@
 #define ASSERT_EVENTS_AA_BaseAngleCmd(index, _angle) \
   this->assertEvents_AA_BaseAngleCmd(__FILE__, __LINE__, index, _angle)
 
-#define ASSERT_EVENTS_AA_ArmAngleCmd_SIZE(size) \
-  this->assertEvents_AA_ArmAngleCmd_size(__FILE__, __LINE__, size)
+#define ASSERT_EVENTS_AA_ArmLengthAngleCmd_SIZE(size) \
+  this->assertEvents_AA_ArmLengthAngleCmd_size(__FILE__, __LINE__, size)
 
-#define ASSERT_EVENTS_AA_ArmAngleCmd(index, _angle) \
-  this->assertEvents_AA_ArmAngleCmd(__FILE__, __LINE__, index, _angle)
+#define ASSERT_EVENTS_AA_ArmLengthAngleCmd(index, _angle) \
+  this->assertEvents_AA_ArmLengthAngleCmd(__FILE__, __LINE__, index, _angle)
 
-#define ASSERT_EVENTS_AA_ClawTiltAngleCmd_SIZE(size) \
-  this->assertEvents_AA_ClawTiltAngleCmd_size(__FILE__, __LINE__, size)
+#define ASSERT_EVENTS_AA_ArmHeightAngleCmd_SIZE(size) \
+  this->assertEvents_AA_ArmHeightAngleCmd_size(__FILE__, __LINE__, size)
 
-#define ASSERT_EVENTS_AA_ClawTiltAngleCmd(index, _angle) \
-  this->assertEvents_AA_ClawTiltAngleCmd(__FILE__, __LINE__, index, _angle)
+#define ASSERT_EVENTS_AA_ArmHeightAngleCmd(index, _angle) \
+  this->assertEvents_AA_ArmHeightAngleCmd(__FILE__, __LINE__, index, _angle)
 
 // ----------------------------------------------------------------------
 // Macros for typed user from port history assertions
@@ -123,11 +129,11 @@
 
 namespace RobotArm {
 
-  //! \class ArmAppGTestBase
-  //! \brief Auto-generated base class for ArmApp component Google Test harness
+  //! \class ArmDemoGTestBase
+  //! \brief Auto-generated base class for ArmDemo component Google Test harness
   //!
-  class ArmAppGTestBase :
-    public ArmAppTesterBase
+  class ArmDemoGTestBase :
+    public ArmDemoTesterBase
   {
 
     protected:
@@ -136,9 +142,9 @@ namespace RobotArm {
       // Construction and destruction
       // ----------------------------------------------------------------------
 
-      //! Construct object ArmAppGTestBase
+      //! Construct object ArmDemoGTestBase
       //!
-      ArmAppGTestBase(
+      ArmDemoGTestBase(
 #if FW_OBJECT_NAMES == 1
           const char *const compName, /*!< The component name*/
           const U32 maxHistorySize /*!< The maximum size of each history*/
@@ -147,9 +153,9 @@ namespace RobotArm {
 #endif
       );
 
-      //! Destroy object ArmAppGTestBase
+      //! Destroy object ArmDemoGTestBase
       //!
-      virtual ~ArmAppGTestBase(void);
+      virtual ~ArmDemoGTestBase(void);
 
     protected:
 
@@ -235,18 +241,18 @@ namespace RobotArm {
     protected:
 
       // ----------------------------------------------------------------------
-      // Channel: AA_ArmAngle
+      // Channel: AA_ArmHeightAngle
       // ----------------------------------------------------------------------
 
       //! Assert telemetry value in history at index
       //!
-      void assertTlm_AA_ArmAngle_size(
+      void assertTlm_AA_ArmHeightAngle_size(
           const char *const __callSiteFileName, /*!< The name of the file containing the call site*/
           const U32 __callSiteLineNumber, /*!< The line number of the call site*/
           const U32 size /*!< The asserted size*/
       ) const;
 
-      void assertTlm_AA_ArmAngle(
+      void assertTlm_AA_ArmHeightAngle(
           const char *const __callSiteFileName, /*!< The name of the file containing the call site*/
           const U32 __callSiteLineNumber, /*!< The line number of the call site*/
           const U32 __index, /*!< The index*/
@@ -256,22 +262,43 @@ namespace RobotArm {
     protected:
 
       // ----------------------------------------------------------------------
-      // Channel: AA_ClawTiltAngle
+      // Channel: AA_ArmLengthAngle
       // ----------------------------------------------------------------------
 
       //! Assert telemetry value in history at index
       //!
-      void assertTlm_AA_ClawTiltAngle_size(
+      void assertTlm_AA_ArmLengthAngle_size(
           const char *const __callSiteFileName, /*!< The name of the file containing the call site*/
           const U32 __callSiteLineNumber, /*!< The line number of the call site*/
           const U32 size /*!< The asserted size*/
       ) const;
 
-      void assertTlm_AA_ClawTiltAngle(
+      void assertTlm_AA_ArmLengthAngle(
           const char *const __callSiteFileName, /*!< The name of the file containing the call site*/
           const U32 __callSiteLineNumber, /*!< The line number of the call site*/
           const U32 __index, /*!< The index*/
           const F32& val /*!< The channel value*/
+      ) const;
+
+    protected:
+
+      // ----------------------------------------------------------------------
+      // Channel: AA_Cycles
+      // ----------------------------------------------------------------------
+
+      //! Assert telemetry value in history at index
+      //!
+      void assertTlm_AA_Cycles_size(
+          const char *const __callSiteFileName, /*!< The name of the file containing the call site*/
+          const U32 __callSiteLineNumber, /*!< The line number of the call site*/
+          const U32 size /*!< The asserted size*/
+      ) const;
+
+      void assertTlm_AA_Cycles(
+          const char *const __callSiteFileName, /*!< The name of the file containing the call site*/
+          const U32 __callSiteLineNumber, /*!< The line number of the call site*/
+          const U32 __index, /*!< The index*/
+          const U32& val /*!< The channel value*/
       ) const;
 
     protected:
@@ -327,16 +354,16 @@ namespace RobotArm {
     protected:
 
       // ----------------------------------------------------------------------
-      // Event: AA_ArmAngleCmd
+      // Event: AA_ArmLengthAngleCmd
       // ----------------------------------------------------------------------
 
-      void assertEvents_AA_ArmAngleCmd_size(
+      void assertEvents_AA_ArmLengthAngleCmd_size(
           const char *const __callSiteFileName, /*!< The name of the file containing the call site*/
           const U32 __callSiteLineNumber, /*!< The line number of the call site*/
           const U32 size /*!< The asserted size*/
       ) const;
 
-      void assertEvents_AA_ArmAngleCmd(
+      void assertEvents_AA_ArmLengthAngleCmd(
           const char *const __callSiteFileName, /*!< The name of the file containing the call site*/
           const U32 __callSiteLineNumber, /*!< The line number of the call site*/
           const U32 __index, /*!< The index*/
@@ -346,16 +373,16 @@ namespace RobotArm {
     protected:
 
       // ----------------------------------------------------------------------
-      // Event: AA_ClawTiltAngleCmd
+      // Event: AA_ArmHeightAngleCmd
       // ----------------------------------------------------------------------
 
-      void assertEvents_AA_ClawTiltAngleCmd_size(
+      void assertEvents_AA_ArmHeightAngleCmd_size(
           const char *const __callSiteFileName, /*!< The name of the file containing the call site*/
           const U32 __callSiteLineNumber, /*!< The line number of the call site*/
           const U32 size /*!< The asserted size*/
       ) const;
 
-      void assertEvents_AA_ClawTiltAngleCmd(
+      void assertEvents_AA_ArmHeightAngleCmd(
           const char *const __callSiteFileName, /*!< The name of the file containing the call site*/
           const U32 __callSiteLineNumber, /*!< The line number of the call site*/
           const U32 __index, /*!< The index*/

@@ -1,7 +1,7 @@
 // ======================================================================
-// \title  ArmApp/test/ut/GTestBase.cpp
+// \title  ArmDemo/test/ut/GTestBase.cpp
 // \author Auto-generated
-// \brief  cpp file for ArmApp component Google Test harness base class
+// \brief  cpp file for ArmDemo component Google Test harness base class
 //
 // \copyright
 // Copyright 2009-2015, by the California Institute of Technology.
@@ -18,8 +18,8 @@ namespace RobotArm {
   // Construction and destruction
   // ----------------------------------------------------------------------
 
-  ArmAppGTestBase ::
-    ArmAppGTestBase(
+  ArmDemoGTestBase ::
+    ArmDemoGTestBase(
 #if FW_OBJECT_NAMES == 1
         const char *const compName,
         const U32 maxHistorySize
@@ -27,7 +27,7 @@ namespace RobotArm {
         const U32 maxHistorySize
 #endif
     ) :
-        ArmAppTesterBase (
+        ArmDemoTesterBase (
 #if FW_OBJECT_NAMES == 1
             compName,
 #endif
@@ -37,8 +37,8 @@ namespace RobotArm {
 
   }
 
-  ArmAppGTestBase ::
-    ~ArmAppGTestBase(void)
+  ArmDemoGTestBase ::
+    ~ArmDemoGTestBase(void)
   {
 
   }
@@ -47,7 +47,7 @@ namespace RobotArm {
   // Commands
   // ----------------------------------------------------------------------
 
-  void ArmAppGTestBase ::
+  void ArmDemoGTestBase ::
     assertCmdResponse_size(
         const char *const __callSiteFileName,
         const U32 __callSiteLineNumber,
@@ -63,7 +63,7 @@ namespace RobotArm {
       << "  Actual:   " << this->cmdResponseHistory->size() << "\n";
   }
 
-  void ArmAppGTestBase ::
+  void ArmDemoGTestBase ::
     assertCmdResponse(
         const char *const __callSiteFileName,
         const U32 __callSiteLineNumber,
@@ -116,7 +116,7 @@ namespace RobotArm {
   // Telemetry
   // ----------------------------------------------------------------------
 
-  void ArmAppGTestBase ::
+  void ArmDemoGTestBase ::
     assertTlm_size(
         const char *const __callSiteFileName,
         const U32 __callSiteLineNumber,
@@ -136,7 +136,7 @@ namespace RobotArm {
   // Channel: AA_ClawAngle
   // ----------------------------------------------------------------------
 
-  void ArmAppGTestBase ::
+  void ArmDemoGTestBase ::
     assertTlm_AA_ClawAngle_size(
         const char *const __callSiteFileName,
         const U32 __callSiteLineNumber,
@@ -152,7 +152,7 @@ namespace RobotArm {
       << "  Actual:   " << this->tlmHistory_AA_ClawAngle->size() << "\n";
   }
 
-  void ArmAppGTestBase ::
+  void ArmDemoGTestBase ::
     assertTlm_AA_ClawAngle(
         const char *const __callSiteFileName,
         const U32 __callSiteLineNumber,
@@ -186,7 +186,7 @@ namespace RobotArm {
   // Channel: AA_BaseAngle
   // ----------------------------------------------------------------------
 
-  void ArmAppGTestBase ::
+  void ArmDemoGTestBase ::
     assertTlm_AA_BaseAngle_size(
         const char *const __callSiteFileName,
         const U32 __callSiteLineNumber,
@@ -202,7 +202,7 @@ namespace RobotArm {
       << "  Actual:   " << this->tlmHistory_AA_BaseAngle->size() << "\n";
   }
 
-  void ArmAppGTestBase ::
+  void ArmDemoGTestBase ::
     assertTlm_AA_BaseAngle(
         const char *const __callSiteFileName,
         const U32 __callSiteLineNumber,
@@ -233,27 +233,27 @@ namespace RobotArm {
   }
 
   // ----------------------------------------------------------------------
-  // Channel: AA_ArmAngle
+  // Channel: AA_ArmHeightAngle
   // ----------------------------------------------------------------------
 
-  void ArmAppGTestBase ::
-    assertTlm_AA_ArmAngle_size(
+  void ArmDemoGTestBase ::
+    assertTlm_AA_ArmHeightAngle_size(
         const char *const __callSiteFileName,
         const U32 __callSiteLineNumber,
         const U32 size
     ) const
   {
-    ASSERT_EQ(this->tlmHistory_AA_ArmAngle->size(), size)
+    ASSERT_EQ(this->tlmHistory_AA_ArmHeightAngle->size(), size)
       << "\n"
       << "  File:     " << __callSiteFileName << "\n"
       << "  Line:     " << __callSiteLineNumber << "\n"
-      << "  Value:    Size of history for telemetry channel AA_ArmAngle\n"
+      << "  Value:    Size of history for telemetry channel AA_ArmHeightAngle\n"
       << "  Expected: " << size << "\n"
-      << "  Actual:   " << this->tlmHistory_AA_ArmAngle->size() << "\n";
+      << "  Actual:   " << this->tlmHistory_AA_ArmHeightAngle->size() << "\n";
   }
 
-  void ArmAppGTestBase ::
-    assertTlm_AA_ArmAngle(
+  void ArmDemoGTestBase ::
+    assertTlm_AA_ArmHeightAngle(
         const char *const __callSiteFileName,
         const U32 __callSiteLineNumber,
         const U32 __index,
@@ -261,49 +261,49 @@ namespace RobotArm {
     )
     const
   {
-    ASSERT_LT(__index, this->tlmHistory_AA_ArmAngle->size())
+    ASSERT_LT(__index, this->tlmHistory_AA_ArmHeightAngle->size())
       << "\n"
       << "  File:     " << __callSiteFileName << "\n"
       << "  Line:     " << __callSiteLineNumber << "\n"
-      << "  Value:    Index into history of telemetry channel AA_ArmAngle\n"
+      << "  Value:    Index into history of telemetry channel AA_ArmHeightAngle\n"
       << "  Expected: Less than size of history ("
-      << this->tlmHistory_AA_ArmAngle->size() << ")\n"
+      << this->tlmHistory_AA_ArmHeightAngle->size() << ")\n"
       << "  Actual:   " << __index << "\n";
-    const TlmEntry_AA_ArmAngle& e =
-      this->tlmHistory_AA_ArmAngle->at(__index);
+    const TlmEntry_AA_ArmHeightAngle& e =
+      this->tlmHistory_AA_ArmHeightAngle->at(__index);
     ASSERT_EQ(val, e.arg)
       << "\n"
       << "  File:     " << __callSiteFileName << "\n"
       << "  Line:     " << __callSiteLineNumber << "\n"
       << "  Value:    Value at index "
       << __index
-      << " on telmetry channel AA_ArmAngle\n"
+      << " on telmetry channel AA_ArmHeightAngle\n"
       << "  Expected: " << val << "\n"
       << "  Actual:   " << e.arg << "\n";
   }
 
   // ----------------------------------------------------------------------
-  // Channel: AA_ClawTiltAngle
+  // Channel: AA_ArmLengthAngle
   // ----------------------------------------------------------------------
 
-  void ArmAppGTestBase ::
-    assertTlm_AA_ClawTiltAngle_size(
+  void ArmDemoGTestBase ::
+    assertTlm_AA_ArmLengthAngle_size(
         const char *const __callSiteFileName,
         const U32 __callSiteLineNumber,
         const U32 size
     ) const
   {
-    ASSERT_EQ(this->tlmHistory_AA_ClawTiltAngle->size(), size)
+    ASSERT_EQ(this->tlmHistory_AA_ArmLengthAngle->size(), size)
       << "\n"
       << "  File:     " << __callSiteFileName << "\n"
       << "  Line:     " << __callSiteLineNumber << "\n"
-      << "  Value:    Size of history for telemetry channel AA_ClawTiltAngle\n"
+      << "  Value:    Size of history for telemetry channel AA_ArmLengthAngle\n"
       << "  Expected: " << size << "\n"
-      << "  Actual:   " << this->tlmHistory_AA_ClawTiltAngle->size() << "\n";
+      << "  Actual:   " << this->tlmHistory_AA_ArmLengthAngle->size() << "\n";
   }
 
-  void ArmAppGTestBase ::
-    assertTlm_AA_ClawTiltAngle(
+  void ArmDemoGTestBase ::
+    assertTlm_AA_ArmLengthAngle(
         const char *const __callSiteFileName,
         const U32 __callSiteLineNumber,
         const U32 __index,
@@ -311,23 +311,73 @@ namespace RobotArm {
     )
     const
   {
-    ASSERT_LT(__index, this->tlmHistory_AA_ClawTiltAngle->size())
+    ASSERT_LT(__index, this->tlmHistory_AA_ArmLengthAngle->size())
       << "\n"
       << "  File:     " << __callSiteFileName << "\n"
       << "  Line:     " << __callSiteLineNumber << "\n"
-      << "  Value:    Index into history of telemetry channel AA_ClawTiltAngle\n"
+      << "  Value:    Index into history of telemetry channel AA_ArmLengthAngle\n"
       << "  Expected: Less than size of history ("
-      << this->tlmHistory_AA_ClawTiltAngle->size() << ")\n"
+      << this->tlmHistory_AA_ArmLengthAngle->size() << ")\n"
       << "  Actual:   " << __index << "\n";
-    const TlmEntry_AA_ClawTiltAngle& e =
-      this->tlmHistory_AA_ClawTiltAngle->at(__index);
+    const TlmEntry_AA_ArmLengthAngle& e =
+      this->tlmHistory_AA_ArmLengthAngle->at(__index);
     ASSERT_EQ(val, e.arg)
       << "\n"
       << "  File:     " << __callSiteFileName << "\n"
       << "  Line:     " << __callSiteLineNumber << "\n"
       << "  Value:    Value at index "
       << __index
-      << " on telmetry channel AA_ClawTiltAngle\n"
+      << " on telmetry channel AA_ArmLengthAngle\n"
+      << "  Expected: " << val << "\n"
+      << "  Actual:   " << e.arg << "\n";
+  }
+
+  // ----------------------------------------------------------------------
+  // Channel: AA_Cycles
+  // ----------------------------------------------------------------------
+
+  void ArmDemoGTestBase ::
+    assertTlm_AA_Cycles_size(
+        const char *const __callSiteFileName,
+        const U32 __callSiteLineNumber,
+        const U32 size
+    ) const
+  {
+    ASSERT_EQ(this->tlmHistory_AA_Cycles->size(), size)
+      << "\n"
+      << "  File:     " << __callSiteFileName << "\n"
+      << "  Line:     " << __callSiteLineNumber << "\n"
+      << "  Value:    Size of history for telemetry channel AA_Cycles\n"
+      << "  Expected: " << size << "\n"
+      << "  Actual:   " << this->tlmHistory_AA_Cycles->size() << "\n";
+  }
+
+  void ArmDemoGTestBase ::
+    assertTlm_AA_Cycles(
+        const char *const __callSiteFileName,
+        const U32 __callSiteLineNumber,
+        const U32 __index,
+        const U32& val
+    )
+    const
+  {
+    ASSERT_LT(__index, this->tlmHistory_AA_Cycles->size())
+      << "\n"
+      << "  File:     " << __callSiteFileName << "\n"
+      << "  Line:     " << __callSiteLineNumber << "\n"
+      << "  Value:    Index into history of telemetry channel AA_Cycles\n"
+      << "  Expected: Less than size of history ("
+      << this->tlmHistory_AA_Cycles->size() << ")\n"
+      << "  Actual:   " << __index << "\n";
+    const TlmEntry_AA_Cycles& e =
+      this->tlmHistory_AA_Cycles->at(__index);
+    ASSERT_EQ(val, e.arg)
+      << "\n"
+      << "  File:     " << __callSiteFileName << "\n"
+      << "  Line:     " << __callSiteLineNumber << "\n"
+      << "  Value:    Value at index "
+      << __index
+      << " on telmetry channel AA_Cycles\n"
       << "  Expected: " << val << "\n"
       << "  Actual:   " << e.arg << "\n";
   }
@@ -336,7 +386,7 @@ namespace RobotArm {
   // Events
   // ----------------------------------------------------------------------
 
-  void ArmAppGTestBase ::
+  void ArmDemoGTestBase ::
     assertEvents_size(
         const char *const __callSiteFileName,
         const U32 __callSiteLineNumber,
@@ -356,7 +406,7 @@ namespace RobotArm {
   // Event: AA_ClawAngleCmd
   // ----------------------------------------------------------------------
 
-  void ArmAppGTestBase ::
+  void ArmDemoGTestBase ::
     assertEvents_AA_ClawAngleCmd_size(
         const char *const __callSiteFileName,
         const U32 __callSiteLineNumber,
@@ -372,7 +422,7 @@ namespace RobotArm {
       << "  Actual:   " << this->eventHistory_AA_ClawAngleCmd->size() << "\n";
   }
 
-  void ArmAppGTestBase ::
+  void ArmDemoGTestBase ::
     assertEvents_AA_ClawAngleCmd(
         const char *const __callSiteFileName,
         const U32 __callSiteLineNumber,
@@ -405,7 +455,7 @@ namespace RobotArm {
   // Event: AA_BaseAngleCmd
   // ----------------------------------------------------------------------
 
-  void ArmAppGTestBase ::
+  void ArmDemoGTestBase ::
     assertEvents_AA_BaseAngleCmd_size(
         const char *const __callSiteFileName,
         const U32 __callSiteLineNumber,
@@ -421,7 +471,7 @@ namespace RobotArm {
       << "  Actual:   " << this->eventHistory_AA_BaseAngleCmd->size() << "\n";
   }
 
-  void ArmAppGTestBase ::
+  void ArmDemoGTestBase ::
     assertEvents_AA_BaseAngleCmd(
         const char *const __callSiteFileName,
         const U32 __callSiteLineNumber,
@@ -451,99 +501,99 @@ namespace RobotArm {
   }
 
   // ----------------------------------------------------------------------
-  // Event: AA_ArmAngleCmd
+  // Event: AA_ArmLengthAngleCmd
   // ----------------------------------------------------------------------
 
-  void ArmAppGTestBase ::
-    assertEvents_AA_ArmAngleCmd_size(
+  void ArmDemoGTestBase ::
+    assertEvents_AA_ArmLengthAngleCmd_size(
         const char *const __callSiteFileName,
         const U32 __callSiteLineNumber,
         const U32 size
     ) const
   {
-    ASSERT_EQ(size, this->eventHistory_AA_ArmAngleCmd->size())
+    ASSERT_EQ(size, this->eventHistory_AA_ArmLengthAngleCmd->size())
       << "\n"
       << "  File:     " << __callSiteFileName << "\n"
       << "  Line:     " << __callSiteLineNumber << "\n"
-      << "  Value:    Size of history for event AA_ArmAngleCmd\n"
+      << "  Value:    Size of history for event AA_ArmLengthAngleCmd\n"
       << "  Expected: " << size << "\n"
-      << "  Actual:   " << this->eventHistory_AA_ArmAngleCmd->size() << "\n";
+      << "  Actual:   " << this->eventHistory_AA_ArmLengthAngleCmd->size() << "\n";
   }
 
-  void ArmAppGTestBase ::
-    assertEvents_AA_ArmAngleCmd(
+  void ArmDemoGTestBase ::
+    assertEvents_AA_ArmLengthAngleCmd(
         const char *const __callSiteFileName,
         const U32 __callSiteLineNumber,
         const U32 __index,
         const F32 angle
     ) const
   {
-    ASSERT_GT(this->eventHistory_AA_ArmAngleCmd->size(), __index)
+    ASSERT_GT(this->eventHistory_AA_ArmLengthAngleCmd->size(), __index)
       << "\n"
       << "  File:     " << __callSiteFileName << "\n"
       << "  Line:     " << __callSiteLineNumber << "\n"
-      << "  Value:    Index into history of event AA_ArmAngleCmd\n"
+      << "  Value:    Index into history of event AA_ArmLengthAngleCmd\n"
       << "  Expected: Less than size of history ("
-      << this->eventHistory_AA_ArmAngleCmd->size() << ")\n"
+      << this->eventHistory_AA_ArmLengthAngleCmd->size() << ")\n"
       << "  Actual:   " << __index << "\n";
-    const EventEntry_AA_ArmAngleCmd& e =
-      this->eventHistory_AA_ArmAngleCmd->at(__index);
+    const EventEntry_AA_ArmLengthAngleCmd& e =
+      this->eventHistory_AA_ArmLengthAngleCmd->at(__index);
     ASSERT_EQ(angle, e.angle)
       << "\n"
       << "  File:     " << __callSiteFileName << "\n"
       << "  Line:     " << __callSiteLineNumber << "\n"
       << "  Value:    Value of argument angle at index "
       << __index
-      << " in history of event AA_ArmAngleCmd\n"
+      << " in history of event AA_ArmLengthAngleCmd\n"
       << "  Expected: " << angle << "\n"
       << "  Actual:   " << e.angle << "\n";
   }
 
   // ----------------------------------------------------------------------
-  // Event: AA_ClawTiltAngleCmd
+  // Event: AA_ArmHeightAngleCmd
   // ----------------------------------------------------------------------
 
-  void ArmAppGTestBase ::
-    assertEvents_AA_ClawTiltAngleCmd_size(
+  void ArmDemoGTestBase ::
+    assertEvents_AA_ArmHeightAngleCmd_size(
         const char *const __callSiteFileName,
         const U32 __callSiteLineNumber,
         const U32 size
     ) const
   {
-    ASSERT_EQ(size, this->eventHistory_AA_ClawTiltAngleCmd->size())
+    ASSERT_EQ(size, this->eventHistory_AA_ArmHeightAngleCmd->size())
       << "\n"
       << "  File:     " << __callSiteFileName << "\n"
       << "  Line:     " << __callSiteLineNumber << "\n"
-      << "  Value:    Size of history for event AA_ClawTiltAngleCmd\n"
+      << "  Value:    Size of history for event AA_ArmHeightAngleCmd\n"
       << "  Expected: " << size << "\n"
-      << "  Actual:   " << this->eventHistory_AA_ClawTiltAngleCmd->size() << "\n";
+      << "  Actual:   " << this->eventHistory_AA_ArmHeightAngleCmd->size() << "\n";
   }
 
-  void ArmAppGTestBase ::
-    assertEvents_AA_ClawTiltAngleCmd(
+  void ArmDemoGTestBase ::
+    assertEvents_AA_ArmHeightAngleCmd(
         const char *const __callSiteFileName,
         const U32 __callSiteLineNumber,
         const U32 __index,
         const F32 angle
     ) const
   {
-    ASSERT_GT(this->eventHistory_AA_ClawTiltAngleCmd->size(), __index)
+    ASSERT_GT(this->eventHistory_AA_ArmHeightAngleCmd->size(), __index)
       << "\n"
       << "  File:     " << __callSiteFileName << "\n"
       << "  Line:     " << __callSiteLineNumber << "\n"
-      << "  Value:    Index into history of event AA_ClawTiltAngleCmd\n"
+      << "  Value:    Index into history of event AA_ArmHeightAngleCmd\n"
       << "  Expected: Less than size of history ("
-      << this->eventHistory_AA_ClawTiltAngleCmd->size() << ")\n"
+      << this->eventHistory_AA_ArmHeightAngleCmd->size() << ")\n"
       << "  Actual:   " << __index << "\n";
-    const EventEntry_AA_ClawTiltAngleCmd& e =
-      this->eventHistory_AA_ClawTiltAngleCmd->at(__index);
+    const EventEntry_AA_ArmHeightAngleCmd& e =
+      this->eventHistory_AA_ArmHeightAngleCmd->at(__index);
     ASSERT_EQ(angle, e.angle)
       << "\n"
       << "  File:     " << __callSiteFileName << "\n"
       << "  Line:     " << __callSiteLineNumber << "\n"
       << "  Value:    Value of argument angle at index "
       << __index
-      << " in history of event AA_ClawTiltAngleCmd\n"
+      << " in history of event AA_ArmHeightAngleCmd\n"
       << "  Expected: " << angle << "\n"
       << "  Actual:   " << e.angle << "\n";
   }
@@ -552,7 +602,7 @@ namespace RobotArm {
   // From ports
   // ----------------------------------------------------------------------
 
-  void ArmAppGTestBase ::
+  void ArmDemoGTestBase ::
     assertFromPortHistory_size(
         const char *const __callSiteFileName,
         const U32 __callSiteLineNumber,
@@ -572,7 +622,7 @@ namespace RobotArm {
   // From port: position
   // ----------------------------------------------------------------------
 
-  void ArmAppGTestBase ::
+  void ArmDemoGTestBase ::
     assert_from_position_size(
         const char *const __callSiteFileName,
         const U32 __callSiteLineNumber,

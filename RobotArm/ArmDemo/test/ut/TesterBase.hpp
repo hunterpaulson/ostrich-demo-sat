@@ -1,7 +1,7 @@
 // ======================================================================
-// \title  ArmApp/test/ut/TesterBase.hpp
+// \title  ArmDemo/test/ut/TesterBase.hpp
 // \author Auto-generated
-// \brief  hpp file for ArmApp component test harness base class
+// \brief  hpp file for ArmDemo component test harness base class
 //
 // \copyright
 // Copyright 2009-2015, by the California Institute of Technology.
@@ -10,10 +10,10 @@
 //
 // ======================================================================
 
-#ifndef ArmApp_TESTER_BASE_HPP
-#define ArmApp_TESTER_BASE_HPP
+#ifndef ArmDemo_TESTER_BASE_HPP
+#define ArmDemo_TESTER_BASE_HPP
 
-#include <RobotArm/ArmApp/ArmAppComponentAc.hpp>
+#include <RobotArm/ArmDemo/ArmDemoComponentAc.hpp>
 #include <Fw/Types/Assert.hpp>
 #include <Fw/Comp/PassiveComponentBase.hpp>
 #include <stdio.h>
@@ -21,10 +21,10 @@
 
 namespace RobotArm {
 
-  //! \class ArmAppTesterBase
-  //! \brief Auto-generated base class for ArmApp component test harness
+  //! \class ArmDemoTesterBase
+  //! \brief Auto-generated base class for ArmDemo component test harness
   //!
-  class ArmAppTesterBase :
+  class ArmDemoTesterBase :
     public Fw::PassiveComponentBase
   {
 
@@ -34,7 +34,7 @@ namespace RobotArm {
       // Initialization
       // ----------------------------------------------------------------------
 
-      //! Initialize object ArmAppTesterBase
+      //! Initialize object ArmDemoTesterBase
       //!
       virtual void init(
           const NATIVE_INT_TYPE instance = 0 /*!< The instance number*/
@@ -46,6 +46,13 @@ namespace RobotArm {
       // Connectors for 'to' ports
       // Connect these output ports to the input ports under test
       // ----------------------------------------------------------------------
+
+      //! Connect Run to to_Run[portNum]
+      //!
+      void connect_to_Run(
+          const NATIVE_INT_TYPE portNum, /*!< The port number*/
+          Svc::InputSchedPort *const Run /*!< The port*/
+      );
 
       //! Connect CmdDisp to to_CmdDisp[portNum]
       //!
@@ -125,9 +132,9 @@ namespace RobotArm {
       // Construction and destruction
       // ----------------------------------------------------------------------
 
-      //! Construct object ArmAppTesterBase
+      //! Construct object ArmDemoTesterBase
       //!
-      ArmAppTesterBase(
+      ArmDemoTesterBase(
 #if FW_OBJECT_NAMES == 1
           const char *const compName, /*!< The component name*/
           const U32 maxHistorySize /*!< The maximum size of each history*/
@@ -136,9 +143,9 @@ namespace RobotArm {
 #endif
       );
 
-      //! Destroy object ArmAppTesterBase
+      //! Destroy object ArmDemoTesterBase
       //!
-      virtual ~ArmAppTesterBase(void);
+      virtual ~ArmDemoTesterBase(void);
 
       // ----------------------------------------------------------------------
       // Test history
@@ -270,6 +277,19 @@ namespace RobotArm {
       History<FromPortEntry_position>
         *fromPortHistory_position;
 
+    protected:
+
+      // ----------------------------------------------------------------------
+      // Invocation functions for to ports
+      // ----------------------------------------------------------------------
+
+      //! Invoke the to port connected to Run
+      //!
+      void invoke_to_Run(
+          const NATIVE_INT_TYPE portNum, /*!< The port number*/
+          NATIVE_UINT_TYPE context /*!< The call order*/
+      );
+
     public:
 
       // ----------------------------------------------------------------------
@@ -281,6 +301,12 @@ namespace RobotArm {
       //! \return The number of from_position ports
       //!
       NATIVE_INT_TYPE getNum_from_position(void) const;
+
+      //! Get the number of to_Run ports
+      //!
+      //! \return The number of to_Run ports
+      //!
+      NATIVE_INT_TYPE getNum_to_Run(void) const;
 
       //! Get the number of to_CmdDisp ports
       //!
@@ -334,6 +360,14 @@ namespace RobotArm {
 
       //! Check whether port is connected
       //!
+      //! Whether to_Run[portNum] is connected
+      //!
+      bool isConnected_to_Run(
+          const NATIVE_INT_TYPE portNum /*!< The port number*/
+      );
+
+      //! Check whether port is connected
+      //!
       //! Whether to_CmdDisp[portNum] is connected
       //!
       bool isConnected_to_CmdDisp(
@@ -365,17 +399,17 @@ namespace RobotArm {
           F32 angle /*!< The commanded angle*/
       );
 
-      //! Send a AA_ARM_ANG command
+      //! Send a AA_ARM_HEIGHT_ANG command
       //!
-      void sendCmd_AA_ARM_ANG(
+      void sendCmd_AA_ARM_HEIGHT_ANG(
           const NATIVE_INT_TYPE instance, /*!< The instance number*/
           const U32 cmdSeq, /*!< The command sequence number*/
           F32 angle /*!< The commanded angle*/
       );
 
-      //! Send a AA_CLAW_TILT_ANG command
+      //! Send a AA_ARM_LENGTH_ANG command
       //!
-      void sendCmd_AA_CLAW_TILT_ANG(
+      void sendCmd_AA_ARM_LENGTH_ANG(
           const NATIVE_INT_TYPE instance, /*!< The instance number*/
           const U32 cmdSeq, /*!< The command sequence number*/
           F32 angle /*!< The commanded angle*/
@@ -522,48 +556,48 @@ namespace RobotArm {
     protected:
 
       // ----------------------------------------------------------------------
-      // Event: AA_ArmAngleCmd
+      // Event: AA_ArmLengthAngleCmd
       // ----------------------------------------------------------------------
 
-      //! Handle event AA_ArmAngleCmd
+      //! Handle event AA_ArmLengthAngleCmd
       //!
-      virtual void logIn_ACTIVITY_HI_AA_ArmAngleCmd(
+      virtual void logIn_ACTIVITY_HI_AA_ArmLengthAngleCmd(
           F32 angle /*!< The commanded angle*/
       );
 
-      //! A history entry for event AA_ArmAngleCmd
+      //! A history entry for event AA_ArmLengthAngleCmd
       //!
       typedef struct {
         F32 angle;
-      } EventEntry_AA_ArmAngleCmd;
+      } EventEntry_AA_ArmLengthAngleCmd;
 
-      //! The history of AA_ArmAngleCmd events
+      //! The history of AA_ArmLengthAngleCmd events
       //!
-      History<EventEntry_AA_ArmAngleCmd>
-        *eventHistory_AA_ArmAngleCmd;
+      History<EventEntry_AA_ArmLengthAngleCmd>
+        *eventHistory_AA_ArmLengthAngleCmd;
 
     protected:
 
       // ----------------------------------------------------------------------
-      // Event: AA_ClawTiltAngleCmd
+      // Event: AA_ArmHeightAngleCmd
       // ----------------------------------------------------------------------
 
-      //! Handle event AA_ClawTiltAngleCmd
+      //! Handle event AA_ArmHeightAngleCmd
       //!
-      virtual void logIn_ACTIVITY_HI_AA_ClawTiltAngleCmd(
+      virtual void logIn_ACTIVITY_HI_AA_ArmHeightAngleCmd(
           F32 angle /*!< The commanded angle*/
       );
 
-      //! A history entry for event AA_ClawTiltAngleCmd
+      //! A history entry for event AA_ArmHeightAngleCmd
       //!
       typedef struct {
         F32 angle;
-      } EventEntry_AA_ClawTiltAngleCmd;
+      } EventEntry_AA_ArmHeightAngleCmd;
 
-      //! The history of AA_ClawTiltAngleCmd events
+      //! The history of AA_ArmHeightAngleCmd events
       //!
-      History<EventEntry_AA_ClawTiltAngleCmd>
-        *eventHistory_AA_ClawTiltAngleCmd;
+      History<EventEntry_AA_ArmHeightAngleCmd>
+        *eventHistory_AA_ArmHeightAngleCmd;
 
     protected:
 
@@ -640,52 +674,77 @@ namespace RobotArm {
     protected:
 
       // ----------------------------------------------------------------------
-      // Channel: AA_ArmAngle
+      // Channel: AA_ArmHeightAngle
       // ----------------------------------------------------------------------
 
-      //! Handle channel AA_ArmAngle
+      //! Handle channel AA_ArmHeightAngle
       //!
-      virtual void tlmInput_AA_ArmAngle(
+      virtual void tlmInput_AA_ArmHeightAngle(
           const Fw::Time& timeTag, /*!< The time*/
           const F32& val /*!< The channel value*/
       );
 
-      //! A telemetry entry for channel AA_ArmAngle
+      //! A telemetry entry for channel AA_ArmHeightAngle
       //!
       typedef struct {
         Fw::Time timeTag;
         F32 arg;
-      } TlmEntry_AA_ArmAngle;
+      } TlmEntry_AA_ArmHeightAngle;
 
-      //! The history of AA_ArmAngle values
+      //! The history of AA_ArmHeightAngle values
       //!
-      History<TlmEntry_AA_ArmAngle>
-        *tlmHistory_AA_ArmAngle;
+      History<TlmEntry_AA_ArmHeightAngle>
+        *tlmHistory_AA_ArmHeightAngle;
 
     protected:
 
       // ----------------------------------------------------------------------
-      // Channel: AA_ClawTiltAngle
+      // Channel: AA_ArmLengthAngle
       // ----------------------------------------------------------------------
 
-      //! Handle channel AA_ClawTiltAngle
+      //! Handle channel AA_ArmLengthAngle
       //!
-      virtual void tlmInput_AA_ClawTiltAngle(
+      virtual void tlmInput_AA_ArmLengthAngle(
           const Fw::Time& timeTag, /*!< The time*/
           const F32& val /*!< The channel value*/
       );
 
-      //! A telemetry entry for channel AA_ClawTiltAngle
+      //! A telemetry entry for channel AA_ArmLengthAngle
       //!
       typedef struct {
         Fw::Time timeTag;
         F32 arg;
-      } TlmEntry_AA_ClawTiltAngle;
+      } TlmEntry_AA_ArmLengthAngle;
 
-      //! The history of AA_ClawTiltAngle values
+      //! The history of AA_ArmLengthAngle values
       //!
-      History<TlmEntry_AA_ClawTiltAngle>
-        *tlmHistory_AA_ClawTiltAngle;
+      History<TlmEntry_AA_ArmLengthAngle>
+        *tlmHistory_AA_ArmLengthAngle;
+
+    protected:
+
+      // ----------------------------------------------------------------------
+      // Channel: AA_Cycles
+      // ----------------------------------------------------------------------
+
+      //! Handle channel AA_Cycles
+      //!
+      virtual void tlmInput_AA_Cycles(
+          const Fw::Time& timeTag, /*!< The time*/
+          const U32& val /*!< The channel value*/
+      );
+
+      //! A telemetry entry for channel AA_Cycles
+      //!
+      typedef struct {
+        Fw::Time timeTag;
+        U32 arg;
+      } TlmEntry_AA_Cycles;
+
+      //! The history of AA_Cycles values
+      //!
+      History<TlmEntry_AA_Cycles>
+        *tlmHistory_AA_Cycles;
 
     protected:
 
@@ -704,6 +763,10 @@ namespace RobotArm {
       // ----------------------------------------------------------------------
       // To ports
       // ----------------------------------------------------------------------
+
+      //! To port connected to Run
+      //!
+      Svc::OutputSchedPort m_to_Run[1];
 
       //! To port connected to CmdDisp
       //!

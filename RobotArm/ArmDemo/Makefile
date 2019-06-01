@@ -1,6 +1,6 @@
 # derive module name from directory
 
-MODULE_DIR = RobotArm/ArmApp
+MODULE_DIR = RobotArm/ArmDemo
 MODULE = $(subst /,,$(MODULE_DIR))
 
 BUILD_ROOT ?= $(subst /$(MODULE_DIR),,$(CURDIR))

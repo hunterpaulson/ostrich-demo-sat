@@ -1,7 +1,7 @@
 // ======================================================================
-// \title  ArmApp/test/ut/Tester.hpp
+// \title  ArmDemo/test/ut/Tester.hpp
 // \author tcanham
-// \brief  hpp file for ArmApp test harness implementation class
+// \brief  hpp file for ArmDemo test harness implementation class
 //
 // \copyright
 // Copyright 2009-2015, by the California Institute of Technology.
@@ -14,12 +14,12 @@
 #define TESTER_HPP
 
 #include "GTestBase.hpp"
-#include "RobotArm/ArmApp/ArmAppComponentImpl.hpp"
+#include "RobotArm/ArmDemo/ArmDemoComponentImpl.hpp"
 
 namespace RobotArm {
 
   class Tester :
-    public ArmAppGTestBase
+    public ArmDemoGTestBase
   {
 
       // ----------------------------------------------------------------------
@@ -81,7 +81,7 @@ namespace RobotArm {
 
       //! The component under test
       //!
-      ArmAppComponentImpl component;
+      ArmDemoComponentImpl component;
 
   };
 

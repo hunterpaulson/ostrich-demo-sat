@@ -1,7 +1,7 @@
 // ====================================================================== 
-// \title  ArmApp.hpp
+// \title  ArmDemo.hpp
 // \author tcanham
-// \brief  cpp file for ArmApp test harness implementation class
+// \brief  cpp file for ArmDemo test harness implementation class
 //
 // \copyright
 // Copyright 2009-2015, by the California Institute of Technology.
@@ -25,10 +25,10 @@ namespace RobotArm {
   Tester ::
     Tester(void) : 
 #if FW_OBJECT_NAMES == 1
-      ArmAppGTestBase("Tester", MAX_HISTORY_SIZE),
-      component("ArmApp")
+      ArmDemoGTestBase("Tester", MAX_HISTORY_SIZE),
+      component("ArmDemo")
 #else
-      ArmAppGTestBase(MAX_HISTORY_SIZE),
+      ArmDemoGTestBase(MAX_HISTORY_SIZE),
       component()
 #endif
   {
@@ -72,6 +72,12 @@ namespace RobotArm {
   void Tester ::
     connectPorts(void) 
   {
+
+    // Run
+    this->connect_to_Run(
+        0,
+        this->component.get_Run_InputPort(0)
+    );
 
     // CmdDisp
     this->connect_to_CmdDisp(
