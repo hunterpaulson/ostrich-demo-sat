@@ -195,7 +195,7 @@ RPI_MODULES := \
 
 RobotArm_APP_MODULES := \
 	RobotArm/Top \
-	RobotArm/ArmApp \
+	RobotArm/ArmDemo \
 	RobotArm/PcaServo \
 	RobotArm/ServoPort
 	

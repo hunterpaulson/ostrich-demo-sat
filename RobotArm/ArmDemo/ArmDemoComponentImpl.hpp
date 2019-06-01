@@ -1,7 +1,7 @@
 // ======================================================================
-// \title  ArmAppComponentImpl.hpp
+// \title  ArmDemoComponentImpl.hpp
 // \author tcanham
-// \brief  hpp file for ArmApp component implementation class
+// \brief  hpp file for ArmDemo component implementation class
 //
 // \copyright
 // Copyright 2009-2015, by the California Institute of Technology.
@@ -10,15 +10,15 @@
 //
 // ======================================================================
 
-#ifndef ArmApp_HPP
-#define ArmApp_HPP
+#ifndef ArmDemo_HPP
+#define ArmDemo_HPP
 
-#include "RobotArm/ArmApp/ArmAppComponentAc.hpp"
+#include "RobotArm/ArmDemo/ArmDemoComponentAc.hpp"
 
 namespace RobotArm {
 
-  class ArmAppComponentImpl :
-    public ArmAppComponentBase
+  class ArmDemoComponentImpl :
+    public ArmDemoComponentBase
   {
 
     public:
@@ -27,9 +27,9 @@ namespace RobotArm {
       // Construction, initialization, and destruction
       // ----------------------------------------------------------------------
 
-      //! Construct object ArmApp
+      //! Construct object ArmDemo
       //!
-      ArmAppComponentImpl(
+      ArmDemoComponentImpl(
 #if FW_OBJECT_NAMES == 1
           const char *const compName /*!< The component name*/
 #else
@@ -37,16 +37,16 @@ namespace RobotArm {
 #endif
       );
 
-      //! Initialize object ArmApp
+      //! Initialize object ArmDemo
       //!
       void init(
           const NATIVE_INT_TYPE queueDepth, /*!< The queue depth*/
           const NATIVE_INT_TYPE instance = 0 /*!< The instance number*/
       );
 
-      //! Destroy object ArmApp
+      //! Destroy object ArmDemo
       //!
-      ~ArmAppComponentImpl(void);
+      ~ArmDemoComponentImpl(void);
 
     PRIVATE:
 

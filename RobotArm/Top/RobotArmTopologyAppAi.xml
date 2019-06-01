@@ -20,7 +20,7 @@
    <import_component_type>Svc/PassiveTextLogger/PassiveTextLoggerComponentAi.xml</import_component_type>
    <import_component_type>Drv/LinuxI2cDriver/LinuxI2cDriverComponentAi.xml</import_component_type>
 
-   <import_component_type>RobotArm/ArmApp/ArmAppComponentAi.xml</import_component_type>
+   <import_component_type>RobotArm/ArmDemo/ArmDemoComponentAi.xml</import_component_type>
    
    <import_component_type>RobotArm/PcaServo/PcaServoComponentAi.xml</import_component_type>
 
@@ -52,7 +52,7 @@
    
    <instance namespace="Drv" name="i2cDrv" type="LinuxI2cDriver" base_id="2000"  base_id_window="20" />
    
-   <instance namespace="RobotArm" name="armDemo" type="ArmApp" base_id="2700"  base_id_window="100" />
+   <instance namespace="RobotArm" name="armDemo" type="ArmDemo" base_id="2700"  base_id_window="100" />
 
    <instance namespace="RobotArm" name="clawServo" type="PcaServo" base_id="2800"  base_id_window="100" />
 
@@ -374,7 +374,7 @@
        <source component = "rateGroup1HzComp" port = "RateGroupMemberOut" type = "Sched" num = "0"/>
         <target component = "chanTlm" port = "Run" type = "Sched" num = "0"/>
    </connection>
-   <connection name = "armAppRg">
+   <connection name = "armDemoRg">
        <source component = "rateGroup1HzComp" port = "RateGroupMemberOut" type = "Sched" num = "1"/>
         <target component = "armDemo" port = "Run" type = "Sched" num = "0"/>
    </connection>

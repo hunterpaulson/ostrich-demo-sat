@@ -1,7 +1,7 @@
 // ======================================================================
-// \title  ArmAppComponentImpl.cpp
+// \title  ArmDemoComponentImpl.cpp
 // \author tcanham
-// \brief  cpp file for ArmApp component implementation class
+// \brief  cpp file for ArmDemo component implementation class
 //
 // \copyright
 // Copyright 2009-2015, by the California Institute of Technology.
@@ -11,8 +11,8 @@
 // ======================================================================
 
 
-#include <RobotArm/ArmApp/ArmAppComponentImpl.hpp>
-#include <RobotArm/ArmApp/ArmAppComponentImplCfg.hpp>
+#include <RobotArm/ArmDemo/ArmDemoComponentImpl.hpp>
+#include <RobotArm/ArmDemo/ArmDemoComponentImplCfg.hpp>
 #include "Fw/Types/BasicTypes.hpp"
 
 namespace RobotArm {
@@ -21,31 +21,31 @@ namespace RobotArm {
   // Construction, initialization, and destruction
   // ----------------------------------------------------------------------
 
-  ArmAppComponentImpl ::
+  ArmDemoComponentImpl ::
 #if FW_OBJECT_NAMES == 1
-    ArmAppComponentImpl(
+    ArmDemoComponentImpl(
         const char *const compName
     ) :
-      ArmAppComponentBase(compName)
+      ArmDemoComponentBase(compName)
 #else
-    ArmAppComponentImpl(void)
+    ArmDemoComponentImpl(void)
 #endif
 	,m_cycles(0)
   {
 
   }
 
-  void ArmAppComponentImpl ::
+  void ArmDemoComponentImpl ::
     init(
         const NATIVE_INT_TYPE queueDepth,
         const NATIVE_INT_TYPE instance
     )
   {
-    ArmAppComponentBase::init(queueDepth, instance);
+    ArmDemoComponentBase::init(queueDepth, instance);
   }
 
-  ArmAppComponentImpl ::
-    ~ArmAppComponentImpl(void)
+  ArmDemoComponentImpl ::
+    ~ArmDemoComponentImpl(void)
   {
 
   }
@@ -54,7 +54,7 @@ namespace RobotArm {
   // Command handler implementations
   // ----------------------------------------------------------------------
 
-  void ArmAppComponentImpl ::
+  void ArmDemoComponentImpl ::
     AA_CLAW_ANG_cmdHandler(
         const FwOpcodeType opCode,
         const U32 cmdSeq,
@@ -72,7 +72,7 @@ namespace RobotArm {
       this->cmdResponse_out(opCode,cmdSeq,Fw::COMMAND_OK);
   }
 
-  void ArmAppComponentImpl ::
+  void ArmDemoComponentImpl ::
     AA_BASE_ANG_cmdHandler(
         const FwOpcodeType opCode,
         const U32 cmdSeq,
@@ -89,7 +89,7 @@ namespace RobotArm {
       this->cmdResponse_out(opCode,cmdSeq,Fw::COMMAND_OK);
   }
 
-  void ArmAppComponentImpl ::
+  void ArmDemoComponentImpl ::
     AA_ARM_HEIGHT_ANG_cmdHandler(
         const FwOpcodeType opCode,
         const U32 cmdSeq,
@@ -106,7 +106,7 @@ namespace RobotArm {
       this->cmdResponse_out(opCode,cmdSeq,Fw::COMMAND_OK);
   }
 
-  void ArmAppComponentImpl ::
+  void ArmDemoComponentImpl ::
     AA_ARM_LENGTH_ANG_cmdHandler(
         const FwOpcodeType opCode,
         const U32 cmdSeq,
@@ -127,7 +127,7 @@ namespace RobotArm {
   // Handler implementations for user-defined typed input ports
   // ----------------------------------------------------------------------
 
-  void ArmAppComponentImpl ::
+  void ArmDemoComponentImpl ::
     Run_handler(
         const NATIVE_INT_TYPE portNum,
         NATIVE_UINT_TYPE context

@@ -61,7 +61,7 @@ RobotArm::PcaServoComponentImpl armHeightServo("armServo");
 RobotArm::PcaServoComponentImpl armLengthServo("clawTiltServo");
 
 // arm demo component
-RobotArm::ArmAppComponentImpl armDemo("armDemo");
+RobotArm::ArmDemoComponentImpl armDemo("armDemo");
 
 void constructApp(int port_number, char* hostname) {
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?oxygen RNGSchema="file:../xml/ISF_Component_Schema.rnc" type="compact"?>
 
-<component name="ArmApp" kind="active" namespace="RobotArm">
+<component name="ArmDemo" kind="active" namespace="RobotArm">
     <import_port_type>RobotArm/ServoPort/ServoPortAi.xml</import_port_type>
     <import_port_type>Svc/Sched/SchedPortAi.xml</import_port_type>
     <comment>Arm Demo App component</comment>

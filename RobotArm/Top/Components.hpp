@@ -35,7 +35,7 @@ void constructApp(int port_number, char* hostname);
 #include <RobotArm/PcaServo/PcaServoComponentImpl.hpp>
 
 // Main app
-#include <RobotArm/ArmApp/ArmAppComponentImpl.hpp>
+#include <RobotArm/ArmDemo/ArmDemoComponentImpl.hpp>
 
 extern Svc::RateGroupDriverImpl rateGroupDriverComp;
 extern Svc::ActiveRateGroupImpl rateGroup1HzComp;
@@ -60,6 +60,6 @@ extern RobotArm::PcaServoComponentImpl armHeightServo;
 extern RobotArm::PcaServoComponentImpl armLengthServo;
 
 // arm demo component
-extern RobotArm::ArmAppComponentImpl armDemo;
+extern RobotArm::ArmDemoComponentImpl armDemo;
 
 #endif
