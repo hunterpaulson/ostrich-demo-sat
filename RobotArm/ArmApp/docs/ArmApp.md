@@ -10,9 +10,9 @@
 | | | |angle|F32|The commanded angle|
 |AA_BASE_ANG|1 (0x1)|Base angle command| | |
 | | | |angle|F32|The commanded angle|
-|AA_ARM_ANG|2 (0x2)|ARM angle command| | |
+|AA_ARM_HEIGHT_ANG|2 (0x2)|Arm height angle command| | |
 | | | |angle|F32|The commanded angle|
-|AA_CLAW_TILT_ANG|3 (0x3)|Claw tilt angle command| | |
+|AA_ARM_LENGTH_ANG|3 (0x3)|Arm length angle command| | |
 | | | |angle|F32|The commanded angle|
 
 ## Telemetry Channel List
@@ -21,8 +21,9 @@
 |---|---|---|---|
 |AA_ClawAngle|0 (0x0)|F32|Commanded angle|
 |AA_BaseAngle|1 (0x1)|F32|Commanded angle|
-|AA_ArmAngle|2 (0x2)|F32|Commanded angle|
-|AA_ClawTiltAngle|3 (0x3)|F32|Commanded angle|
+|AA_ArmHeightAngle|2 (0x2)|F32|Commanded angle|
+|AA_ArmLengthAngle|3 (0x3)|F32|Commanded angle|
+|AA_Cycles|4 (0x4)|U32|Scheduler cycles|
 
 ## Event List
 
@@ -32,7 +33,7 @@
 | | | |angle|F32||The commanded angle|
 |AA_BaseAngleCmd|1 (0x1)|Base Angle commanded| | | | |
 | | | |angle|F32||The commanded angle|
-|AA_ArmAngleCmd|2 (0x2)|Arm Angle commanded| | | | |
+|AA_ArmLengthAngleCmd|2 (0x2)|Arm length commanded| | | | |
 | | | |angle|F32||The commanded angle|
-|AA_ClawTiltAngleCmd|3 (0x3)|Claw tilt angle commanded| | | | |
+|AA_ArmHeightAngleCmd|3 (0x3)|Arm height angle commanded| | | | |
 | | | |angle|F32||The commanded angle|

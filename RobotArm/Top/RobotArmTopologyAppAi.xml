@@ -58,9 +58,9 @@
 
    <instance namespace="RobotArm" name="baseServo" type="PcaServo" base_id="2900"  base_id_window="100" />
 
-   <instance namespace="RobotArm" name="armServo" type="PcaServo" base_id="3000"  base_id_window="100" />
+   <instance namespace="RobotArm" name="armHeightServo" type="PcaServo" base_id="3000"  base_id_window="100" />
 
-   <instance namespace="RobotArm" name="clawTiltServo" type="PcaServo" base_id="3100"  base_id_window="100" />
+   <instance namespace="RobotArm" name="armLengthServo" type="PcaServo" base_id="3100"  base_id_window="100" />
 
    <!-- Command Registration/Dispatch/Reply Connections -->
    
@@ -90,12 +90,12 @@
         <source component = "baseServo" port = "CmdReg" type = "CmdReg" num = "0"/>
         <target component = "cmdDisp" port = "compCmdReg" type = "CmdReg" num = "5"/>
    </connection>
-   <connection name = "ArmServoReg">
-        <source component = "armServo" port = "CmdReg" type = "CmdReg" num = "0"/>
+   <connection name = "armHeightReg">
+        <source component = "armHeightServo" port = "CmdReg" type = "CmdReg" num = "0"/>
         <target component = "cmdDisp" port = "compCmdReg" type = "CmdReg" num = "6"/>
    </connection>
-   <connection name = "ClawTiltServoReg">
-        <source component = "clawTiltServo" port = "CmdReg" type = "CmdReg" num = "0"/>
+   <connection name = "armLengthServoReg">
+        <source component = "armLengthServo" port = "CmdReg" type = "CmdReg" num = "0"/>
         <target component = "cmdDisp" port = "compCmdReg" type = "CmdReg" num = "7"/>
    </connection>
 
@@ -125,13 +125,13 @@
         <source component = "cmdDisp" port = "compCmdSend" type = "Cmd" num = "5"/>
         <target component = "baseServo" port = "CmdDisp" type = "Cmd" num = "0"/>
    </connection>
-   <connection name = "ArmServoDisp">
+   <connection name = "armHeightDisp">
         <source component = "cmdDisp" port = "compCmdSend" type = "Cmd" num = "6"/>
-        <target component = "clawServo" port = "CmdDisp" type = "Cmd" num = "0"/>
+        <target component = "armHeightServo" port = "CmdDisp" type = "Cmd" num = "0"/>
    </connection>
-   <connection name = "ClawTiltServoDisp">
+   <connection name = "armLengthServoDisp">
         <source component = "cmdDisp" port = "compCmdSend" type = "Cmd" num = "7"/>
-        <target component = "clawTiltServo" port = "CmdDisp" type = "Cmd" num = "0"/>
+        <target component = "armLengthServo" port = "CmdDisp" type = "Cmd" num = "0"/>
    </connection>
    
     <!-- Command Reply Ports - Go to the same response port on the dispatcher -->
@@ -160,12 +160,12 @@
        <source component = "baseServo" port = "CmdStatus" type = "CmdResponse" num = "0"/>
         <target component = "cmdDisp" port = "compCmdStat" type = "CmdResponse" num = "0"/>
    </connection>
-   <connection name = "ArmServoReply">
-       <source component = "armServo" port = "CmdStatus" type = "CmdResponse" num = "0"/>
+   <connection name = "armHeightReply">
+       <source component = "armHeightServo" port = "CmdStatus" type = "CmdResponse" num = "0"/>
         <target component = "cmdDisp" port = "compCmdStat" type = "CmdResponse" num = "0"/>
    </connection>
-   <connection name = "ClawTiltServoReply">
-       <source component = "clawTiltServo" port = "CmdStatus" type = "CmdResponse" num = "0"/>
+   <connection name = "armLengthServoReply">
+       <source component = "armLengthServo" port = "CmdStatus" type = "CmdResponse" num = "0"/>
         <target component = "cmdDisp" port = "compCmdStat" type = "CmdResponse" num = "0"/>
    </connection>
 
@@ -219,12 +219,12 @@
        <source component = "baseServo" port = "Log" type = "Log" num = "0"/>
         <target component = "eventLogger" port = "LogRecv" type = "Log" num = "0"/>
    </connection>
-   <connection name = "ArmServoLog">
-       <source component = "armServo" port = "Log" type = "Log" num = "0"/>
+   <connection name = "armHeightLog">
+       <source component = "armHeightServo" port = "Log" type = "Log" num = "0"/>
         <target component = "eventLogger" port = "LogRecv" type = "Log" num = "0"/>
    </connection>
-   <connection name = "ClawTiltServoLog">
-       <source component = "clawTiltServo" port = "Log" type = "Log" num = "0"/>
+   <connection name = "armLengthServoLog">
+       <source component = "armLengthServo" port = "Log" type = "Log" num = "0"/>
         <target component = "eventLogger" port = "LogRecv" type = "Log" num = "0"/>
    </connection>
    
@@ -266,12 +266,12 @@
        <source component = "baseServo" port = "LogText" type = "LogText" num = "0"/>
         <target component = "textLogger" port = "TextLogger" type = "LogText" num = "0"/>
    </connection>
-   <connection name = "ArmServoTextLogger">
-       <source component = "armServo" port = "LogText" type = "LogText" num = "0"/>
+   <connection name = "armHeightTextLogger">
+       <source component = "armHeightServo" port = "LogText" type = "LogText" num = "0"/>
         <target component = "textLogger" port = "TextLogger" type = "LogText" num = "0"/>
    </connection>
-   <connection name = "ClawTiltServoTextLogger">
-       <source component = "clawTiltServo" port = "LogText" type = "LogText" num = "0"/>
+   <connection name = "armLengthServoTextLogger">
+       <source component = "armLengthServo" port = "LogText" type = "LogText" num = "0"/>
         <target component = "textLogger" port = "TextLogger" type = "LogText" num = "0"/>
    </connection>
 
@@ -290,7 +290,7 @@
         <target component = "chanTlm" port = "TlmRecv" type = "Tlm" num = "0"/>
    </connection>
    <connection name = "ArmDemoTlm">
-       <source component = "rpiDemo" port = "Tlm" type = "Tlm" num = "0"/>
+       <source component = "armDemo" port = "Tlm" type = "Tlm" num = "0"/>
         <target component = "chanTlm" port = "TlmRecv" type = "Tlm" num = "0"/>
    </connection>
    <connection name = "ClawServoTlm">
@@ -301,12 +301,12 @@
        <source component = "baseServo" port = "Tlm" type = "Tlm" num = "0"/>
         <target component = "chanTlm" port = "TlmRecv" type = "Tlm" num = "0"/>
    </connection>
-   <connection name = "ArmServoTlm">
-       <source component = "armServo" port = "Tlm" type = "Tlm" num = "0"/>
+   <connection name = "armHeightTlm">
+       <source component = "armHeightServo" port = "Tlm" type = "Tlm" num = "0"/>
         <target component = "chanTlm" port = "TlmRecv" type = "Tlm" num = "0"/>
    </connection>
-   <connection name = "ClawTiltServoTlm">
-       <source component = "clawTiltServo" port = "Tlm" type = "Tlm" num = "0"/>
+   <connection name = "armLengthServoTlm">
+       <source component = "armLengthServo" port = "Tlm" type = "Tlm" num = "0"/>
         <target component = "chanTlm" port = "TlmRecv" type = "Tlm" num = "0"/>
    </connection>
 
@@ -348,23 +348,23 @@
        <source component = "baseServo" port = "Time" type = "Time" num = "0"/>
         <target component = "linuxTime" port = "timeGetPort" type = "Time" num = "0"/>
    </connection>
-   <connection name = "ArmServoTime">
-       <source component = "armServo" port = "Time" type = "Time" num = "0"/>
+   <connection name = "armHeightTime">
+       <source component = "armHeightServo" port = "Time" type = "Time" num = "0"/>
         <target component = "linuxTime" port = "timeGetPort" type = "Time" num = "0"/>
    </connection>
-   <connection name = "ClawTiltServoTime">
-       <source component = "clawTiltServo" port = "Time" type = "Time" num = "0"/>
+   <connection name = "armLengthServoTime">
+       <source component = "armLengthServo" port = "Time" type = "Time" num = "0"/>
         <target component = "linuxTime" port = "timeGetPort" type = "Time" num = "0"/>
    </connection>
 
-   <!-- Rate Group Connections -->
-   
    <!-- Linux Timer Connection -->
    <connection name = "LinuxTimer">
        <source component = "linuxTimer" port = "CycleOut" type = "Cycle" num = "0"/>
         <target component = "rateGroupDriverComp" port = "CycleIn" type = "Cycle" num = "0"/>
    </connection>
 
+   <!-- Rate Group Connections -->
+   
    <!-- 1Hz Rate Group -->
    <connection name = "rateGroupDriverCompRg1Hz">
        <source component = "rateGroupDriverComp" port = "CycleOut" type = "Cycle" num = "1"/>
@@ -373,6 +373,10 @@
    <connection name = "chanTlmRg">
        <source component = "rateGroup1HzComp" port = "RateGroupMemberOut" type = "Sched" num = "0"/>
         <target component = "chanTlm" port = "Run" type = "Sched" num = "0"/>
+   </connection>
+   <connection name = "armAppRg">
+       <source component = "rateGroup1HzComp" port = "RateGroupMemberOut" type = "Sched" num = "1"/>
+        <target component = "armDemo" port = "Run" type = "Sched" num = "0"/>
    </connection>
    
 
@@ -415,12 +419,12 @@
        <source component = "baseServo" port = "i2c" type = "I2cWrite" num = "0"/>
         <target component = "i2cDrv" port = "write" type = "I2cWrite" num = "0"/>
    </connection>
-   <connection name = "ArmServoI2c">
-       <source component = "armServo" port = "i2c" type = "I2cWrite" num = "0"/>
+   <connection name = "armHeightI2c">
+       <source component = "armHeightServo" port = "i2c" type = "I2cWrite" num = "0"/>
         <target component = "i2cDrv" port = "write" type = "I2cWrite" num = "0"/>
    </connection>
-   <connection name = "ClawTiltServoI2c">
-       <source component = "clawTiltServo" port = "i2c" type = "I2cWrite" num = "0"/>
+   <connection name = "armLengthServoI2c">
+       <source component = "armLengthServo" port = "i2c" type = "I2cWrite" num = "0"/>
         <target component = "i2cDrv" port = "write" type = "I2cWrite" num = "0"/>
    </connection>
    
@@ -435,11 +439,11 @@
    </connection>
    <connection name = "App2Arm">
        <source component = "armDemo" port = "position" type = "ServoSet" num = "2"/>
-        <target component = "armServo" port = "position" type = "ServoSet" num = "0"/>
+        <target component = "armHeightServo" port = "position" type = "ServoSet" num = "0"/>
    </connection>
-   <connection name = "App2ClawTilt">
+   <connection name = "App2armLength">
        <source component = "armDemo" port = "position" type = "ServoSet" num = "3"/>
-        <target component = "clawTiltServo" port = "position" type = "ServoSet" num = "0"/>
+        <target component = "armLengthServo" port = "position" type = "ServoSet" num = "0"/>
    </connection>
 
 </assembly>

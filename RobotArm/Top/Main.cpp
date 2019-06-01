@@ -59,7 +59,7 @@ int main(int argc, char* argv[]) {
 
     // Give time for threads to exit
     (void) printf("Waiting for threads...\n");
-    Os::Task::delay(1000);
+    Os::Task::delay(500);
 
     (void) printf("Exiting...\n");
 

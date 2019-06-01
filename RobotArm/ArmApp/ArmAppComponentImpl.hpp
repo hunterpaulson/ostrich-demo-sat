@@ -72,7 +72,7 @@ namespace RobotArm {
 
       //! Implementation for AA_ARM_ANG command handler
       //! ARM angle command
-      void AA_ARM_ANG_cmdHandler(
+      void AA_ARM_HEIGHT_ANG_cmdHandler(
           const FwOpcodeType opCode, /*!< The opcode*/
           const U32 cmdSeq, /*!< The command sequence number*/
           F32 angle /*!< The commanded angle*/
@@ -80,11 +80,21 @@ namespace RobotArm {
 
       //! Implementation for AA_CLAW_TILT_ANG command handler
       //! Claw tilt angle command
-      void AA_CLAW_TILT_ANG_cmdHandler(
+      void AA_ARM_LENGTH_ANG_cmdHandler(
           const FwOpcodeType opCode, /*!< The opcode*/
           const U32 cmdSeq, /*!< The command sequence number*/
           F32 angle /*!< The commanded angle*/
       );
+
+      //! Handler implementation for Run
+      //!
+      void Run_handler(
+          const NATIVE_INT_TYPE portNum, /*!< The port number*/
+          NATIVE_UINT_TYPE context /*!< The call order*/
+      );
+
+      U32 m_cycles; // cycle count
+
 
 
     };

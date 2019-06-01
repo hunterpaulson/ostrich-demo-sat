@@ -3,11 +3,17 @@
 
 <component name="ArmApp" kind="active" namespace="RobotArm">
     <import_port_type>RobotArm/ServoPort/ServoPortAi.xml</import_port_type>
+    <import_port_type>Svc/Sched/SchedPortAi.xml</import_port_type>
     <comment>Arm Demo App component</comment>
     <ports>
         <port name="position" data_type="RobotArm::ServoSet" kind="output" max_number="4">
             <comment>
             Servo position port
+            </comment>
+        </port>
+        <port name="Run" data_type="Svc::Sched" kind="async_input" >
+            <comment>
+            Run port for starting packet send cycle
             </comment>
         </port>
     </ports>
@@ -34,10 +40,10 @@
                 </arg>
              </args>
         </command>
-        <!-- Arm Angle command -->
-        <command kind="async" opcode="0x2" mnemonic="AA_ARM_ANG" >
+        <!-- Arm Height angle command -->
+        <command kind="async" opcode="0x2" mnemonic="AA_ARM_HEIGHT_ANG" >
             <comment>
-            ARM angle command
+            Arm height angle command
             </comment>
             <args>
                 <arg name="angle" type="F32">
@@ -45,10 +51,10 @@
                 </arg>
              </args>
         </command>
-        <!-- Claw Tilt Angle command -->
-        <command kind="async" opcode="0x3" mnemonic="AA_CLAW_TILT_ANG" >
+        <!-- Arm length angle command -->
+        <command kind="async" opcode="0x3" mnemonic="AA_ARM_LENGTH_ANG" >
             <comment>
-            Claw tilt angle command
+            Arm length angle command
             </comment>
             <args>
                 <arg name="angle" type="F32">
@@ -80,10 +86,10 @@
 	            </arg>
 	        </args>
 	    </event>
-	    <!-- Commanded arm angle event -->
-	    <event id="2" name="AA_ArmAngleCmd" severity="ACTIVITY_HI" format_string = "Arm commanded to %f"  >
+	    <!-- Commanded arm length angle event -->
+	    <event id="2" name="AA_ArmLengthAngleCmd" severity="ACTIVITY_HI" format_string = "Arm length commanded to %f"  >
 	        <comment>
-	        Arm Angle commanded
+	        Arm length commanded
 	        </comment>
 	        <args>
 	            <arg name="angle" type="F32">
@@ -91,10 +97,10 @@
 	            </arg>
 	        </args>
 	    </event>
-	    <!-- Commanded claw tilt angle event -->
-	    <event id="3" name="AA_ClawTiltAngleCmd" severity="ACTIVITY_HI" format_string = "Claw tilt commanded to %f"  >
+	    <!-- Commanded arm height event -->
+	    <event id="3" name="AA_ArmHeightAngleCmd" severity="ACTIVITY_HI" format_string = "Arm height commanded to %f"  >
 	        <comment>
-	        Claw tilt angle commanded
+	        Arm height angle commanded
 	        </comment>
 	        <args>
 	            <arg name="angle" type="F32">
@@ -114,14 +120,19 @@
             Commanded angle
             </comment>
         </channel>
-        <channel id="2" name="AA_ArmAngle" data_type="F32">
+        <channel id="2" name="AA_ArmHeightAngle" data_type="F32">
             <comment>
             Commanded angle
             </comment>
         </channel>
-        <channel id="3" name="AA_ClawTiltAngle" data_type="F32">
+        <channel id="3" name="AA_ArmLengthAngle" data_type="F32">
             <comment>
             Commanded angle
+            </comment>
+        </channel>
+        <channel id="4" name="AA_Cycles" data_type="U32">
+            <comment>
+            Scheduler cycles
             </comment>
         </channel>
     </telemetry>

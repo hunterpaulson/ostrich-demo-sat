@@ -13,6 +13,7 @@
 
 #include <RobotArm/PcaServo/PcaServoComponentImpl.hpp>
 #include "Fw/Types/BasicTypes.hpp"
+#include "Os/Task.hpp"
 
 namespace RobotArm {
 
@@ -133,6 +134,9 @@ namespace RobotArm {
 	  this->m_buff.setsize(2);
 	  // call I2C port
 	  this->i2c_out(0,SERVO_BRD_ADDR,this->m_buff);
+
+	  // delay for reset
+	  Os::Task::delay(500);
 
 	  // set prescale value
 	  this->m_data[0] = 0xfe;

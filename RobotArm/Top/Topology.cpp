@@ -57,8 +57,8 @@ Drv::LinuxI2cDriverComponentImpl i2cDrv("i2cDrv");
 // servo controllers
 RobotArm::PcaServoComponentImpl clawServo("clawServo");
 RobotArm::PcaServoComponentImpl baseServo("baseServo");
-RobotArm::PcaServoComponentImpl armServo("armServo");
-RobotArm::PcaServoComponentImpl clawTiltServo("clawTiltServo");
+RobotArm::PcaServoComponentImpl armHeightServo("armServo");
+RobotArm::PcaServoComponentImpl armLengthServo("clawTiltServo");
 
 // arm demo component
 RobotArm::ArmAppComponentImpl armDemo("armDemo");
@@ -97,8 +97,8 @@ void constructApp(int port_number, char* hostname) {
 
     clawServo.init(10,0);
     baseServo.init(10,0);
-    armServo.init(10,0);
-    clawTiltServo.init(10,0);
+    armHeightServo.init(10,0);
+    armLengthServo.init(10,0);
 
     armDemo.init(10,0);
 
@@ -113,8 +113,8 @@ void constructApp(int port_number, char* hostname) {
 
     clawServo.regCommands();
     baseServo.regCommands();
-    armServo.regCommands();
-    clawTiltServo.regCommands();
+    armHeightServo.regCommands();
+    armLengthServo.regCommands();
 
     // open i2c driver
     i2cDrv.open("/dev/i2c-1");
@@ -124,8 +124,8 @@ void constructApp(int port_number, char* hostname) {
     // set servo instance for each servo
     clawServo.configure(0,0x40);
     baseServo.configure(1,0x40);
-    armServo.configure(2,0x40);
-    clawTiltServo.configure(3,0x40);
+    armHeightServo.configure(2,0x40);
+    armLengthServo.configure(3,0x40);
     // configure card with one of the servos
     clawServo.configChip();
 
@@ -145,8 +145,8 @@ void constructApp(int port_number, char* hostname) {
 
     clawServo.start(0, 100, 10*1024);
     baseServo.start(0, 100, 10*1024);
-    armServo.start(0, 100, 10*1024);
-    clawTiltServo.start(0, 100, 10*1024);
+    armHeightServo.start(0, 100, 10*1024);
+    armLengthServo.start(0, 100, 10*1024);
 
     // Initialize socket server
     sockGndIf.startSocketTask(100, 10*1024, port_number, hostname, Svc::SocketGndIfImpl::SEND_UDP);
@@ -163,8 +163,8 @@ void exitTasks(void) {
 
     clawServo.exit();
     baseServo.exit();
-    armServo.exit();
-    clawTiltServo.exit();
+    armHeightServo.exit();
+    armLengthServo.exit();
 
     armDemo.exit();
 }

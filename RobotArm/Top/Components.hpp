@@ -56,8 +56,8 @@ extern Drv::LinuxI2cDriverComponentImpl i2cDrv;
 // servo controllers
 extern RobotArm::PcaServoComponentImpl clawServo;
 extern RobotArm::PcaServoComponentImpl baseServo;
-extern RobotArm::PcaServoComponentImpl armServo;
-extern RobotArm::PcaServoComponentImpl clawTiltServo;
+extern RobotArm::PcaServoComponentImpl armHeightServo;
+extern RobotArm::PcaServoComponentImpl armLengthServo;
 
 // arm demo component
 extern RobotArm::ArmAppComponentImpl armDemo;

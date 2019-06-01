@@ -30,6 +30,7 @@ namespace RobotArm {
 #else
     ArmAppComponentImpl(void)
 #endif
+	,m_cycles(0)
   {
 
   }
@@ -89,37 +90,50 @@ namespace RobotArm {
   }
 
   void ArmAppComponentImpl ::
-    AA_ARM_ANG_cmdHandler(
+    AA_ARM_HEIGHT_ANG_cmdHandler(
         const FwOpcodeType opCode,
         const U32 cmdSeq,
         F32 angle
     )
   {
       // write to motor port
-      this->position_out(ARM_PORT,angle);
+      this->position_out(ARM_HEIGHT_PORT,angle);
       // send event
-      this->log_ACTIVITY_HI_AA_ArmAngleCmd(angle);
+      this->log_ACTIVITY_HI_AA_ArmHeightAngleCmd(angle);
       // send telemetry
-      this->tlmWrite_AA_ArmAngle(angle);
+      this->tlmWrite_AA_ArmHeightAngle(angle);
       // return command status
       this->cmdResponse_out(opCode,cmdSeq,Fw::COMMAND_OK);
   }
 
   void ArmAppComponentImpl ::
-    AA_CLAW_TILT_ANG_cmdHandler(
+    AA_ARM_LENGTH_ANG_cmdHandler(
         const FwOpcodeType opCode,
         const U32 cmdSeq,
         F32 angle
     )
   {
       // write to motor port
-      this->position_out(CLAW_TILT_PORT,angle);
+      this->position_out(ARM_LENGTH_PORT,angle);
       // send event
-      this->log_ACTIVITY_HI_AA_ClawTiltAngleCmd(angle);
+      this->log_ACTIVITY_HI_AA_ArmHeightAngleCmd(angle);
       // send telemetry
-      this->tlmWrite_AA_ClawTiltAngle(angle);
+      this->tlmWrite_AA_ArmHeightAngle(angle);
       // return command status
       this->cmdResponse_out(opCode,cmdSeq,Fw::COMMAND_OK);
+  }
+
+  // ----------------------------------------------------------------------
+  // Handler implementations for user-defined typed input ports
+  // ----------------------------------------------------------------------
+
+  void ArmAppComponentImpl ::
+    Run_handler(
+        const NATIVE_INT_TYPE portNum,
+        NATIVE_UINT_TYPE context
+    )
+  {
+	  this->tlmWrite_AA_Cycles(this->m_cycles++);
   }
 
 } // end namespace RobotArm

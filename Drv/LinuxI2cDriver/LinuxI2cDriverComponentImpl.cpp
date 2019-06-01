@@ -22,6 +22,8 @@
 #include <stdio.h>  // required for printf statements
 #include <errno.h>
 
+#define DEBUG_PRINT 0
+
 namespace Drv {
 
   // ----------------------------------------------------------------------
@@ -79,6 +81,14 @@ namespace Drv {
 	  // Make sure file has been opened
 	  FW_ASSERT(-1 != this->m_fd);
 
+#if DEBUG_PRINT
+	  printf("I2c addr: 0x%02X\n",addr);
+	  for (U32 byte = 0; byte < serBuffer.getsize(); byte++) {
+		  printf("0x%02X ",((U8*)serBuffer.getdata())[byte]);
+
+	  }
+	  printf("\n");
+#endif
 	  // select slave address
 	  int stat = ioctl(this->m_fd, I2C_SLAVE, addr);
 	  FW_ASSERT(-1 != stat,errno);
