@@ -81,6 +81,20 @@ namespace RobotArm {
           F32 angle /*!< The commanded angle*/
       );
 
+      //! Implementation for PS_DIS command handler
+      //! Disable servo board
+      void PS_DIS_cmdHandler(
+          const FwOpcodeType opCode, /*!< The opcode*/
+          const U32 cmdSeq /*!< The command sequence number*/
+      );
+
+      //! Implementation for PS_EN command handler
+      //! Enable servo board
+      void PS_EN_cmdHandler(
+          const FwOpcodeType opCode, /*!< The opcode*/
+          const U32 cmdSeq /*!< The command sequence number*/
+      );
+
 
       //! common position setter
       void setPos(F32 angle);

@@ -129,6 +129,7 @@ void constructApp(int port_number, char* hostname) {
     // configure card with one of the servos
     clawServo.configChip();
 
+    cmdSeq.setTimeout(10);
 
     // Active component startup
     // start rate groups

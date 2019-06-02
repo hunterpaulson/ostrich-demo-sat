@@ -29,6 +29,17 @@
                 </arg>
              </args>
         </command>
+        <!-- Angle command -->
+        <command kind="async" opcode="0x1" mnemonic="PS_DIS" >
+            <comment>
+            Disable servo board
+            </comment>
+        </command>
+        <command kind="async" opcode="0x2" mnemonic="PS_EN" >
+            <comment>
+            Enable servo board
+            </comment>
+        </command>
     </commands>
     <events>
 	    <!-- Commanded angle event -->

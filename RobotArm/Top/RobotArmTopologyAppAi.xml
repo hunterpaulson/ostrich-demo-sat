@@ -378,6 +378,10 @@
        <source component = "rateGroup1HzComp" port = "RateGroupMemberOut" type = "Sched" num = "1"/>
         <target component = "armDemo" port = "Run" type = "Sched" num = "0"/>
    </connection>
+   <connection name = "seqRg">
+       <source component = "rateGroup1HzComp" port = "RateGroupMemberOut" type = "Sched" num = "2"/>
+        <target component = "cmdSeq" port = "schedIn" type = "Sched" num = "0"/>
+   </connection>
    
 
    <!-- Socket Ground System Connections -->

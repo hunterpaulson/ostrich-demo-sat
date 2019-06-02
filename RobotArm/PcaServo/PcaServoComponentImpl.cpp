@@ -130,7 +130,7 @@ namespace RobotArm {
 
 	  // enable prescale setting
 	  this->m_data[0] = 0;
-	  this->m_data[1] = 0x10; //!< enable PWM
+	  this->m_data[1] = 0x10; //!< put to sleep
 	  this->m_buff.setsize(2);
 	  // call I2C port
 	  this->i2c_out(0,SERVO_BRD_ADDR,this->m_buff);
@@ -145,6 +145,13 @@ namespace RobotArm {
 	  // call I2C port
 	  this->i2c_out(0,SERVO_BRD_ADDR,this->m_buff);
 
+	  // re-enable chip
+	  this->m_data[0] = 0;
+	  this->m_data[1] = 0x20; //!< enable PWM
+	  this->m_buff.setsize(2);
+	  // call I2C port
+	  this->i2c_out(0,SERVO_BRD_ADDR,this->m_buff);
+
 	  // enable multi-byte
 	  this->m_data[0] = 0xfe;
 	  this->m_data[1] = 0x1e; //!< enable multi-byte
@@ -152,6 +159,31 @@ namespace RobotArm {
 	  // call I2C port
 	  this->i2c_out(0,SERVO_BRD_ADDR,this->m_buff);
 
+  }
+
+  void PcaServoComponentImpl ::
+    PS_DIS_cmdHandler(
+        const FwOpcodeType opCode,
+        const U32 cmdSeq
+    )
+  {
+	  // enable prescale setting
+	  this->m_data[0] = 0;
+	  this->m_data[1] = 0x10; //!< put to sleep
+	  this->m_buff.setsize(2);
+	  // call I2C port
+	  this->i2c_out(0,SERVO_BRD_ADDR,this->m_buff);
+	  this->cmdResponse_out(opCode,cmdSeq,Fw::COMMAND_OK);
+  }
+
+  void PcaServoComponentImpl ::
+    PS_EN_cmdHandler(
+        const FwOpcodeType opCode,
+        const U32 cmdSeq
+    )
+  {
+		this->configChip();
+		this->cmdResponse_out(opCode,cmdSeq,Fw::COMMAND_OK);
   }
 
 

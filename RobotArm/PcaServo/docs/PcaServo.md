@@ -8,6 +8,8 @@
 |---|---|---|---|---|---|
 |PS_ANG|0 (0x0)|Servo angle command| | |
 | | | |angle|F32|The commanded angle|
+|PS_DIS|1 (0x1)|Disable servo board| | |
+|PS_EN|2 (0x2)|Enable servo board| | |
 
 ## Telemetry Channel List
 
