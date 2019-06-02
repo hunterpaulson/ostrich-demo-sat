@@ -1,0 +1,83 @@
+        -:    0:Source:/mnt/c/Users/tcanham/source2/fprime/branches/nasa-timcanham/fprime/Fw/Buffer/BufferSerializableAc.hpp
+        -:    0:Programs:30
+        -:    1:/*
+        -:    2: * Buffer.hpp
+        -:    3: *
+        -:    4: *  Created on: Sunday, 02 June 2019
+        -:    5: *  Author:     tcanham
+        -:    6: *
+        -:    7: */
+        -:    8:#ifndef BUFFER_HPP_
+        -:    9:#define BUFFER_HPP_
+        -:   10:
+        -:   11:#include <Fw/Types/BasicTypes.hpp>
+        -:   12:#include <Fw/Types/Serializable.hpp>
+        -:   13:#if FW_SERIALIZABLE_TO_STRING
+        -:   14:#include <Fw/Types/StringType.hpp>
+        -:   15:#include <stdio.h> // snprintf
+        -:   16:#ifdef BUILD_UT
+        -:   17:#include <iostream>
+        -:   18:#include <Fw/Types/EightyCharString.hpp>
+        -:   19:#endif
+        -:   20:#endif
+        -:   21:
+        -:   22:namespace Fw {
+        -:   23:
+    #####:   24:class Buffer : public Fw::Serializable {
+        -:   25:
+        -:   26:
+        -:   27:public:
+        -:   28:
+        -:   29:    enum {
+        -:   30:        SERIALIZED_SIZE =
+        -:   31:        sizeof(U32) +
+        -:   32:        sizeof(U32) +
+        -:   33:        sizeof(U64) +
+        -:   34:        sizeof(U32)
+        -:   35:    }; //!< serializable size of Buffer
+        -:   36:
+        -:   37:    Buffer(void); //!< Default constructor
+        -:   38:    Buffer(const Buffer* src); //!< pointer copy constructor
+        -:   39:    Buffer(const Buffer& src); //!< reference copy constructor
+        -:   40:    Buffer(U32 managerID, U32 bufferID, U64 data, U32 size); //!< constructor with arguments
+        -:   41:    const Buffer& operator=(const Buffer& src); //!< equal operator
+        -:   42:    bool operator==(const Buffer& src) const; //!< equality operator
+        -:   43:#ifdef BUILD_UT
+        -:   44:    // to support GoogleTest framework in unit tests
+        -:   45:    friend std::ostream& operator<<(std::ostream& os, const Buffer& obj);
+        -:   46:#endif
+        -:   47:
+        -:   48:    void set(U32 managerID, U32 bufferID, U64 data, U32 size); //!< set values
+        -:   49:
+        -:   50:    U32 getmanagerID(void); //!< get member managerID
+        -:   51:    U32 getbufferID(void); //!< get member bufferID
+        -:   52:    U64 getdata(void); //!< get member data
+        -:   53:    U32 getsize(void); //!< get member size
+        -:   54:
+        -:   55:    void setmanagerID(U32 val); //!< set member managerID
+        -:   56:    void setbufferID(U32 val); //!< set member bufferID
+        -:   57:    void setdata(U64 val); //!< set member data
+        -:   58:    void setsize(U32 val); //!< set member size
+        -:   59:
+        -:   60:
+        -:   61:    Fw::SerializeStatus serialize(Fw::SerializeBufferBase& buffer) const; //!< serialization function
+        -:   62:    Fw::SerializeStatus deserialize(Fw::SerializeBufferBase& buffer); //!< deserialization function
+        -:   63:#if FW_SERIALIZABLE_TO_STRING || BUILD_UT
+        -:   64:    void toString(Fw::StringBase& text) const; //!< generate text from serializable
+        -:   65:#endif
+        -:   66:protected:
+        -:   67:
+        -:   68:    enum {
+        -:   69:        TYPE_ID = 0xA4583D9C //!< type id
+        -:   70:    };
+        -:   71:
+        -:   72:    U32 m_managerID; //<! managerID - The ID of the buffer manager that allocated this buffer
+        -:   73:    U32 m_bufferID; //<! bufferID - The ID of this buffer
+        -:   74:    U64 m_data; //<! data - A pointer to the data
+        -:   75:    U32 m_size; //<! size - The data size in bytes
+        -:   76:private:
+        -:   77:
+        -:   78:};
+        -:   79:} // end namespace Fw
+        -:   80:#endif /* BUFFER_HPP_ */
+        -:   81:

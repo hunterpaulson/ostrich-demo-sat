@@ -1,0 +1,1521 @@
+        -:    0:Source:/mnt/c/Users/tcanham/source2/fprime/branches/nasa-timcanham/fprime/RobotArm/PcaServo/PcaServoComponentAc.cpp
+        -:    0:Programs:30
+        -:    1:// ======================================================================
+        -:    2:// \title  PcaServoComponentAc.cpp
+        -:    3:// \author Auto-generated
+        -:    4:// \brief  cpp file for PcaServo component base class
+        -:    5://
+        -:    6:// \copyright
+        -:    7:// Copyright 2009-2015, by the California Institute of Technology.
+        -:    8:// ALL RIGHTS RESERVED.  United States Government Sponsorship
+        -:    9:// acknowledged.
+        -:   10://
+        -:   11:// ======================================================================
+        -:   12:
+        -:   13:#include <stdio.h>
+        -:   14:#include <Fw/Cfg/Config.hpp>
+        -:   15:#include <RobotArm/PcaServo/PcaServoComponentAc.hpp>
+        -:   16:#include <Fw/Types/Assert.hpp>
+        -:   17:#if FW_ENABLE_TEXT_LOGGING
+        -:   18:#include <Fw/Types/EightyCharString.hpp>
+        -:   19:#endif
+        -:   20:
+        -:   21:
+        -:   22:namespace RobotArm {
+        -:   23:
+        -:   24:  // ----------------------------------------------------------------------
+        -:   25:  // Anonymous namespace to prevent name collisions
+        -:   26:  // ----------------------------------------------------------------------
+        -:   27:
+        -:   28:  namespace {
+        -:   29:
+        -:   30:    typedef enum {
+        -:   31:      PCASERVO_COMPONENT_EXIT = Fw::ActiveComponentBase::ACTIVE_COMPONENT_EXIT,
+        -:   32:      POSITION_SERVOSET,
+        -:   33:      CMD_PS_ANG,
+        -:   34:      CMD_PS_DIS,
+        -:   35:      CMD_PS_EN
+        -:   36:    } MsgTypeEnum;
+        -:   37:
+        -:   38:    // Get the max size by doing a union of the input port serialization sizes.
+        -:   39:
+        -:   40:    typedef union {
+        -:   41:      BYTE port1[RobotArm::InputServoSetPort::SERIALIZED_SIZE];
+        -:   42:      BYTE cmdPort[Fw::InputCmdPort::SERIALIZED_SIZE];
+        -:   43:    } BuffUnion;
+        -:   44:
+        -:   45:    // Define a message buffer class large enough to handle all the
+        -:   46:    // asynchronous inputs to the component
+        -:   47:
+      508:   48:    class ComponentIpcSerializableBuffer :
+        -:   49:      public Fw::SerializeBufferBase
+        -:   50:    {
+        -:   51:
+        -:   52:      public:
+        -:   53:
+        -:   54:        enum {
+        -:   55:          // Max. message size = size of data + message id + port
+        -:   56:          SERIALIZATION_SIZE =
+        -:   57:            sizeof(BuffUnion) +
+        -:   58:            sizeof(NATIVE_INT_TYPE) +
+        -:   59:            sizeof(NATIVE_INT_TYPE)
+        -:   60:        };
+        -:   61:
+      839:   62:        NATIVE_UINT_TYPE getBuffCapacity(void) const {
+      839:   63:          return sizeof(m_buff);
+        -:   64:        }
+        -:   65:
+     5297:   66:        U8* getBuffAddr(void) {
+     5297:   67:          return m_buff;
+        -:   68:        }
+        -:   69:
+      127:   70:        const U8* getBuffAddr(void) const {
+      127:   71:          return m_buff;
+        -:   72:        }
+        -:   73:
+        -:   74:      private:
+        -:   75:        // Should be the max of all the input ports serialized sizes...
+        -:   76:        U8 m_buff[SERIALIZATION_SIZE];
+        -:   77:
+        -:   78:    };
+        -:   79:
+        -:   80:  }
+        -:   81:
+        -:   82:  // ----------------------------------------------------------------------
+        -:   83:  // Getters for numbers of input ports
+        -:   84:  // ----------------------------------------------------------------------
+        -:   85:
+       66:   86:  RobotArm::InputServoSetPort *PcaServoComponentBase ::
+        -:   87:    get_position_InputPort(NATIVE_INT_TYPE portNum)
+        -:   88:  {
+       66:   89:    FW_ASSERT(portNum < this->getNum_position_InputPorts(),static_cast<AssertArg>(portNum));
+       66:   90:    return &this->m_position_InputPort[portNum];
+        -:   91:  }
+        -:   92:
+       66:   93:  Fw::InputCmdPort *PcaServoComponentBase ::
+        -:   94:    get_CmdDisp_InputPort(NATIVE_INT_TYPE portNum)
+        -:   95:  {
+       66:   96:    FW_ASSERT(portNum < this->getNum_CmdDisp_InputPorts(),static_cast<AssertArg>(portNum));
+       66:   97:    return &this->m_CmdDisp_InputPort[portNum];
+        -:   98:  }
+        -:   99:
+        -:  100:  // ----------------------------------------------------------------------
+        -:  101:  // Typed connectors for output ports
+        -:  102:  // ----------------------------------------------------------------------
+        -:  103:
+       66:  104:  void PcaServoComponentBase ::
+        -:  105:    set_i2c_OutputPort(
+        -:  106:        NATIVE_INT_TYPE portNum,
+        -:  107:        Drv::InputI2cWritePort* port
+        -:  108:    )
+        -:  109:  {
+       66:  110:    FW_ASSERT(portNum < this->getNum_i2c_OutputPorts(),static_cast<AssertArg>(portNum));
+       66:  111:    this->m_i2c_OutputPort[portNum].addCallPort(port);
+       66:  112:  }
+        -:  113:
+       66:  114:  void PcaServoComponentBase ::
+        -:  115:    set_CmdStatus_OutputPort(
+        -:  116:        NATIVE_INT_TYPE portNum,
+        -:  117:        Fw::InputCmdResponsePort* port
+        -:  118:    )
+        -:  119:  {
+       66:  120:    FW_ASSERT(portNum < this->getNum_CmdStatus_OutputPorts(),static_cast<AssertArg>(portNum));
+       66:  121:    this->m_CmdStatus_OutputPort[portNum].addCallPort(port);
+       66:  122:  }
+        -:  123:
+       66:  124:  void PcaServoComponentBase ::
+        -:  125:    set_CmdReg_OutputPort(
+        -:  126:        NATIVE_INT_TYPE portNum,
+        -:  127:        Fw::InputCmdRegPort* port
+        -:  128:    )
+        -:  129:  {
+       66:  130:    FW_ASSERT(portNum < this->getNum_CmdReg_OutputPorts(),static_cast<AssertArg>(portNum));
+       66:  131:    this->m_CmdReg_OutputPort[portNum].addCallPort(port);
+       66:  132:  }
+        -:  133:
+       66:  134:  void PcaServoComponentBase ::
+        -:  135:    set_Tlm_OutputPort(
+        -:  136:        NATIVE_INT_TYPE portNum,
+        -:  137:        Fw::InputTlmPort* port
+        -:  138:    )
+        -:  139:  {
+       66:  140:    FW_ASSERT(portNum < this->getNum_Tlm_OutputPorts(),static_cast<AssertArg>(portNum));
+       66:  141:    this->m_Tlm_OutputPort[portNum].addCallPort(port);
+       66:  142:  }
+        -:  143:
+       66:  144:  void PcaServoComponentBase ::
+        -:  145:    set_Time_OutputPort(
+        -:  146:        NATIVE_INT_TYPE portNum,
+        -:  147:        Fw::InputTimePort* port
+        -:  148:    )
+        -:  149:  {
+       66:  150:    FW_ASSERT(portNum < this->getNum_Time_OutputPorts(),static_cast<AssertArg>(portNum));
+       66:  151:    this->m_Time_OutputPort[portNum].addCallPort(port);
+       66:  152:  }
+        -:  153:
+       66:  154:  void PcaServoComponentBase ::
+        -:  155:    set_Log_OutputPort(
+        -:  156:        NATIVE_INT_TYPE portNum,
+        -:  157:        Fw::InputLogPort* port
+        -:  158:    )
+        -:  159:  {
+       66:  160:    FW_ASSERT(portNum < this->getNum_Log_OutputPorts(),static_cast<AssertArg>(portNum));
+       66:  161:    this->m_Log_OutputPort[portNum].addCallPort(port);
+       66:  162:  }
+        -:  163:
+        -:  164:#if FW_ENABLE_TEXT_LOGGING == 1
+       66:  165:  void PcaServoComponentBase ::
+        -:  166:    set_LogText_OutputPort(
+        -:  167:        NATIVE_INT_TYPE portNum,
+        -:  168:        Fw::InputLogTextPort* port
+        -:  169:    )
+        -:  170:  {
+       66:  171:    FW_ASSERT(portNum < this->getNum_LogText_OutputPorts(),static_cast<AssertArg>(portNum));
+       66:  172:    this->m_LogText_OutputPort[portNum].addCallPort(port);
+       66:  173:  }
+        -:  174:#endif
+        -:  175:
+        -:  176:  // ----------------------------------------------------------------------
+        -:  177:  // Serialization connectors for output ports
+        -:  178:  // ----------------------------------------------------------------------
+        -:  179:
+        -:  180:#if FW_PORT_SERIALIZATION
+        -:  181:
+    #####:  182:  void PcaServoComponentBase ::
+        -:  183:    set_i2c_OutputPort(
+        -:  184:        NATIVE_INT_TYPE portNum,
+        -:  185:        Fw::InputSerializePort *port
+        -:  186:    )
+        -:  187:  {
+    #####:  188:    FW_ASSERT(portNum < this->getNum_i2c_OutputPorts(),static_cast<AssertArg>(portNum));
+    #####:  189:    return this->m_i2c_OutputPort[portNum].registerSerialPort(port);
+        -:  190:  }
+        -:  191:
+    #####:  192:  void PcaServoComponentBase ::
+        -:  193:    set_CmdStatus_OutputPort(
+        -:  194:        NATIVE_INT_TYPE portNum,
+        -:  195:        Fw::InputSerializePort *port
+        -:  196:    )
+        -:  197:  {
+    #####:  198:    FW_ASSERT(portNum < this->getNum_CmdStatus_OutputPorts(),static_cast<AssertArg>(portNum));
+    #####:  199:    return this->m_CmdStatus_OutputPort[portNum].registerSerialPort(port);
+        -:  200:  }
+        -:  201:
+    #####:  202:  void PcaServoComponentBase ::
+        -:  203:    set_CmdReg_OutputPort(
+        -:  204:        NATIVE_INT_TYPE portNum,
+        -:  205:        Fw::InputSerializePort *port
+        -:  206:    )
+        -:  207:  {
+    #####:  208:    FW_ASSERT(portNum < this->getNum_CmdReg_OutputPorts(),static_cast<AssertArg>(portNum));
+    #####:  209:    return this->m_CmdReg_OutputPort[portNum].registerSerialPort(port);
+        -:  210:  }
+        -:  211:
+    #####:  212:  void PcaServoComponentBase ::
+        -:  213:    set_Tlm_OutputPort(
+        -:  214:        NATIVE_INT_TYPE portNum,
+        -:  215:        Fw::InputSerializePort *port
+        -:  216:    )
+        -:  217:  {
+    #####:  218:    FW_ASSERT(portNum < this->getNum_Tlm_OutputPorts(),static_cast<AssertArg>(portNum));
+    #####:  219:    return this->m_Tlm_OutputPort[portNum].registerSerialPort(port);
+        -:  220:  }
+        -:  221:
+    #####:  222:  void PcaServoComponentBase ::
+        -:  223:    set_Time_OutputPort(
+        -:  224:        NATIVE_INT_TYPE portNum,
+        -:  225:        Fw::InputSerializePort *port
+        -:  226:    )
+        -:  227:  {
+    #####:  228:    FW_ASSERT(portNum < this->getNum_Time_OutputPorts(),static_cast<AssertArg>(portNum));
+    #####:  229:    return this->m_Time_OutputPort[portNum].registerSerialPort(port);
+        -:  230:  }
+        -:  231:
+    #####:  232:  void PcaServoComponentBase ::
+        -:  233:    set_Log_OutputPort(
+        -:  234:        NATIVE_INT_TYPE portNum,
+        -:  235:        Fw::InputSerializePort *port
+        -:  236:    )
+        -:  237:  {
+    #####:  238:    FW_ASSERT(portNum < this->getNum_Log_OutputPorts(),static_cast<AssertArg>(portNum));
+    #####:  239:    return this->m_Log_OutputPort[portNum].registerSerialPort(port);
+        -:  240:  }
+        -:  241:
+        -:  242:#if FW_ENABLE_TEXT_LOGGING == 1
+    #####:  243:  void PcaServoComponentBase ::
+        -:  244:    set_LogText_OutputPort(
+        -:  245:        NATIVE_INT_TYPE portNum,
+        -:  246:        Fw::InputSerializePort *port
+        -:  247:    )
+        -:  248:  {
+    #####:  249:    FW_ASSERT(portNum < this->getNum_LogText_OutputPorts(),static_cast<AssertArg>(portNum));
+    #####:  250:    return this->m_LogText_OutputPort[portNum].registerSerialPort(port);
+        -:  251:  }
+        -:  252:#endif
+        -:  253:
+        -:  254:#endif
+        -:  255:
+        -:  256:  // ----------------------------------------------------------------------
+        -:  257:  // Command registration
+        -:  258:  // ----------------------------------------------------------------------
+        -:  259:
+    #####:  260:  void PcaServoComponentBase ::
+        -:  261:    regCommands(void)
+        -:  262:  {
+    #####:  263:    FW_ASSERT(this->m_CmdReg_OutputPort[0].isConnected());
+    #####:  264:    this->m_CmdReg_OutputPort[0].invoke(
+        -:  265:        this->getIdBase() + OPCODE_PS_ANG
+        -:  266:    );
+    #####:  267:    this->m_CmdReg_OutputPort[0].invoke(
+    #####:  268:        this->getIdBase() + OPCODE_PS_DIS
+        -:  269:    );
+    #####:  270:    this->m_CmdReg_OutputPort[0].invoke(
+    #####:  271:        this->getIdBase() + OPCODE_PS_EN
+        -:  272:    );
+    #####:  273:  }
+        -:  274:
+        -:  275:  // ----------------------------------------------------------------------
+        -:  276:  // Component construction, initialization, and destruction
+        -:  277:  // ----------------------------------------------------------------------
+        -:  278:
+       66:  279:  PcaServoComponentBase ::
+        -:  280:#if FW_OBJECT_NAMES == 1
+       66:  281:    PcaServoComponentBase(const char* compName) :
+       66:  282:      Fw::ActiveComponentBase(compName)
+        -:  283:#else
+        -:  284:    PcaServoComponentBase() :
+        -:  285:      Fw::ActiveComponentBase()
+        -:  286:#endif
+        -:  287:  {
+        -:  288:
+        -:  289:
+        -:  290:
+       66:  291:  }
+        -:  292:
+       66:  293:  void PcaServoComponentBase ::
+        -:  294:    init(
+        -:  295:        NATIVE_INT_TYPE queueDepth,
+        -:  296:        NATIVE_INT_TYPE instance
+        -:  297:    )
+        -:  298:  {
+        -:  299:
+        -:  300:    // Initialize base class
+       66:  301:    Fw::ActiveComponentBase::init(instance);
+        -:  302:
+        -:  303:    // Connect input port position
+       66:  304:    for (
+       66:  305:        NATIVE_INT_TYPE port = 0;
+      132:  306:        port < this->getNum_position_InputPorts();
+        -:  307:        port++
+        -:  308:    ) {
+        -:  309:
+       66:  310:      this->m_position_InputPort[port].init();
+       66:  311:      this->m_position_InputPort[port].addCallComp(
+        -:  312:          this,
+        -:  313:          m_p_position_in
+        -:  314:      );
+       66:  315:      this->m_position_InputPort[port].setPortNum(port);
+        -:  316:
+        -:  317:#if FW_OBJECT_NAMES == 1
+        -:  318:      char portName[80];
+       66:  319:      (void) snprintf(
+        -:  320:          portName,
+        -:  321:          sizeof(portName),
+        -:  322:          "%s_position_InputPort[%d]",
+        -:  323:          this->m_objName,
+        -:  324:          port
+        -:  325:      );
+       66:  326:      this->m_position_InputPort[port].setObjName(portName);
+        -:  327:#endif
+        -:  328:
+        -:  329:    }
+        -:  330:
+        -:  331:    // Connect input port CmdDisp
+       66:  332:    for (
+       66:  333:        NATIVE_INT_TYPE port = 0;
+      132:  334:        port < this->getNum_CmdDisp_InputPorts();
+        -:  335:        port++
+        -:  336:    ) {
+        -:  337:
+       66:  338:      this->m_CmdDisp_InputPort[port].init();
+       66:  339:      this->m_CmdDisp_InputPort[port].addCallComp(
+        -:  340:          this,
+        -:  341:          m_p_CmdDisp_in
+        -:  342:      );
+       66:  343:      this->m_CmdDisp_InputPort[port].setPortNum(port);
+        -:  344:
+        -:  345:#if FW_OBJECT_NAMES == 1
+        -:  346:      char portName[80];
+       66:  347:      (void) snprintf(
+        -:  348:          portName,
+        -:  349:          sizeof(portName),
+        -:  350:          "%s_CmdDisp_InputPort[%d]",
+        -:  351:          this->m_objName,
+        -:  352:          port
+        -:  353:      );
+       66:  354:      this->m_CmdDisp_InputPort[port].setObjName(portName);
+        -:  355:#endif
+        -:  356:
+        -:  357:    }
+        -:  358:
+        -:  359:    // Initialize output port i2c
+       66:  360:    for (
+       66:  361:        NATIVE_INT_TYPE port = 0;
+      132:  362:        port < this->getNum_i2c_OutputPorts();
+        -:  363:        port++
+        -:  364:    ) {
+       66:  365:      this->m_i2c_OutputPort[port].init();
+        -:  366:
+        -:  367:#if FW_OBJECT_NAMES == 1
+        -:  368:      char portName[80];
+       66:  369:      (void) snprintf(
+        -:  370:          portName,
+        -:  371:          sizeof(portName),
+        -:  372:          "%s_i2c_OutputPort[%d]",
+        -:  373:          this->m_objName,
+        -:  374:          port
+        -:  375:      );
+       66:  376:      this->m_i2c_OutputPort[port].setObjName(portName);
+        -:  377:#endif
+        -:  378:
+        -:  379:    }
+        -:  380:
+        -:  381:    // Initialize output port CmdStatus
+       66:  382:    for (
+       66:  383:        NATIVE_INT_TYPE port = 0;
+      132:  384:        port < this->getNum_CmdStatus_OutputPorts();
+        -:  385:        port++
+        -:  386:    ) {
+       66:  387:      this->m_CmdStatus_OutputPort[port].init();
+        -:  388:
+        -:  389:#if FW_OBJECT_NAMES == 1
+        -:  390:      char portName[80];
+       66:  391:      (void) snprintf(
+        -:  392:          portName,
+        -:  393:          sizeof(portName),
+        -:  394:          "%s_CmdStatus_OutputPort[%d]",
+        -:  395:          this->m_objName,
+        -:  396:          port
+        -:  397:      );
+       66:  398:      this->m_CmdStatus_OutputPort[port].setObjName(portName);
+        -:  399:#endif
+        -:  400:
+        -:  401:    }
+        -:  402:
+        -:  403:    // Initialize output port CmdReg
+       66:  404:    for (
+       66:  405:        NATIVE_INT_TYPE port = 0;
+      132:  406:        port < this->getNum_CmdReg_OutputPorts();
+        -:  407:        port++
+        -:  408:    ) {
+       66:  409:      this->m_CmdReg_OutputPort[port].init();
+        -:  410:
+        -:  411:#if FW_OBJECT_NAMES == 1
+        -:  412:      char portName[80];
+       66:  413:      (void) snprintf(
+        -:  414:          portName,
+        -:  415:          sizeof(portName),
+        -:  416:          "%s_CmdReg_OutputPort[%d]",
+        -:  417:          this->m_objName,
+        -:  418:          port
+        -:  419:      );
+       66:  420:      this->m_CmdReg_OutputPort[port].setObjName(portName);
+        -:  421:#endif
+        -:  422:
+        -:  423:    }
+        -:  424:
+        -:  425:    // Initialize output port Tlm
+       66:  426:    for (
+       66:  427:        NATIVE_INT_TYPE port = 0;
+      132:  428:        port < this->getNum_Tlm_OutputPorts();
+        -:  429:        port++
+        -:  430:    ) {
+       66:  431:      this->m_Tlm_OutputPort[port].init();
+        -:  432:
+        -:  433:#if FW_OBJECT_NAMES == 1
+        -:  434:      char portName[80];
+       66:  435:      (void) snprintf(
+        -:  436:          portName,
+        -:  437:          sizeof(portName),
+        -:  438:          "%s_Tlm_OutputPort[%d]",
+        -:  439:          this->m_objName,
+        -:  440:          port
+        -:  441:      );
+       66:  442:      this->m_Tlm_OutputPort[port].setObjName(portName);
+        -:  443:#endif
+        -:  444:
+        -:  445:    }
+        -:  446:
+        -:  447:    // Initialize output port Time
+       66:  448:    for (
+       66:  449:        NATIVE_INT_TYPE port = 0;
+      132:  450:        port < this->getNum_Time_OutputPorts();
+        -:  451:        port++
+        -:  452:    ) {
+       66:  453:      this->m_Time_OutputPort[port].init();
+        -:  454:
+        -:  455:#if FW_OBJECT_NAMES == 1
+        -:  456:      char portName[80];
+       66:  457:      (void) snprintf(
+        -:  458:          portName,
+        -:  459:          sizeof(portName),
+        -:  460:          "%s_Time_OutputPort[%d]",
+        -:  461:          this->m_objName,
+        -:  462:          port
+        -:  463:      );
+       66:  464:      this->m_Time_OutputPort[port].setObjName(portName);
+        -:  465:#endif
+        -:  466:
+        -:  467:    }
+        -:  468:
+        -:  469:    // Initialize output port Log
+       66:  470:    for (
+       66:  471:        NATIVE_INT_TYPE port = 0;
+      132:  472:        port < this->getNum_Log_OutputPorts();
+        -:  473:        port++
+        -:  474:    ) {
+       66:  475:      this->m_Log_OutputPort[port].init();
+        -:  476:
+        -:  477:#if FW_OBJECT_NAMES == 1
+        -:  478:      char portName[80];
+       66:  479:      (void) snprintf(
+        -:  480:          portName,
+        -:  481:          sizeof(portName),
+        -:  482:          "%s_Log_OutputPort[%d]",
+        -:  483:          this->m_objName,
+        -:  484:          port
+        -:  485:      );
+       66:  486:      this->m_Log_OutputPort[port].setObjName(portName);
+        -:  487:#endif
+        -:  488:
+        -:  489:    }
+        -:  490:
+        -:  491:    // Initialize output port LogText
+        -:  492:#if FW_ENABLE_TEXT_LOGGING == 1
+       66:  493:    for (
+       66:  494:        NATIVE_INT_TYPE port = 0;
+      132:  495:        port < this->getNum_LogText_OutputPorts();
+        -:  496:        port++
+        -:  497:    ) {
+       66:  498:      this->m_LogText_OutputPort[port].init();
+        -:  499:
+        -:  500:#if FW_OBJECT_NAMES == 1
+        -:  501:      char portName[80];
+       66:  502:      (void) snprintf(
+        -:  503:          portName,
+        -:  504:          sizeof(portName),
+        -:  505:          "%s_LogText_OutputPort[%d]",
+        -:  506:          this->m_objName,
+        -:  507:          port
+        -:  508:      );
+       66:  509:      this->m_LogText_OutputPort[port].setObjName(portName);
+        -:  510:#endif
+        -:  511:
+        -:  512:    }
+        -:  513:#endif
+        -:  514:
+        -:  515:    Os::Queue::QueueStatus qStat =
+       66:  516:    this->createQueue(
+        -:  517:        queueDepth,
+        -:  518:        ComponentIpcSerializableBuffer::SERIALIZATION_SIZE
+       66:  519:    );
+       66:  520:    FW_ASSERT(
+        -:  521:        Os::Queue::QUEUE_OK == qStat,
+        -:  522:        static_cast<AssertArg>(qStat)
+        -:  523:    );
+        -:  524:
+       66:  525:  }
+        -:  526:
+       66:  527:  PcaServoComponentBase::
+       66:  528:    ~PcaServoComponentBase() {
+        -:  529:
+       66:  530:  }
+        -:  531:
+        -:  532:  // ----------------------------------------------------------------------
+        -:  533:  // Invocation functions for output ports
+        -:  534:  // ----------------------------------------------------------------------
+        -:  535:
+      297:  536:  void PcaServoComponentBase ::
+        -:  537:    i2c_out(
+        -:  538:        NATIVE_INT_TYPE portNum,
+        -:  539:        U32 addr, Fw::Buffer &serBuffer
+        -:  540:    )
+        -:  541:  {
+      297:  542:    FW_ASSERT(portNum < this->getNum_i2c_OutputPorts(),static_cast<AssertArg>(portNum));
+      297:  543:    this->m_i2c_OutputPort[portNum].invoke(addr, serBuffer);
+      297:  544:  }
+        -:  545:
+        -:  546:  // ----------------------------------------------------------------------
+        -:  547:  // Getters for numbers of ports
+        -:  548:  // ----------------------------------------------------------------------
+        -:  549:
+      257:  550:  NATIVE_INT_TYPE PcaServoComponentBase ::
+        -:  551:    getNum_position_InputPorts(void)
+        -:  552:  {
+      257:  553:    return (NATIVE_INT_TYPE) FW_NUM_ARRAY_ELEMENTS(
+        -:  554:        this->m_position_InputPort
+        -:  555:    );
+        -:  556:  }
+        -:  557:
+      495:  558:  NATIVE_INT_TYPE PcaServoComponentBase ::
+        -:  559:    getNum_i2c_OutputPorts(void)
+        -:  560:  {
+      495:  561:    return (NATIVE_INT_TYPE) FW_NUM_ARRAY_ELEMENTS(
+        -:  562:        this->m_i2c_OutputPort
+        -:  563:    );
+        -:  564:  }
+        -:  565:
+      198:  566:  NATIVE_INT_TYPE PcaServoComponentBase ::
+        -:  567:    getNum_CmdDisp_InputPorts(void)
+        -:  568:  {
+      198:  569:    return (NATIVE_INT_TYPE) FW_NUM_ARRAY_ELEMENTS(
+        -:  570:        this->m_CmdDisp_InputPort
+        -:  571:    );
+        -:  572:  }
+        -:  573:
+      198:  574:  NATIVE_INT_TYPE PcaServoComponentBase ::
+        -:  575:    getNum_CmdStatus_OutputPorts(void)
+        -:  576:  {
+      198:  577:    return (NATIVE_INT_TYPE) FW_NUM_ARRAY_ELEMENTS(
+        -:  578:        this->m_CmdStatus_OutputPort
+        -:  579:    );
+        -:  580:  }
+        -:  581:
+      198:  582:  NATIVE_INT_TYPE PcaServoComponentBase ::
+        -:  583:    getNum_CmdReg_OutputPorts(void)
+        -:  584:  {
+      198:  585:    return (NATIVE_INT_TYPE) FW_NUM_ARRAY_ELEMENTS(
+        -:  586:        this->m_CmdReg_OutputPort
+        -:  587:    );
+        -:  588:  }
+        -:  589:
+      198:  590:  NATIVE_INT_TYPE PcaServoComponentBase ::
+        -:  591:    getNum_Tlm_OutputPorts(void)
+        -:  592:  {
+      198:  593:    return (NATIVE_INT_TYPE) FW_NUM_ARRAY_ELEMENTS(
+        -:  594:        this->m_Tlm_OutputPort
+        -:  595:    );
+        -:  596:  }
+        -:  597:
+      198:  598:  NATIVE_INT_TYPE PcaServoComponentBase ::
+        -:  599:    getNum_Time_OutputPorts(void)
+        -:  600:  {
+      198:  601:    return (NATIVE_INT_TYPE) FW_NUM_ARRAY_ELEMENTS(
+        -:  602:        this->m_Time_OutputPort
+        -:  603:    );
+        -:  604:  }
+        -:  605:
+      198:  606:  NATIVE_INT_TYPE PcaServoComponentBase ::
+        -:  607:    getNum_Log_OutputPorts(void)
+        -:  608:  {
+      198:  609:    return (NATIVE_INT_TYPE) FW_NUM_ARRAY_ELEMENTS(
+        -:  610:        this->m_Log_OutputPort
+        -:  611:    );
+        -:  612:  }
+        -:  613:
+        -:  614:#if FW_ENABLE_TEXT_LOGGING == 1
+      198:  615:  NATIVE_INT_TYPE PcaServoComponentBase ::
+        -:  616:    getNum_LogText_OutputPorts(void)
+        -:  617:  {
+      198:  618:    return (NATIVE_INT_TYPE) FW_NUM_ARRAY_ELEMENTS(
+        -:  619:        this->m_LogText_OutputPort
+        -:  620:    );
+        -:  621:  }
+        -:  622:#endif
+        -:  623:
+        -:  624:  // ----------------------------------------------------------------------
+        -:  625:  // Port connection status queries
+        -:  626:  // ----------------------------------------------------------------------
+        -:  627:
+    #####:  628:  bool PcaServoComponentBase ::
+        -:  629:    isConnected_i2c_OutputPort(NATIVE_INT_TYPE portNum)
+        -:  630:  {
+    #####:  631:     FW_ASSERT(
+        -:  632:        portNum < this->getNum_i2c_OutputPorts(),
+        -:  633:        static_cast<AssertArg>(portNum)
+        -:  634:     );
+    #####:  635:     return this->m_i2c_OutputPort[portNum].isConnected();
+        -:  636:  }
+        -:  637:
+    #####:  638:  bool PcaServoComponentBase ::
+        -:  639:    isConnected_CmdStatus_OutputPort(NATIVE_INT_TYPE portNum)
+        -:  640:  {
+    #####:  641:     FW_ASSERT(
+        -:  642:        portNum < this->getNum_CmdStatus_OutputPorts(),
+        -:  643:        static_cast<AssertArg>(portNum)
+        -:  644:     );
+    #####:  645:     return this->m_CmdStatus_OutputPort[portNum].isConnected();
+        -:  646:  }
+        -:  647:
+    #####:  648:  bool PcaServoComponentBase ::
+        -:  649:    isConnected_CmdReg_OutputPort(NATIVE_INT_TYPE portNum)
+        -:  650:  {
+    #####:  651:     FW_ASSERT(
+        -:  652:        portNum < this->getNum_CmdReg_OutputPorts(),
+        -:  653:        static_cast<AssertArg>(portNum)
+        -:  654:     );
+    #####:  655:     return this->m_CmdReg_OutputPort[portNum].isConnected();
+        -:  656:  }
+        -:  657:
+    #####:  658:  bool PcaServoComponentBase ::
+        -:  659:    isConnected_Tlm_OutputPort(NATIVE_INT_TYPE portNum)
+        -:  660:  {
+    #####:  661:     FW_ASSERT(
+        -:  662:        portNum < this->getNum_Tlm_OutputPorts(),
+        -:  663:        static_cast<AssertArg>(portNum)
+        -:  664:     );
+    #####:  665:     return this->m_Tlm_OutputPort[portNum].isConnected();
+        -:  666:  }
+        -:  667:
+    #####:  668:  bool PcaServoComponentBase ::
+        -:  669:    isConnected_Time_OutputPort(NATIVE_INT_TYPE portNum)
+        -:  670:  {
+    #####:  671:     FW_ASSERT(
+        -:  672:        portNum < this->getNum_Time_OutputPorts(),
+        -:  673:        static_cast<AssertArg>(portNum)
+        -:  674:     );
+    #####:  675:     return this->m_Time_OutputPort[portNum].isConnected();
+        -:  676:  }
+        -:  677:
+    #####:  678:  bool PcaServoComponentBase ::
+        -:  679:    isConnected_Log_OutputPort(NATIVE_INT_TYPE portNum)
+        -:  680:  {
+    #####:  681:     FW_ASSERT(
+        -:  682:        portNum < this->getNum_Log_OutputPorts(),
+        -:  683:        static_cast<AssertArg>(portNum)
+        -:  684:     );
+    #####:  685:     return this->m_Log_OutputPort[portNum].isConnected();
+        -:  686:  }
+        -:  687:
+        -:  688:#if FW_ENABLE_TEXT_LOGGING == 1
+    #####:  689:  bool PcaServoComponentBase ::
+        -:  690:    isConnected_LogText_OutputPort(NATIVE_INT_TYPE portNum)
+        -:  691:  {
+    #####:  692:     FW_ASSERT(
+        -:  693:        portNum < this->getNum_LogText_OutputPorts(),
+        -:  694:        static_cast<AssertArg>(portNum)
+        -:  695:     );
+    #####:  696:     return this->m_LogText_OutputPort[portNum].isConnected();
+        -:  697:  }
+        -:  698:#endif
+        -:  699:
+        -:  700:  // ----------------------------------------------------------------------
+        -:  701:  // Calls for messages received on command input ports
+        -:  702:  // ----------------------------------------------------------------------
+        -:  703:
+       68:  704:  void PcaServoComponentBase ::
+        -:  705:    m_p_CmdDisp_in(
+        -:  706:        Fw::PassiveComponentBase* callComp,
+        -:  707:        NATIVE_INT_TYPE portNum,
+        -:  708:        FwOpcodeType opCode,
+        -:  709:        U32 cmdSeq,
+        -:  710:        Fw::CmdArgBuffer &args
+        -:  711:    )
+        -:  712:  {
+        -:  713:
+        -:  714:    // Select base class function based on opcode
+       68:  715:    FW_ASSERT(callComp);
+       68:  716:    PcaServoComponentBase* compPtr =
+        -:  717:      (PcaServoComponentBase*) callComp;
+        -:  718:
+       68:  719:    const U32 idBase = callComp->getIdBase();
+       68:  720:    FW_ASSERT(opCode >= idBase, opCode, idBase);
+       68:  721:    switch (opCode - idBase) {
+        -:  722:
+       27:  723:      case OPCODE_PS_ANG: /*!< Servo angle command */
+       27:  724:        compPtr->PS_ANG_cmdHandlerBase(
+        -:  725:            opCode,
+        -:  726:            cmdSeq,
+        -:  727:            args
+        -:  728:        );
+       27:  729:        break;
+        -:  730:
+       20:  731:      case OPCODE_PS_DIS: /*!< Disable servo board */
+       20:  732:        compPtr->PS_DIS_cmdHandlerBase(
+        -:  733:            opCode,
+        -:  734:            cmdSeq,
+        -:  735:            args
+        -:  736:        );
+       20:  737:        break;
+        -:  738:
+       21:  739:      case OPCODE_PS_EN: /*!< Enable servo board */
+       21:  740:        compPtr->PS_EN_cmdHandlerBase(
+        -:  741:            opCode,
+        -:  742:            cmdSeq,
+        -:  743:            args
+        -:  744:        );
+       21:  745:        break;
+        -:  746:
+    #####:  747:      default: {
+    #####:  748:        compPtr->cmdResponse_out(
+        -:  749:            opCode,cmdSeq,
+        -:  750:            Fw::COMMAND_INVALID_OPCODE
+        -:  751:        );
+    #####:  752:        break;
+        -:  753:      }
+        -:  754:
+        -:  755:    }
+        -:  756:
+       68:  757:  }
+        -:  758:
+       68:  759:  void PcaServoComponentBase ::
+        -:  760:    cmdResponse_out(
+        -:  761:        FwOpcodeType opCode,
+        -:  762:        U32 cmdSeq,
+        -:  763:        Fw::CommandResponse response
+        -:  764:    )
+        -:  765:  {
+       68:  766:    FW_ASSERT(this->m_CmdStatus_OutputPort[0].isConnected());
+       68:  767:    this->m_CmdStatus_OutputPort[0].invoke(opCode,cmdSeq,response);
+       68:  768:  }
+        -:  769:
+        -:  770:  // ----------------------------------------------------------------------
+        -:  771:  // Base class command functions
+        -:  772:  // ----------------------------------------------------------------------
+        -:  773:
+       27:  774:  void PcaServoComponentBase ::
+        -:  775:    PS_ANG_cmdHandlerBase(
+        -:  776:        FwOpcodeType opCode,
+        -:  777:        U32 cmdSeq,
+        -:  778:        Fw::CmdArgBuffer &args
+        -:  779:    )
+        -:  780:  {
+        -:  781:
+        -:  782:    // Call pre-message hook
+       27:  783:    this->PS_ANG_preMsgHook(opCode,cmdSeq);
+        -:  784:
+        -:  785:    // Defer deserializing arguments to the message dispatcher
+        -:  786:    // to avoid deserializing and reserializing just for IPC
+       54:  787:    ComponentIpcSerializableBuffer msg;
+       27:  788:    Fw::SerializeStatus _status = Fw::FW_SERIALIZE_OK;
+        -:  789:
+        -:  790:    // Serialize for IPC
+       27:  791:    _status = msg.serialize((NATIVE_INT_TYPE)CMD_PS_ANG);
+       27:  792:    FW_ASSERT (
+        -:  793:        _status == Fw::FW_SERIALIZE_OK,
+        -:  794:        static_cast<AssertArg>(_status)
+        -:  795:        );
+        -:  796:
+        -:  797:    // Fake port number to make message dequeue work
+       27:  798:    NATIVE_INT_TYPE port = 0;
+       27:  799:    _status = msg.serialize(port);
+       27:  800:    FW_ASSERT (
+        -:  801:        _status == Fw::FW_SERIALIZE_OK,
+        -:  802:        static_cast<AssertArg>(_status)
+        -:  803:    );
+        -:  804:
+       27:  805:    _status = msg.serialize(opCode);
+       27:  806:    FW_ASSERT (
+        -:  807:        _status == Fw::FW_SERIALIZE_OK,
+        -:  808:        static_cast<AssertArg>(_status)
+        -:  809:    );
+        -:  810:
+       27:  811:    _status = msg.serialize(cmdSeq);
+       27:  812:    FW_ASSERT (
+        -:  813:        _status == Fw::FW_SERIALIZE_OK,
+        -:  814:        static_cast<AssertArg>(_status)
+        -:  815:    );
+        -:  816:
+       27:  817:    _status = msg.serialize(args);
+       27:  818:    FW_ASSERT (
+        -:  819:        _status == Fw::FW_SERIALIZE_OK,
+        -:  820:        static_cast<AssertArg>(_status)
+        -:  821:    );
+        -:  822:
+        -:  823:    // send message
+       27:  824:    Os::Queue::QueueBlocking _block =
+        -:  825:      Os::Queue::QUEUE_NONBLOCKING;
+        -:  826:    Os::Queue::QueueStatus qStatus =
+       27:  827:      this->m_queue.send(msg, 0,_block);
+       27:  828:    FW_ASSERT(
+        -:  829:        qStatus == Os::Queue::QUEUE_OK,
+        -:  830:        static_cast<AssertArg>(qStatus)
+        -:  831:    );
+        -:  832:
+       27:  833:  }
+        -:  834:
+       27:  835:  void PcaServoComponentBase::
+        -:  836:    PS_ANG_preMsgHook(
+        -:  837:        FwOpcodeType opCode,
+        -:  838:        U32 cmdSeq
+        -:  839:    )
+        -:  840:  {
+        -:  841:    // Defaults to no-op; can be overridden
+       27:  842:  }
+        -:  843:
+       20:  844:  void PcaServoComponentBase ::
+        -:  845:    PS_DIS_cmdHandlerBase(
+        -:  846:        FwOpcodeType opCode,
+        -:  847:        U32 cmdSeq,
+        -:  848:        Fw::CmdArgBuffer &args
+        -:  849:    )
+        -:  850:  {
+        -:  851:
+        -:  852:    // Call pre-message hook
+       20:  853:    this->PS_DIS_preMsgHook(opCode,cmdSeq);
+        -:  854:
+        -:  855:    // Defer deserializing arguments to the message dispatcher
+        -:  856:    // to avoid deserializing and reserializing just for IPC
+       40:  857:    ComponentIpcSerializableBuffer msg;
+       20:  858:    Fw::SerializeStatus _status = Fw::FW_SERIALIZE_OK;
+        -:  859:
+        -:  860:    // Serialize for IPC
+       20:  861:    _status = msg.serialize((NATIVE_INT_TYPE)CMD_PS_DIS);
+       20:  862:    FW_ASSERT (
+        -:  863:        _status == Fw::FW_SERIALIZE_OK,
+        -:  864:        static_cast<AssertArg>(_status)
+        -:  865:        );
+        -:  866:
+        -:  867:    // Fake port number to make message dequeue work
+       20:  868:    NATIVE_INT_TYPE port = 0;
+       20:  869:    _status = msg.serialize(port);
+       20:  870:    FW_ASSERT (
+        -:  871:        _status == Fw::FW_SERIALIZE_OK,
+        -:  872:        static_cast<AssertArg>(_status)
+        -:  873:    );
+        -:  874:
+       20:  875:    _status = msg.serialize(opCode);
+       20:  876:    FW_ASSERT (
+        -:  877:        _status == Fw::FW_SERIALIZE_OK,
+        -:  878:        static_cast<AssertArg>(_status)
+        -:  879:    );
+        -:  880:
+       20:  881:    _status = msg.serialize(cmdSeq);
+       20:  882:    FW_ASSERT (
+        -:  883:        _status == Fw::FW_SERIALIZE_OK,
+        -:  884:        static_cast<AssertArg>(_status)
+        -:  885:    );
+        -:  886:
+       20:  887:    _status = msg.serialize(args);
+       20:  888:    FW_ASSERT (
+        -:  889:        _status == Fw::FW_SERIALIZE_OK,
+        -:  890:        static_cast<AssertArg>(_status)
+        -:  891:    );
+        -:  892:
+        -:  893:    // send message
+       20:  894:    Os::Queue::QueueBlocking _block =
+        -:  895:      Os::Queue::QUEUE_NONBLOCKING;
+        -:  896:    Os::Queue::QueueStatus qStatus =
+       20:  897:      this->m_queue.send(msg, 0,_block);
+       20:  898:    FW_ASSERT(
+        -:  899:        qStatus == Os::Queue::QUEUE_OK,
+        -:  900:        static_cast<AssertArg>(qStatus)
+        -:  901:    );
+        -:  902:
+       20:  903:  }
+        -:  904:
+       20:  905:  void PcaServoComponentBase::
+        -:  906:    PS_DIS_preMsgHook(
+        -:  907:        FwOpcodeType opCode,
+        -:  908:        U32 cmdSeq
+        -:  909:    )
+        -:  910:  {
+        -:  911:    // Defaults to no-op; can be overridden
+       20:  912:  }
+        -:  913:
+       21:  914:  void PcaServoComponentBase ::
+        -:  915:    PS_EN_cmdHandlerBase(
+        -:  916:        FwOpcodeType opCode,
+        -:  917:        U32 cmdSeq,
+        -:  918:        Fw::CmdArgBuffer &args
+        -:  919:    )
+        -:  920:  {
+        -:  921:
+        -:  922:    // Call pre-message hook
+       21:  923:    this->PS_EN_preMsgHook(opCode,cmdSeq);
+        -:  924:
+        -:  925:    // Defer deserializing arguments to the message dispatcher
+        -:  926:    // to avoid deserializing and reserializing just for IPC
+       42:  927:    ComponentIpcSerializableBuffer msg;
+       21:  928:    Fw::SerializeStatus _status = Fw::FW_SERIALIZE_OK;
+        -:  929:
+        -:  930:    // Serialize for IPC
+       21:  931:    _status = msg.serialize((NATIVE_INT_TYPE)CMD_PS_EN);
+       21:  932:    FW_ASSERT (
+        -:  933:        _status == Fw::FW_SERIALIZE_OK,
+        -:  934:        static_cast<AssertArg>(_status)
+        -:  935:        );
+        -:  936:
+        -:  937:    // Fake port number to make message dequeue work
+       21:  938:    NATIVE_INT_TYPE port = 0;
+       21:  939:    _status = msg.serialize(port);
+       21:  940:    FW_ASSERT (
+        -:  941:        _status == Fw::FW_SERIALIZE_OK,
+        -:  942:        static_cast<AssertArg>(_status)
+        -:  943:    );
+        -:  944:
+       21:  945:    _status = msg.serialize(opCode);
+       21:  946:    FW_ASSERT (
+        -:  947:        _status == Fw::FW_SERIALIZE_OK,
+        -:  948:        static_cast<AssertArg>(_status)
+        -:  949:    );
+        -:  950:
+       21:  951:    _status = msg.serialize(cmdSeq);
+       21:  952:    FW_ASSERT (
+        -:  953:        _status == Fw::FW_SERIALIZE_OK,
+        -:  954:        static_cast<AssertArg>(_status)
+        -:  955:    );
+        -:  956:
+       21:  957:    _status = msg.serialize(args);
+       21:  958:    FW_ASSERT (
+        -:  959:        _status == Fw::FW_SERIALIZE_OK,
+        -:  960:        static_cast<AssertArg>(_status)
+        -:  961:    );
+        -:  962:
+        -:  963:    // send message
+       21:  964:    Os::Queue::QueueBlocking _block =
+        -:  965:      Os::Queue::QUEUE_NONBLOCKING;
+        -:  966:    Os::Queue::QueueStatus qStatus =
+       21:  967:      this->m_queue.send(msg, 0,_block);
+       21:  968:    FW_ASSERT(
+        -:  969:        qStatus == Os::Queue::QUEUE_OK,
+        -:  970:        static_cast<AssertArg>(qStatus)
+        -:  971:    );
+        -:  972:
+       21:  973:  }
+        -:  974:
+       21:  975:  void PcaServoComponentBase::
+        -:  976:    PS_EN_preMsgHook(
+        -:  977:        FwOpcodeType opCode,
+        -:  978:        U32 cmdSeq
+        -:  979:    )
+        -:  980:  {
+        -:  981:    // Defaults to no-op; can be overridden
+       21:  982:  }
+        -:  983:
+        -:  984:  // ----------------------------------------------------------------------
+        -:  985:  // Telemetry write functions
+        -:  986:  // ----------------------------------------------------------------------
+        -:  987:
+       86:  988:  void PcaServoComponentBase ::
+        -:  989:    tlmWrite_PS_Angle(F32 arg)
+        -:  990:  {
+        -:  991:
+       86:  992:    if (this->m_Tlm_OutputPort[0].isConnected()) {
+      172:  993:      Fw::Time _tlmTime;
+       86:  994:      if (this->m_Time_OutputPort[0].isConnected()) {
+       86:  995:         this->m_Time_OutputPort[0].invoke( _tlmTime);
+        -:  996:      }
+      172:  997:      Fw::TlmBuffer _tlmBuff;
+       86:  998:      Fw::SerializeStatus _stat = _tlmBuff.serialize(arg);
+       86:  999:      FW_ASSERT(
+        -: 1000:          _stat == Fw::FW_SERIALIZE_OK,
+        -: 1001:          static_cast<AssertArg>(_stat)
+        -: 1002:      );
+        -: 1003:
+        -: 1004:      FwChanIdType _id;
+        -: 1005:
+       86: 1006:      _id = this->getIdBase() + CHANNELID_PS_ANGLE;
+        -: 1007:
+       86: 1008:      this->m_Tlm_OutputPort[0].invoke(
+        -: 1009:          _id,
+        -: 1010:          _tlmTime,
+        -: 1011:          _tlmBuff
+        -: 1012:      );
+        -: 1013:    }
+        -: 1014:
+       86: 1015:  }
+        -: 1016:
+       86: 1017:  void PcaServoComponentBase ::
+        -: 1018:    tlmWrite_PS_Reg(U16 arg)
+        -: 1019:  {
+        -: 1020:
+       86: 1021:    if (this->m_Tlm_OutputPort[0].isConnected()) {
+      172: 1022:      Fw::Time _tlmTime;
+       86: 1023:      if (this->m_Time_OutputPort[0].isConnected()) {
+       86: 1024:         this->m_Time_OutputPort[0].invoke( _tlmTime);
+        -: 1025:      }
+      172: 1026:      Fw::TlmBuffer _tlmBuff;
+       86: 1027:      Fw::SerializeStatus _stat = _tlmBuff.serialize(arg);
+       86: 1028:      FW_ASSERT(
+        -: 1029:          _stat == Fw::FW_SERIALIZE_OK,
+        -: 1030:          static_cast<AssertArg>(_stat)
+        -: 1031:      );
+        -: 1032:
+        -: 1033:      FwChanIdType _id;
+        -: 1034:
+       86: 1035:      _id = this->getIdBase() + CHANNELID_PS_REG;
+        -: 1036:
+       86: 1037:      this->m_Tlm_OutputPort[0].invoke(
+        -: 1038:          _id,
+        -: 1039:          _tlmTime,
+        -: 1040:          _tlmBuff
+        -: 1041:      );
+        -: 1042:    }
+        -: 1043:
+       86: 1044:  }
+        -: 1045:
+        -: 1046:  // ----------------------------------------------------------------------
+        -: 1047:  // Time
+        -: 1048:  // ----------------------------------------------------------------------
+        -: 1049:
+    #####: 1050:  Fw::Time PcaServoComponentBase ::
+        -: 1051:    getTime(void)
+        -: 1052:  {
+    #####: 1053:    if (this->m_Time_OutputPort[0].isConnected()) {
+    #####: 1054:      Fw::Time _time;
+    #####: 1055:      this->m_Time_OutputPort[0].invoke(_time);
+    #####: 1056:      return _time;
+        -: 1057:    } else {
+    #####: 1058:      return Fw::Time(TB_NONE,0,0);
+        -: 1059:    }
+        -: 1060:  }
+        -: 1061:
+        -: 1062:  // ----------------------------------------------------------------------
+        -: 1063:  // Event handling functions
+        -: 1064:  // ----------------------------------------------------------------------
+        -: 1065:
+       86: 1066:  void PcaServoComponentBase ::
+        -: 1067:    log_ACTIVITY_HI_PS_AngleCmd(
+        -: 1068:        U8 inst, F32 angle, U16 reg
+        -: 1069:    )
+        -: 1070:  {
+        -: 1071:
+        -: 1072:
+        -: 1073:    // Get the time
+      172: 1074:    Fw::Time _logTime;
+       86: 1075:    if (this->m_Time_OutputPort[0].isConnected()) {
+       86: 1076:       this->m_Time_OutputPort[0].invoke( _logTime);
+        -: 1077:    }
+        -: 1078:
+       86: 1079:    FwEventIdType _id = static_cast<FwEventIdType>(0);
+        -: 1080:
+       86: 1081:    _id = this->getIdBase() + EVENTID_PS_ANGLECMD;
+        -: 1082:
+        -: 1083:    // Emit the event on the log port
+       86: 1084:    if (this->m_Log_OutputPort[0].isConnected()) {
+        -: 1085:
+      172: 1086:      Fw::LogBuffer _logBuff;
+       86: 1087:      Fw::SerializeStatus _status = Fw::FW_SERIALIZE_OK;
+        -: 1088:
+        -: 1089:#if FW_AMPCS_COMPATIBLE
+        -: 1090:      // Serialize the number of arguments
+        -: 1091:      _status = _logBuff.serialize(static_cast<U8>(3));
+        -: 1092:      FW_ASSERT(
+        -: 1093:          _status == Fw::FW_SERIALIZE_OK,
+        -: 1094:          static_cast<AssertArg>(_status)
+        -: 1095:      );
+        -: 1096:#endif
+        -: 1097:
+        -: 1098:#if FW_AMPCS_COMPATIBLE
+        -: 1099:      // Serialize the argument size
+        -: 1100:      _status = _logBuff.serialize(
+        -: 1101:          static_cast<U8>(sizeof(inst))
+        -: 1102:      );
+        -: 1103:      FW_ASSERT(
+        -: 1104:          _status == Fw::FW_SERIALIZE_OK,
+        -: 1105:          static_cast<AssertArg>(_status)
+        -: 1106:      );
+        -: 1107:#endif
+        -: 1108:
+       86: 1109:      _status = _logBuff.serialize(inst);
+       86: 1110:      FW_ASSERT(
+        -: 1111:          _status == Fw::FW_SERIALIZE_OK,
+        -: 1112:          static_cast<AssertArg>(_status)
+        -: 1113:      );
+        -: 1114:
+        -: 1115:#if FW_AMPCS_COMPATIBLE
+        -: 1116:      // Serialize the argument size
+        -: 1117:      _status = _logBuff.serialize(
+        -: 1118:          static_cast<U8>(sizeof(angle))
+        -: 1119:      );
+        -: 1120:      FW_ASSERT(
+        -: 1121:          _status == Fw::FW_SERIALIZE_OK,
+        -: 1122:          static_cast<AssertArg>(_status)
+        -: 1123:      );
+        -: 1124:#endif
+        -: 1125:
+       86: 1126:      _status = _logBuff.serialize(angle);
+       86: 1127:      FW_ASSERT(
+        -: 1128:          _status == Fw::FW_SERIALIZE_OK,
+        -: 1129:          static_cast<AssertArg>(_status)
+        -: 1130:      );
+        -: 1131:
+        -: 1132:#if FW_AMPCS_COMPATIBLE
+        -: 1133:      // Serialize the argument size
+        -: 1134:      _status = _logBuff.serialize(
+        -: 1135:          static_cast<U8>(sizeof(reg))
+        -: 1136:      );
+        -: 1137:      FW_ASSERT(
+        -: 1138:          _status == Fw::FW_SERIALIZE_OK,
+        -: 1139:          static_cast<AssertArg>(_status)
+        -: 1140:      );
+        -: 1141:#endif
+        -: 1142:
+       86: 1143:      _status = _logBuff.serialize(reg);
+       86: 1144:      FW_ASSERT(
+        -: 1145:          _status == Fw::FW_SERIALIZE_OK,
+        -: 1146:          static_cast<AssertArg>(_status)
+        -: 1147:      );
+        -: 1148:
+        -: 1149:
+       86: 1150:      this->m_Log_OutputPort[0].invoke(
+        -: 1151:          _id,
+        -: 1152:          _logTime,Fw::LOG_ACTIVITY_HI,
+        -: 1153:          _logBuff
+        -: 1154:      );
+        -: 1155:
+        -: 1156:    }
+        -: 1157:
+        -: 1158:    // Emit the event on the text log port
+        -: 1159:#if FW_ENABLE_TEXT_LOGGING
+       86: 1160:    if (this->m_LogText_OutputPort[0].isConnected()) {
+        -: 1161:
+        -: 1162:#if FW_OBJECT_NAMES == 1
+       86: 1163:      const char* _formatString =
+        -: 1164:        "(%s) %s: Motor %d commanded to angle %f (0x%04X)";
+        -: 1165:#else
+        -: 1166:      const char* _formatString =
+        -: 1167:        "%s: Motor %d commanded to angle %f (0x%04X)";
+        -: 1168:#endif
+        -: 1169:
+        -: 1170:      char _textBuffer[FW_LOG_TEXT_BUFFER_SIZE];
+        -: 1171:
+       86: 1172:      (void) snprintf(
+        -: 1173:          _textBuffer,
+        -: 1174:          FW_LOG_TEXT_BUFFER_SIZE,
+        -: 1175:          _formatString,
+        -: 1176:#if FW_OBJECT_NAMES == 1
+        -: 1177:          this->m_objName,
+        -: 1178:#endif
+        -: 1179:          "PS_AngleCmd "
+        -: 1180:        , inst
+        -: 1181:        , angle
+        -: 1182:        , reg
+        -: 1183:      );
+        -: 1184:
+        -: 1185:      // Null terminate
+       86: 1186:      _textBuffer[FW_LOG_TEXT_BUFFER_SIZE-1] = 0;
+      172: 1187:      Fw::TextLogString _logString = _textBuffer;
+       86: 1188:      this->m_LogText_OutputPort[0].invoke(
+        -: 1189:          _id,
+        -: 1190:          _logTime,Fw::TEXT_LOG_ACTIVITY_HI,
+        -: 1191:          _logString
+        -: 1192:      );
+        -: 1193:
+        -: 1194:    }
+        -: 1195:#endif
+        -: 1196:
+       86: 1197:  }
+        -: 1198:
+        -: 1199:
+        -: 1200:  // ----------------------------------------------------------------------
+        -: 1201:  // Calls for invocations received on typed input ports
+        -: 1202:  // ----------------------------------------------------------------------
+        -: 1203:
+       59: 1204:  void PcaServoComponentBase ::
+        -: 1205:    m_p_position_in(
+        -: 1206:        Fw::PassiveComponentBase* callComp,
+        -: 1207:        NATIVE_INT_TYPE portNum,
+        -: 1208:        F32 angle
+        -: 1209:    )
+        -: 1210:  {
+       59: 1211:    FW_ASSERT(callComp);
+       59: 1212:    PcaServoComponentBase* compPtr =
+        -: 1213:      (PcaServoComponentBase*) callComp;
+       59: 1214:    compPtr->position_handlerBase(portNum, angle);
+       59: 1215:  }
+        -: 1216:
+        -: 1217:  // ----------------------------------------------------------------------
+        -: 1218:  // Port handler base-class functions for typed input ports
+        -: 1219:  // ----------------------------------------------------------------------
+        -: 1220:
+       59: 1221:  void PcaServoComponentBase ::
+        -: 1222:    position_handlerBase(
+        -: 1223:        NATIVE_INT_TYPE portNum,
+        -: 1224:        F32 angle
+        -: 1225:    )
+        -: 1226:  {
+        -: 1227:
+        -: 1228:    // Make sure port number is valid
+       59: 1229:    FW_ASSERT(portNum < this->getNum_position_InputPorts(),static_cast<AssertArg>(portNum));
+        -: 1230:
+        -: 1231:    // Call pre-message hook
+       59: 1232:    position_preMsgHook(
+        -: 1233:        portNum,
+        -: 1234:        angle
+       59: 1235:    );
+        -: 1236:
+      118: 1237:    ComponentIpcSerializableBuffer msg;
+       59: 1238:    Fw::SerializeStatus _status = Fw::FW_SERIALIZE_OK;
+        -: 1239:
+       59: 1240:    _status = msg.serialize(
+        -: 1241:        static_cast<NATIVE_INT_TYPE>(POSITION_SERVOSET)
+        -: 1242:    );
+       59: 1243:    FW_ASSERT (
+        -: 1244:        _status == Fw::FW_SERIALIZE_OK,
+        -: 1245:        static_cast<AssertArg>(_status)
+        -: 1246:    );
+        -: 1247:
+       59: 1248:    _status = msg.serialize(portNum);
+       59: 1249:    FW_ASSERT (
+        -: 1250:        _status == Fw::FW_SERIALIZE_OK,
+        -: 1251:        static_cast<AssertArg>(_status)
+        -: 1252:    );
+        -: 1253:
+        -: 1254:    // Serialize argument angle
+       59: 1255:    _status = msg.serialize(angle);
+       59: 1256:    FW_ASSERT(
+        -: 1257:        _status == Fw::FW_SERIALIZE_OK,
+        -: 1258:        static_cast<AssertArg>(_status)
+        -: 1259:    );
+        -: 1260:
+        -: 1261:
+        -: 1262:    // send message
+       59: 1263:    Os::Queue::QueueBlocking _block =
+        -: 1264:      Os::Queue::QUEUE_NONBLOCKING;
+        -: 1265:    Os::Queue::QueueStatus qStatus =
+       59: 1266:      this->m_queue.send(msg, 0,_block);
+       59: 1267:    FW_ASSERT(
+        -: 1268:        qStatus == Os::Queue::QUEUE_OK,
+        -: 1269:        static_cast<AssertArg>(qStatus)
+        -: 1270:    );
+        -: 1271:
+       59: 1272:  }
+        -: 1273:
+        -: 1274:  // ----------------------------------------------------------------------
+        -: 1275:  // Pre-message hooks for async input ports
+        -: 1276:  // ----------------------------------------------------------------------
+        -: 1277:
+       59: 1278:  void PcaServoComponentBase ::
+        -: 1279:    position_preMsgHook(
+        -: 1280:        NATIVE_INT_TYPE portNum,
+        -: 1281:        F32 angle
+        -: 1282:    )
+        -: 1283:  {
+        -: 1284:    // Default: no-op
+       59: 1285:  }
+        -: 1286:
+        -: 1287:  // ----------------------------------------------------------------------
+        -: 1288:  // Message dispatch method for active and queued components. Called
+        -: 1289:  // by active component thread or implementation code for queued components
+        -: 1290:  // ----------------------------------------------------------------------
+        -: 1291:
+      127: 1292:  Fw::QueuedComponentBase::MsgDispatchStatus PcaServoComponentBase ::
+        -: 1293:    doDispatch(void)
+        -: 1294:  {
+      254: 1295:    ComponentIpcSerializableBuffer msg;
+        -: 1296:    NATIVE_INT_TYPE priority;
+        -: 1297:
+      127: 1298:    Os::Queue::QueueStatus msgStatus = this->m_queue.receive(msg,priority,Os::Queue::QUEUE_BLOCKING);
+      127: 1299:    FW_ASSERT(
+        -: 1300:        msgStatus == Os::Queue::QUEUE_OK,
+        -: 1301:        static_cast<AssertArg>(msgStatus)
+        -: 1302:    );
+        -: 1303:
+        -: 1304:    // Reset to beginning of buffer
+      127: 1305:    msg.resetDeser();
+        -: 1306:
+        -: 1307:    NATIVE_INT_TYPE desMsg;
+      127: 1308:    Fw::SerializeStatus deserStatus = msg.deserialize(desMsg);
+      127: 1309:    FW_ASSERT(
+        -: 1310:        deserStatus == Fw::FW_SERIALIZE_OK,
+        -: 1311:        static_cast<AssertArg>(deserStatus)
+        -: 1312:    );
+        -: 1313:
+      127: 1314:    MsgTypeEnum msgType = static_cast<MsgTypeEnum>(desMsg);
+        -: 1315:
+      127: 1316:    if (msgType == PCASERVO_COMPONENT_EXIT) {
+    #####: 1317:      return MSG_DISPATCH_EXIT;
+        -: 1318:    }
+        -: 1319:
+        -: 1320:    NATIVE_INT_TYPE portNum;
+      127: 1321:    deserStatus = msg.deserialize(portNum);
+      127: 1322:    FW_ASSERT(
+        -: 1323:        deserStatus == Fw::FW_SERIALIZE_OK,
+        -: 1324:        static_cast<AssertArg>(deserStatus)
+        -: 1325:    );
+        -: 1326:
+      127: 1327:    switch (msgType) {
+        -: 1328:
+        -: 1329:      // Handle async input port position
+       59: 1330:      case POSITION_SERVOSET: {
+        -: 1331:
+        -: 1332:        // Deserialize argument angle
+        -: 1333:        F32 angle;
+       59: 1334:        deserStatus = msg.deserialize(angle);
+       59: 1335:        FW_ASSERT(
+        -: 1336:            deserStatus == Fw::FW_SERIALIZE_OK,
+        -: 1337:            static_cast<AssertArg>(deserStatus)
+        -: 1338:        );
+        -: 1339:
+        -: 1340:        // Call handler function
+       59: 1341:        this->position_handler(
+        -: 1342:            portNum,
+        -: 1343:            angle
+       59: 1344:        );
+        -: 1345:
+       59: 1346:        break;
+        -: 1347:
+        -: 1348:      }
+        -: 1349:
+        -: 1350:      // Handle command PS_ANG
+       27: 1351:      case CMD_PS_ANG: {
+        -: 1352:        // Deserialize opcode
+        -: 1353:        FwOpcodeType opCode;
+       27: 1354:        deserStatus = msg.deserialize(opCode);
+       27: 1355:        FW_ASSERT (
+        -: 1356:            deserStatus == Fw::FW_SERIALIZE_OK,
+        -: 1357:            static_cast<AssertArg>(deserStatus)
+        -: 1358:        );
+        -: 1359:
+        -: 1360:        // Deserialize command sequence
+        -: 1361:        U32 cmdSeq;
+       27: 1362:        deserStatus = msg.deserialize(cmdSeq);
+       27: 1363:        FW_ASSERT (
+        -: 1364:            deserStatus == Fw::FW_SERIALIZE_OK,
+        -: 1365:            static_cast<AssertArg>(deserStatus)
+        -: 1366:        );
+        -: 1367:
+        -: 1368:        // Deserialize command argument buffer
+       54: 1369:        Fw::CmdArgBuffer args;
+       27: 1370:        deserStatus = msg.deserialize(args);
+       27: 1371:        FW_ASSERT (
+        -: 1372:            deserStatus == Fw::FW_SERIALIZE_OK,
+        -: 1373:            static_cast<AssertArg>(deserStatus)
+        -: 1374:        );
+        -: 1375:
+        -: 1376:        // Reset buffer
+       27: 1377:        args.resetDeser();
+        -: 1378:
+        -: 1379:        // Deserialize argument angle
+        -: 1380:        F32 angle;
+       27: 1381:        deserStatus = args.deserialize(angle);
+       27: 1382:        if (deserStatus != Fw::FW_SERIALIZE_OK) {
+    #####: 1383:          if (this->m_CmdStatus_OutputPort[0].isConnected()) {
+    #####: 1384:            this->cmdResponse_out(
+        -: 1385:                opCode,
+        -: 1386:                cmdSeq,
+        -: 1387:                Fw::COMMAND_FORMAT_ERROR
+        -: 1388:            );
+        -: 1389:          }
+        -: 1390:          // Don't crash the task if bad arguments were passed from the ground
+    #####: 1391:          break;
+        -: 1392:        }
+        -: 1393:
+        -: 1394:        // Make sure there was no data left over.
+        -: 1395:        // That means the argument buffer size was incorrect.
+        -: 1396:#if FW_CMD_CHECK_RESIDUAL
+       27: 1397:        if (args.getBuffLeft() != 0) {
+    #####: 1398:          if (this->m_CmdStatus_OutputPort[0].isConnected()) {
+    #####: 1399:            this->cmdResponse_out(opCode,cmdSeq,Fw::COMMAND_FORMAT_ERROR);
+        -: 1400:          }
+        -: 1401:          // Don't crash the task if bad arguments were passed from the ground
+    #####: 1402:          break;
+        -: 1403:        }
+        -: 1404:#endif
+        -: 1405:        // Call handler function
+       27: 1406:        this->PS_ANG_cmdHandler(
+        -: 1407:            opCode,
+        -: 1408:            cmdSeq,
+        -: 1409:            angle
+       27: 1410:        );
+        -: 1411:
+       27: 1412:        break;
+        -: 1413:
+        -: 1414:      }
+        -: 1415:
+        -: 1416:      // Handle command PS_DIS
+       20: 1417:      case CMD_PS_DIS: {
+        -: 1418:        // Deserialize opcode
+        -: 1419:        FwOpcodeType opCode;
+       20: 1420:        deserStatus = msg.deserialize(opCode);
+       20: 1421:        FW_ASSERT (
+        -: 1422:            deserStatus == Fw::FW_SERIALIZE_OK,
+        -: 1423:            static_cast<AssertArg>(deserStatus)
+        -: 1424:        );
+        -: 1425:
+        -: 1426:        // Deserialize command sequence
+        -: 1427:        U32 cmdSeq;
+       20: 1428:        deserStatus = msg.deserialize(cmdSeq);
+       20: 1429:        FW_ASSERT (
+        -: 1430:            deserStatus == Fw::FW_SERIALIZE_OK,
+        -: 1431:            static_cast<AssertArg>(deserStatus)
+        -: 1432:        );
+        -: 1433:
+        -: 1434:        // Deserialize command argument buffer
+       40: 1435:        Fw::CmdArgBuffer args;
+       20: 1436:        deserStatus = msg.deserialize(args);
+       20: 1437:        FW_ASSERT (
+        -: 1438:            deserStatus == Fw::FW_SERIALIZE_OK,
+        -: 1439:            static_cast<AssertArg>(deserStatus)
+        -: 1440:        );
+        -: 1441:
+        -: 1442:        // Reset buffer
+       20: 1443:        args.resetDeser();
+        -: 1444:
+        -: 1445:        // Make sure there was no data left over.
+        -: 1446:        // That means the argument buffer size was incorrect.
+        -: 1447:#if FW_CMD_CHECK_RESIDUAL
+       20: 1448:        if (args.getBuffLeft() != 0) {
+    #####: 1449:          if (this->m_CmdStatus_OutputPort[0].isConnected()) {
+    #####: 1450:            this->cmdResponse_out(opCode,cmdSeq,Fw::COMMAND_FORMAT_ERROR);
+        -: 1451:          }
+        -: 1452:          // Don't crash the task if bad arguments were passed from the ground
+    #####: 1453:          break;
+        -: 1454:        }
+        -: 1455:#endif
+        -: 1456:        // Call handler function
+       20: 1457:        this->PS_DIS_cmdHandler(opCode, cmdSeq);
+        -: 1458:
+       20: 1459:        break;
+        -: 1460:
+        -: 1461:      }
+        -: 1462:
+        -: 1463:      // Handle command PS_EN
+       21: 1464:      case CMD_PS_EN: {
+        -: 1465:        // Deserialize opcode
+        -: 1466:        FwOpcodeType opCode;
+       21: 1467:        deserStatus = msg.deserialize(opCode);
+       21: 1468:        FW_ASSERT (
+        -: 1469:            deserStatus == Fw::FW_SERIALIZE_OK,
+        -: 1470:            static_cast<AssertArg>(deserStatus)
+        -: 1471:        );
+        -: 1472:
+        -: 1473:        // Deserialize command sequence
+        -: 1474:        U32 cmdSeq;
+       21: 1475:        deserStatus = msg.deserialize(cmdSeq);
+       21: 1476:        FW_ASSERT (
+        -: 1477:            deserStatus == Fw::FW_SERIALIZE_OK,
+        -: 1478:            static_cast<AssertArg>(deserStatus)
+        -: 1479:        );
+        -: 1480:
+        -: 1481:        // Deserialize command argument buffer
+       42: 1482:        Fw::CmdArgBuffer args;
+       21: 1483:        deserStatus = msg.deserialize(args);
+       21: 1484:        FW_ASSERT (
+        -: 1485:            deserStatus == Fw::FW_SERIALIZE_OK,
+        -: 1486:            static_cast<AssertArg>(deserStatus)
+        -: 1487:        );
+        -: 1488:
+        -: 1489:        // Reset buffer
+       21: 1490:        args.resetDeser();
+        -: 1491:
+        -: 1492:        // Make sure there was no data left over.
+        -: 1493:        // That means the argument buffer size was incorrect.
+        -: 1494:#if FW_CMD_CHECK_RESIDUAL
+       21: 1495:        if (args.getBuffLeft() != 0) {
+    #####: 1496:          if (this->m_CmdStatus_OutputPort[0].isConnected()) {
+    #####: 1497:            this->cmdResponse_out(opCode,cmdSeq,Fw::COMMAND_FORMAT_ERROR);
+        -: 1498:          }
+        -: 1499:          // Don't crash the task if bad arguments were passed from the ground
+    #####: 1500:          break;
+        -: 1501:        }
+        -: 1502:#endif
+        -: 1503:        // Call handler function
+       21: 1504:        this->PS_EN_cmdHandler(opCode, cmdSeq);
+        -: 1505:
+       21: 1506:        break;
+        -: 1507:
+        -: 1508:      }
+        -: 1509:
+    #####: 1510:      default:
+    #####: 1511:        return MSG_DISPATCH_ERROR;
+        -: 1512:
+        -: 1513:    }
+        -: 1514:
+      127: 1515:    return MSG_DISPATCH_OK;
+        -: 1516:
+        -: 1517:  }
+        -: 1518:
+       75: 1519:} // end namespace RobotArm

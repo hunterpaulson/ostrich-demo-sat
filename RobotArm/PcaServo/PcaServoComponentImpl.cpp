@@ -32,6 +32,8 @@ namespace RobotArm {
 #endif
 	 ,m_instance(0), m_addr(0)
   {
+	  this->m_buff.setbufferID(0);
+	  this->m_buff.setmanagerID(0);
 	  this->m_buff.setdata((U64)this->m_data);
 	  this->m_buff.setsize(I2C_BUFFER_SIZE);
   }

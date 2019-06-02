@@ -1,0 +1,23 @@
+Running unit test for RobotArmPcaServo
+make[1]: Entering directory '/mnt/c/Users/tcanham/source2/fprime/branches/nasa-timcanham/fprime/RobotArm/PcaServo'
+Running test/ut/runtest_LINUX with output dir linux-linux-x86-debug-gnu-ut-bin
+test/ut/runtest_LINUX linux-linux-x86-debug-gnu-ut-bin
+Running /mnt/c/Users/tcanham/source2/fprime/branches/nasa-timcanham/fprime/RobotArm/PcaServo/test/ut/linux-linux-x86-debug-gnu-ut-bin/test_ut
+[==========] Running 3 tests from 1 test case.
+[----------] Global test environment set-up.
+[----------] 3 tests from TestNominal
+[ RUN      ] TestNominal.ServoTest
+EVENT: (0) (0:0,0) ACTIVITY_HI: (PcaServo) PS_AngleCmd : Motor 0 commanded to angle -90.000000 (0x0058)
+EVENT: (0) (0:0,0) ACTIVITY_HI: (PcaServo) PS_AngleCmd : Motor 0 commanded to angle 0.000000 (0x0128)
+EVENT: (0) (0:0,0) ACTIVITY_HI: (PcaServo) PS_AngleCmd : Motor 0 commanded to angle 90.000000 (0x01F9)
+[       OK ] TestNominal.ServoTest (0 ms)
+[ RUN      ] TestNominal.EnableTest
+[       OK ] TestNominal.EnableTest (500 ms)
+[ RUN      ] TestNominal.DisableTest
+[       OK ] TestNominal.DisableTest (0 ms)
+[----------] 3 tests from TestNominal (502 ms total)
+
+[----------] Global test environment tear-down
+[==========] 3 tests from 1 test case ran. (502 ms total)
+[  PASSED  ] 3 tests.
+make[1]: Leaving directory '/mnt/c/Users/tcanham/source2/fprime/branches/nasa-timcanham/fprime/RobotArm/PcaServo'

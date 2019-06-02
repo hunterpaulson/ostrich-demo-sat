@@ -9,17 +9,20 @@
 #include <gtest/gtest.h>
 #include <Fw/Test/UnitTest.hpp>
 
-
-TEST(TestNominal,CycleTest) {
+TEST(TestNominal,ServoTest) {
     RobotArm::Tester tester;
-    tester.testCycle();
+    tester.servoTest();
 }
 
-TEST(TestNominal,Angles) {
+TEST(TestNominal,EnableTest) {
     RobotArm::Tester tester;
-    tester.testAngles();
+    tester.enableTest();
 }
 
+TEST(TestNominal,DisableTest) {
+    RobotArm::Tester tester;
+    tester.disableTest();
+}
 
 int main(int argc, char* argv[]) {
     ::testing::InitGoogleTest(&argc, argv);
