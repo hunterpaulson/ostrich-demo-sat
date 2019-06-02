@@ -116,9 +116,9 @@ namespace RobotArm {
       // write to motor port
       this->position_out(ARM_LENGTH_PORT,angle);
       // send event
-      this->log_ACTIVITY_HI_AA_ArmHeightAngleCmd(angle);
+      this->log_ACTIVITY_HI_AA_ArmLengthAngleCmd(angle);
       // send telemetry
-      this->tlmWrite_AA_ArmHeightAngle(angle);
+      this->tlmWrite_AA_ArmLengthAngle(angle);
       // return command status
       this->cmdResponse_out(opCode,cmdSeq,Fw::COMMAND_OK);
   }

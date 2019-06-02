@@ -1,0 +1,141 @@
+        -:    0:Source:/mnt/c/Users/tcanham/source2/fprime/branches/nasa-timcanham/fprime/RobotArm/ArmDemo/ArmDemoComponentImpl.cpp
+        -:    0:Programs:18
+        -:    1:// ======================================================================
+        -:    2:// \title  ArmDemoComponentImpl.cpp
+        -:    3:// \author tcanham
+        -:    4:// \brief  cpp file for ArmDemo component implementation class
+        -:    5://
+        -:    6:// \copyright
+        -:    7:// Copyright 2009-2015, by the California Institute of Technology.
+        -:    8:// ALL RIGHTS RESERVED.  United States Government Sponsorship
+        -:    9:// acknowledged.
+        -:   10://
+        -:   11:// ======================================================================
+        -:   12:
+        -:   13:
+        -:   14:#include <RobotArm/ArmDemo/ArmDemoComponentImpl.hpp>
+        -:   15:#include <RobotArm/ArmDemo/ArmDemoComponentImplCfg.hpp>
+        -:   16:#include "Fw/Types/BasicTypes.hpp"
+        -:   17:
+        -:   18:namespace RobotArm {
+        -:   19:
+        -:   20:  // ----------------------------------------------------------------------
+        -:   21:  // Construction, initialization, and destruction
+        -:   22:  // ----------------------------------------------------------------------
+        -:   23:
+        4:   24:  ArmDemoComponentImpl ::
+        -:   25:#if FW_OBJECT_NAMES == 1
+        -:   26:    ArmDemoComponentImpl(
+        -:   27:        const char *const compName
+        4:   28:    ) :
+        -:   29:      ArmDemoComponentBase(compName)
+        -:   30:#else
+        -:   31:    ArmDemoComponentImpl(void)
+        -:   32:#endif
+        4:   33:	,m_cycles(0)
+        -:   34:  {
+        -:   35:
+        4:   36:  }
+        -:   37:
+        4:   38:  void ArmDemoComponentImpl ::
+        -:   39:    init(
+        -:   40:        const NATIVE_INT_TYPE queueDepth,
+        -:   41:        const NATIVE_INT_TYPE instance
+        -:   42:    )
+        -:   43:  {
+        4:   44:    ArmDemoComponentBase::init(queueDepth, instance);
+        4:   45:  }
+        -:   46:
+        4:   47:  ArmDemoComponentImpl ::
+        4:   48:    ~ArmDemoComponentImpl(void)
+        -:   49:  {
+        -:   50:
+        4:   51:  }
+        -:   52:
+        -:   53:  // ----------------------------------------------------------------------
+        -:   54:  // Command handler implementations
+        -:   55:  // ----------------------------------------------------------------------
+        -:   56:
+        6:   57:  void ArmDemoComponentImpl ::
+        -:   58:    AA_CLAW_ANG_cmdHandler(
+        -:   59:        const FwOpcodeType opCode,
+        -:   60:        const U32 cmdSeq,
+        -:   61:        F32 angle
+        -:   62:    )
+        -:   63:  {
+        -:   64:
+        -:   65:      // write to motor port
+        6:   66:      this->position_out(CLAW_PORT,angle);
+        -:   67:      // send event
+        6:   68:      this->log_ACTIVITY_HI_AA_ClawAngleCmd(angle);
+        -:   69:      // send telemetry
+        6:   70:      this->tlmWrite_AA_ClawAngle(angle);
+        -:   71:      // return command status
+        6:   72:      this->cmdResponse_out(opCode,cmdSeq,Fw::COMMAND_OK);
+        6:   73:  }
+        -:   74:
+        6:   75:  void ArmDemoComponentImpl ::
+        -:   76:    AA_BASE_ANG_cmdHandler(
+        -:   77:        const FwOpcodeType opCode,
+        -:   78:        const U32 cmdSeq,
+        -:   79:        F32 angle
+        -:   80:    )
+        -:   81:  {
+        -:   82:      // write to motor port
+        6:   83:      this->position_out(BASE_PORT,angle);
+        -:   84:      // send event
+        6:   85:      this->log_ACTIVITY_HI_AA_BaseAngleCmd(angle);
+        -:   86:      // send telemetry
+        6:   87:      this->tlmWrite_AA_BaseAngle(angle);
+        -:   88:      // return command status
+        6:   89:      this->cmdResponse_out(opCode,cmdSeq,Fw::COMMAND_OK);
+        6:   90:  }
+        -:   91:
+        6:   92:  void ArmDemoComponentImpl ::
+        -:   93:    AA_ARM_HEIGHT_ANG_cmdHandler(
+        -:   94:        const FwOpcodeType opCode,
+        -:   95:        const U32 cmdSeq,
+        -:   96:        F32 angle
+        -:   97:    )
+        -:   98:  {
+        -:   99:      // write to motor port
+        6:  100:      this->position_out(ARM_HEIGHT_PORT,angle);
+        -:  101:      // send event
+        6:  102:      this->log_ACTIVITY_HI_AA_ArmHeightAngleCmd(angle);
+        -:  103:      // send telemetry
+        6:  104:      this->tlmWrite_AA_ArmHeightAngle(angle);
+        -:  105:      // return command status
+        6:  106:      this->cmdResponse_out(opCode,cmdSeq,Fw::COMMAND_OK);
+        6:  107:  }
+        -:  108:
+        6:  109:  void ArmDemoComponentImpl ::
+        -:  110:    AA_ARM_LENGTH_ANG_cmdHandler(
+        -:  111:        const FwOpcodeType opCode,
+        -:  112:        const U32 cmdSeq,
+        -:  113:        F32 angle
+        -:  114:    )
+        -:  115:  {
+        -:  116:      // write to motor port
+        6:  117:      this->position_out(ARM_LENGTH_PORT,angle);
+        -:  118:      // send event
+        6:  119:      this->log_ACTIVITY_HI_AA_ArmLengthAngleCmd(angle);
+        -:  120:      // send telemetry
+        6:  121:      this->tlmWrite_AA_ArmLengthAngle(angle);
+        -:  122:      // return command status
+        6:  123:      this->cmdResponse_out(opCode,cmdSeq,Fw::COMMAND_OK);
+        6:  124:  }
+        -:  125:
+        -:  126:  // ----------------------------------------------------------------------
+        -:  127:  // Handler implementations for user-defined typed input ports
+        -:  128:  // ----------------------------------------------------------------------
+        -:  129:
+      100:  130:  void ArmDemoComponentImpl ::
+        -:  131:    Run_handler(
+        -:  132:        const NATIVE_INT_TYPE portNum,
+        -:  133:        NATIVE_UINT_TYPE context
+        -:  134:    )
+        -:  135:  {
+      100:  136:	  this->tlmWrite_AA_Cycles(this->m_cycles++);
+      100:  137:  }
+        -:  138:
+        6:  139:} // end namespace RobotArm

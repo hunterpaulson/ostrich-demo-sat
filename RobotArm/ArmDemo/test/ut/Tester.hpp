@@ -42,9 +42,13 @@ namespace RobotArm {
       // Tests
       // ----------------------------------------------------------------------
 
-      //! To do
+      //! Test cycling
       //!
-      void toDo(void);
+      void testCycle(void);
+
+      //! Test claw angle
+      //!
+      void testAngles(void);
 
     private:
 

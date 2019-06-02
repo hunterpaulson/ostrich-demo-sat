@@ -1,0 +1,13 @@
+File '/mnt/c/Users/tcanham/source2/fprime/branches/nasa-timcanham/fprime/RobotArm/ArmDemo/ArmDemoComponentImpl.cpp'
+Lines executed:100.00% of 38
+Creating 'ArmDemoComponentImpl.cpp.gcov'
+
+File '/usr/include/c++/7/iostream'
+Lines executed:100.00% of 1
+Creating 'iostream.gcov'
+
+File '/mnt/c/Users/tcanham/source2/fprime/branches/nasa-timcanham/fprime/RobotArm/ArmDemo/ArmDemoComponentAc.cpp'
+Lines executed:84.37% of 563
+Creating 'ArmDemoComponentAc.cpp.gcov'
+
+Lines executed:85.38% of 602

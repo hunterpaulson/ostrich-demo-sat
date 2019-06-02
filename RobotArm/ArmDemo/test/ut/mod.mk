@@ -16,8 +16,9 @@ TEST_SRC = 	TesterBase.cpp 	\
 			Tester.cpp \
 			main.cpp
 
-TEST_MODS = RobotArm/ArmApp \
+TEST_MODS = RobotArm/ArmDemo \
 			RobotArm/ServoPort \
+			Svc/Sched \
 			gtest \
 			Fw/Cmd \
 			Fw/Comp \

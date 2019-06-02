@@ -10,10 +10,14 @@
 #include <Fw/Test/UnitTest.hpp>
 
 
-TEST(TestNominal,Nominal) {
-
+TEST(TestNominal,CycleTest) {
     RobotArm::Tester tester;
+    tester.testCycle();
+}
 
+TEST(TestNominal,Angles) {
+    RobotArm::Tester tester;
+    tester.testAngles();
 }
 
 
