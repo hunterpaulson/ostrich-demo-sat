@@ -39,17 +39,17 @@ int main(int argc, char* argv[]) {
 
     printf("Address: %d (0x%02X) Device: %s\n",addr,addr,device);
 
-    for (int i = optind; i < argc; i++) {
-        printf("Data: %s\n",argv[i]);
-    }
-
-    return 0;
-
-    Drv::Tester tester;
-
     U8 data[12];
 
-    tester.sendData(0x40,data,sizeof(data));
+    for (int i = optind; i < argc; i++) {
+    	data[optind-i] = strtoul(argv[i],0,0);
+        printf("Data: %s 0x%02X\n",argv[i],data[optind-i]);
+    }
+
+    Drv::Tester tester;
+    tester.open(device);
+
+    tester.sendData(addr,data,argc-optind);
 
     return 0;
 }

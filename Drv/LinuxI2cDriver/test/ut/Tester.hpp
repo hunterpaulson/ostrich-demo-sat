@@ -46,6 +46,8 @@ namespace Drv {
       //!
       void sendData(U32 addr, U8* data, NATIVE_INT_TYPE size);
 
+      void open(const char* device);
+
     private:
 
       // ----------------------------------------------------------------------

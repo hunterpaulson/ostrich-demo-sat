@@ -54,6 +54,11 @@ namespace Drv {
       this->invoke_to_write(0,addr,dataBuff);
   }
 
+  void Tester::open(const char* device) {
+	  this->component.open(device);
+  }
+
+
   // ----------------------------------------------------------------------
   // Helper methods 
   // ----------------------------------------------------------------------
