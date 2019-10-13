@@ -73,11 +73,11 @@ void read_dht11_dat()
                 f = dht11_dat[2] * 9. / 5. + 32;
 
                 lcdPosition(lcd, 0, 0);
-                lcdPrintf(lcd, "Humidity: %d.%d %%\n", dht11_dat[0], dht11_dat[1]);
+                lcdPrintf(lcd, "H: %d.%d %%\n", dht11_dat[0], dht11_dat[1]);
 
                 lcdPosition(lcd, 0, 1);
                 //lcdPrintf(lcd, "Temp: %d.0 C", dht11_dat[2]); //Uncomment for Celsius
-                lcdPrintf(lcd, "Temp: %.1f F", f); //Comment out for Celsius
+                lcdPrintf(lcd, "T: %.1f F", f); //Comment out for Celsius
         }
 }
 
