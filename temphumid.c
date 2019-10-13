@@ -75,7 +75,7 @@ void read_dht11_dat()
                 f = dht11_dat[2] * 9. / 5. + 32;        //F calculation 
 
                 //humidity
-                setupStr = "Humidity: %d.%d %%\n";
+                setupStr = "Humidity: %d.%d %%";
                 sprintf(displayStr, setupStr, dht11_dat[0], dht11_dat[1]);
                 lcdPosition(lcd, 0, 0);                 //print in the first row
                 lcdPuts(lcd, displayStr);
