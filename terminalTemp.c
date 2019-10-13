@@ -29,9 +29,9 @@ void read_dht11_dat()
         lastTest = digitalRead(DHTPIN);
         while (lastTest == laststate)
         {
-		        printf("%d", lastTest); //idk why this works but it does
+		        //printf("%d", lastTest); //idk why this works but it does
                 counter++;
-                delayMicroseconds(1);
+                delayMicroseconds(2);
                 if (counter == 255)
                 {
                         break;
@@ -42,7 +42,7 @@ void read_dht11_dat()
         
 		laststate = digitalRead(DHTPIN);
 
-        printf("\n");
+        //printf("\n");
 		if ( counter == 255 )
 			break;
  
