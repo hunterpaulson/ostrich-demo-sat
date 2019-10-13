@@ -25,8 +25,8 @@ void read_dht11_dat()
         uint8_t counter = 0;
         uint8_t j = 0, i;
         float f; 
-        char displayStr[32];                                    //pointer to char string
-        char* setupStr = "H: %d.%d %%\nT: %d.%d C\0";           //set up string for sprintf        
+        char displayStr[16];                                    //pointer to char string
+        char* setupStr;                                         //set up string for sprintf        
 
         dht11_dat[0] = dht11_dat[1] = dht11_dat[2] = dht11_dat[3] = dht11_dat[4] = 0;
 
@@ -72,8 +72,18 @@ void read_dht11_dat()
 
         if ((j >= 40) && (dht11_dat[4] == ((dht11_dat[0] + dht11_dat[1] + dht11_dat[2] + dht11_dat[3]) & 0xFF)))
         {
-                f = dht11_dat[2] * 9. / 5. + 32;
-                sprintf(displayStr, setupStr, dht11_dat[0], dht11_dat[1], dht11_dat[2], dht11_dat[3]);
+                f = dht11_dat[2] * 9. / 5. + 32;        //F calculation 
+
+                //humidity
+                setupStr = "Humidity: %d.%d %%\n";
+                sprintf(displayStr, setupStr, dht11_dat[0], dht11_dat[1]);
+                lcdPosition(lcd, 0, 0);                 //print in the first row
+                lcdPuts(lcd, displayStr);
+
+                //temp
+                setupStr = "Temp: %d.%d C\0";
+                sprintf(displayStr, setupStr, dht11_dat[2], dht11_dat[3]);
+                lcdPosition(lcd, 0, 1);                 //print in the second row
                 lcdPuts(lcd, displayStr);
                 /*
                 lcdPosition(lcd, 0, 0);
