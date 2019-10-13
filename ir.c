@@ -1,3 +1,3 @@
 /*
 plain impl of the ir scanner
-*.
+*/

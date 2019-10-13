@@ -25,6 +25,8 @@ void read_dht11_dat()
         uint8_t counter = 0;
         uint8_t j = 0, i;
         float f; 
+        char displayStr[32];                                    //pointer to char string
+        char* setupStr = "H: %d.%d %%\nT: %d.%d C\0";           //set up string for sprintf        
 
         dht11_dat[0] = dht11_dat[1] = dht11_dat[2] = dht11_dat[3] = dht11_dat[4] = 0;
 
@@ -71,13 +73,16 @@ void read_dht11_dat()
         if ((j >= 40) && (dht11_dat[4] == ((dht11_dat[0] + dht11_dat[1] + dht11_dat[2] + dht11_dat[3]) & 0xFF)))
         {
                 f = dht11_dat[2] * 9. / 5. + 32;
-
+                sprintf(displayStr, setupStr, dht11_dat[0], dht11_dat[1], dht11_dat[2], dht11_dat[3]);
+                lcdPuts(lcd, displayStr);
+                /*
                 lcdPosition(lcd, 0, 0);
                 lcdPrintf(lcd, "H: %d.%d %%\n", dht11_dat[0], dht11_dat[1]);
 
                 lcdPosition(lcd, 0, 1);
                 //lcdPrintf(lcd, "Temp: %d.0 C", dht11_dat[2]); //Uncomment for Celsius
                 lcdPrintf(lcd, "T: %.1f F", f); //Comment out for Celsius
+                */
         }
 }
 
