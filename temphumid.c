@@ -16,6 +16,8 @@
 
 int lcd;
 int dht11_dat[5] = {0, 0, 0, 0, 0};
+int lastTest; 
+
 
 void read_dht11_dat()
 {
@@ -38,17 +40,22 @@ void read_dht11_dat()
         for (i = 0; i < MAXTIMINGS; i++)
         {
                 counter = 0;
-                while (digitalRead(DHTPIN) == laststate)
+                lastTest = digitalRead(DHTPIN);
+                while (lastTest == laststate)
                 {
+                        printf("%d", lastTest);
                         counter++;
                         delayMicroseconds(1);
                         if (counter == 255)
                         {
                                 break;
                         }
+
+                        lastTest = digitalRead(DHTPIN);
                 }
                 laststate = digitalRead(DHTPIN);
 
+                printf("\n");
                 if (counter == 255)
                         break;
 
