@@ -5,7 +5,8 @@
 #define MAXTIMINGS	85
 #define DHTPIN		7
 int dht11_dat[5] = { 0, 0, 0, 0, 0 };
- 
+int lastTest; 
+
 void read_dht11_dat()
 {
 	uint8_t laststate	= HIGH;
@@ -25,17 +26,23 @@ void read_dht11_dat()
 	for ( i = 0; i < MAXTIMINGS; i++ )
 	{
 		counter = 0;
-		while ( digitalRead( DHTPIN ) == laststate )
-		{
-			counter++;
-			delayMicroseconds( 1 );
-			if ( counter == 255 )
-			{
-				break;
-			}
-		}
-		laststate = digitalRead( DHTPIN );
- 
+        lastTest = digitalRead(DHTPIN);
+        while (lastTest == laststate)
+        {
+		        printf("%d", lastTest);
+                counter++;
+                delayMicroseconds(1);
+                if (counter == 255)
+                {
+                        break;
+                }
+
+                lastTest = digitalRead(DHTPIN);
+        }
+        
+		laststate = digitalRead(DHTPIN);
+
+        printf("\n");
 		if ( counter == 255 )
 			break;
  
