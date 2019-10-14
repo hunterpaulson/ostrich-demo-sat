@@ -250,13 +250,13 @@ void lcd_output(string toPrint, int line){
     if(toPrint.length() > 16){
 
         //if string greater than screen length, split the string 
-        lcdPosition(lcd, 0, 0);
-        lcdPuts(lcd, toPrint.substr(0, 16));
-        lcdPosition(lcd, 0, 1);
-        lcdPuts(lcd, toPrint.substr(16, toPrint.length()-1));
+       // lcdPosition(lcd, 0, 0);
+       // lcdPuts(lcd, toPrint.substr(0, 16));
+       // lcdPosition(lcd, 0, 1);
+       // lcdPuts(lcd, toPrint.substr(16, toPrint.length()-1));
     }else{
         lcdPosition(lcd, 0, line);           
-        lcdPuts(lcd, toPrint);
+        lcdPuts(lcd,&toPrint);
     }
 
    
@@ -319,7 +319,7 @@ int main(void)
                 lcd_output("LEET HACKERMANZ", 0);
                 lcd_output("Hunter Paulson", 1);
                 break;
-            case KEY_6:
+            case KEY_7:
                 lcd_output("Kill me now", 0);
                 break;
             default:
@@ -330,7 +330,7 @@ int main(void)
         currentIrKey = read_ir_dat(); 
     }
 
-    lcd_output("Goodbye");
+    lcd_output("Goodbye", 0);
 
     serialClose(fd);
     return(0);
