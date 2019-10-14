@@ -225,12 +225,10 @@ string read_dht11_dat(int mode)
                 f = dht11_dat[2] * 9. / 5. + 32;        //F calculation 
 
                 //humidity
-                setupStr = "Humidity: %d.%d %%";
-                sprintf(HumDisplayStr, setupStr, dht11_dat[0], dht11_dat[1]);
+                sprintf(HumDisplayStr, "Humidity: %d.%d %%", dht11_dat[0], dht11_dat[1]);
         
                 //temp
-                setupStr = "Temp: %d.%d C\0";
-                sprintf(TempDisplayStr, setupStr, dht11_dat[2], dht11_dat[3]);
+                sprintf(TempDisplayStr, "Temp: %d.%d C", dht11_dat[2], dht11_dat[3]);
                 
                if(mode == 1){
                    return HumDisplayStr;
@@ -247,6 +245,8 @@ string read_dht11_dat(int mode)
 
 void lcd_output(string toPrint, int line){
     
+
+    lcdClear(lcd);
     if(toPrint.length() > 16){
 
         //if string greater than screen length, split the string 
@@ -275,7 +275,7 @@ int main(void)
 
     while(currentIrKey != KEY_POUND)
     {
-        switch(currentIrKey){
+        switch(lastIrKey){
             case KEY_1:             //print temperature
                 returnedString = read_dht11_dat(2);
 
@@ -323,7 +323,7 @@ int main(void)
                 lcd_output("Kill me now", 0);
                 break;
             default:
-                cout << "[ERROR] press the right buttons come on" << endl;
+               // cout << "[ERROR] press the right buttons come on" << endl;
         }
         
         lastIrKey = currentIrKey;
