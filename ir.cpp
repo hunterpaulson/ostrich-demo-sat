@@ -15,6 +15,7 @@ int main(){
     wiringPiSetup();
     
     string toString;
+    char c;
 
     if(fd > 0){
         serialFlush(fd); //flush any data in buffer
@@ -29,7 +30,8 @@ int main(){
                 for(int i = 0; i < bytesToRead; i++){
 		            //serialData[i] = serialGetchar(fd);
                     //printf("%c", serialData[i]);
-                    toString = serialGetchar(fd);
+                    c = serialGetchar(fd);
+                    toString.append(c);
                 }
 
                 cout << toString << endl;
