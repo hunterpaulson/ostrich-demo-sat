@@ -1,17 +1,28 @@
 #include <wiringSerial.h>
 #include <stdio.h>
-#include <ir_key_codes.h>
-
-int fd = serialOpen('/dev/ttyACM0', 9600);    //open the port w/ baud rate 9600
+#include <wiringPi.h>
+#include <errno.h>
 
 int main(){
+    wiringPiSetup();
+    int fd = serialOpen("/dev/ttyACM0", 9600);
+    char bullshit;
+   int test;
+
     if(fd > 0){
         serialFlush(fd); //flush any data in buffer
         printf("[IR-TEST] begin pressing buttons\n");
-        if(serialDataAvail(fd) > 0){
-            printf("%d", (char) serialGetchar(fd));
-        }
 
+	while(1){
+          //bullshit = (char) serialGetchar(fd);
+          test = serialDataAvail(fd);
+	  bullshit = (char) serialGetchar(fd);
+	 // printf("%d", test);
+	 
+	  if(test > 0){
+	      printf("%c", bullshit); 
+          }
+      }
     }else{
         printf("[ERROR] unable to open port '/dev/ttyACM0'\n");
     }
