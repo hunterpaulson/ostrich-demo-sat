@@ -322,8 +322,6 @@ int main(void)
             case KEY_7:
                 lcd_output("Kill me now", 0);
                 break;
-            default:
-               // cout << "[ERROR] press the right buttons come on" << endl;
         }
         
         lastIrKey = currentIrKey;
