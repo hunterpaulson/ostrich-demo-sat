@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string>
+#include <iostream>
 
 
 //USE WIRINGPI PIN NUMBERS
@@ -175,7 +176,7 @@ string read_dht11_dat(int mode)
         float f; 
         char TempDisplayStr[16];                                    //pointer to char string
         char HumDisplayStr[16]; 
-        char* setupStr;                                         //set up string for sprintf        
+        string setupStr;                                         //set up string for sprintf        
 
         dht11_dat[0] = dht11_dat[1] = dht11_dat[2] = dht11_dat[3] = dht11_dat[4] = 0;
 
@@ -245,8 +246,7 @@ string read_dht11_dat(int mode)
 }
 
 void lcd_output(string toPrint, int line){
-    cout << "[DEBUG] lcd_output ran: " << toPrint << endl;
-
+    
     if(toPrint.length() > 16){
 
         //if string greater than screen length, split the string 
@@ -256,7 +256,7 @@ void lcd_output(string toPrint, int line){
        // lcdPuts(lcd, toPrint.substr(16, toPrint.length()-1));
     }else{
         lcdPosition(lcd, 0, line);           
-        lcdPuts(lcd,&toPrint);
+        lcdPuts(lcd,toPrint.c_str());
     }
 
    
@@ -323,7 +323,7 @@ int main(void)
                 lcd_output("Kill me now", 0);
                 break;
             default:
-                cout << "[ERROR] press the right buttons come on\n";
+                cout << "[ERROR] press the right buttons come on" << endl;
         }
         
         lastIrKey = currentIrKey;
