@@ -5,7 +5,7 @@
 
 int fd = serialOpen("/dev/ttyACM0", 9600);
 int bytesToRead;
-char serialData[];
+
 
 int main(){
     wiringPiSetup();
@@ -15,18 +15,20 @@ int main(){
         printf("[IR-TEST] begin pressing buttons\n");
 
 	    while(1){
-            bytesToRead = serialDataAvail(fd);
+                bytesToRead = serialDataAvail(fd);
             
 	        if(bytesToRead > 0){
-                serialData = new char[bytesToRead];
+                 char * serialData = new char[bytesToRead];
 	            
                 for(int i = 0; i < bytesToRead; i++){
+		    serialData[i] = serialGetchar(fd);
                     printf("%c", serialData[i]);
                 }
 
-                printf("\n");
                 delete serialData;
+	        serialFlush(fd);
             }
+           delay(150);
         } 
     }else{
         printf("[ERROR] unable to open port '/dev/ttyACM0'\n");
