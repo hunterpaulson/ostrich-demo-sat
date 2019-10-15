@@ -1,7 +1,0 @@
-BUILDS := \
-	DARWIN \
-	LINUX \
-	CYGWIN \
-	BAERAD750 \
-	SPHINX
-
