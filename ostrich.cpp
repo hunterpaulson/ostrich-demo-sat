@@ -1,3 +1,17 @@
+/* Author: Zachary Hoffmann (zchoffma)
+*  Date: 10/13/19
+*  Description:
+*       This is the driver application for the plain implementation of the ostrich satellite, i.e. 
+*       without F'.  This application can be broken down into 4 parts: IR Driver function (read_ir_dat() and check_valid_key()),
+*       Temperature driver function (read_dht11_dat()), LCD printing function (lcd_output()), and the overall control (main()).
+*       
+*  Compile:
+*       g++ -o ostrich ostrich.cpp -lwiringPi -lwiringPiDev
+*/
+
+
+
+
 #include <wiringPi.h>
 #include <wiringSerial.h>
 #include <errno.h>
@@ -52,11 +66,11 @@ int dht11_dat[5] = {0, 0, 0, 0, 0};
 int currentState; 
 
 //IR RECEIVER INIT
-int fd = serialOpen("/dev/ttyACM0", 9600);   //open serial port with baud rate 9600
+int fd = serialOpen("/dev/ttyACM0", 9600);   //open serial port ttyACM0 with baud rate 9600
 int bytesToRead;    
 
 
-/* Checks if the key extracted by read_ir_dat() is valid or not
+/* This function checks if the key extracted by read_ir_dat() is valid or not
 *   
 *   @RETURNS -1 if invalid, else returns the valid key
 */
@@ -167,7 +181,12 @@ int read_ir_dat(){
 }
 
 
-
+/*  This function was largely taken from circuitbasics.com, but has been slightly changed to 
+*   fit the purpose of this project.  The temperature/humidity sensor used is the DHT11 Temperature 
+*   and Humidity sensor.  The link to the website containing the code is found here:
+*
+*   http://www.circuitbasics.com/how-to-set-up-the-dht11-humidity-sensor-on-the-raspberry-pi/
+*/
 string read_dht11_dat(int mode)
 {
         uint8_t laststate = HIGH;
@@ -176,7 +195,7 @@ string read_dht11_dat(int mode)
         float f; 
         char TempDisplayStr[16];                                    //pointer to char string
         char HumDisplayStr[16]; 
-        string setupStr;                                         //set up string for sprintf        
+
 
         dht11_dat[0] = dht11_dat[1] = dht11_dat[2] = dht11_dat[3] = dht11_dat[4] = 0;
 
@@ -195,9 +214,8 @@ string read_dht11_dat(int mode)
                 currentState = digitalRead(DHTPIN);
                 while (currentState == laststate)
                 {
-                        //printf("%d", currentState); //this shouldnt work but it does
                         counter++;
-                        delayMicroseconds(2); // is 2 because 1 is too fast
+                        delayMicroseconds(2); //Changed to 2 microseconds because 1 microsecond is too fast
                         if (counter == 255)
                         {
                                 break;
@@ -240,14 +258,19 @@ string read_dht11_dat(int mode)
 
         }
 
+        //used to repeatedly call this function
         return "invalidData";
 }
 
+
+/*  This function just outputs a given string to the lcd screen using wiringPi outputs
+*   
+*   Parameters:  toPrint --the string that will be printed 
+                 line --prints on either line 0 or 1 
+*/
 void lcd_output(string toPrint, int line){
     
-
-    lcdClear(lcd);
-    if(toPrint.length() > 16){
+    if(toPrint.length() > 16){     //if expecting larger than 16 char strings implement this 'if'
 
         //if string greater than screen length, split the string 
        // lcdPosition(lcd, 0, 0);
@@ -265,7 +288,7 @@ void lcd_output(string toPrint, int line){
 
 int main(void)
 {   
-    wiringPiSetup();
+    wiringPiSetup();     //must run to use wiringPi functions
     string returnedString;
     int count = 0;
     int currentIrKey = KEY_1;
@@ -273,7 +296,7 @@ int main(void)
 
     lcd = lcdInit (2, 16, 4, LCD_RS, LCD_E, LCD_D4, LCD_D5, LCD_D6, LCD_D7, 0, 0, 0, 0);
 
-    while(currentIrKey != KEY_POUND)
+    while(currentIrKey != KEY_POUND)   //press pound key to end program
     {
         switch(lastIrKey){
             case KEY_1:             //print temperature
@@ -283,8 +306,9 @@ int main(void)
                     returnedString = read_dht11_dat(2);
                     count++;
                 }
+                count = 0; //reset count
                 
-
+                lcdClear(lcd);
                 lcd_output(returnedString, 0);
                 delay(1000);
                 break;
@@ -296,30 +320,40 @@ int main(void)
                     returnedString = read_dht11_dat(1);
                     count++;
                 }
+                count = 0; //reset count
 
+                lcdClear(lcd);
                 lcd_output(returnedString, 0);
                 delay(1000);
                 break;
 
             case KEY_3:
+                lcdClear(lcd);
                 lcd_output("SATELLITE NAME:", 0);
                 lcd_output("Ostrich", 1);
                 break;
 
             case KEY_4:
                 //quote from the famous song 'Faucet Failure' by Ski Mask the Slump God
-                lcd_output("IM FLYER THAN A", 0);
-                lcd_output("FUCKIN OSTRICH", 1);
+                lcdClear(lcd);
+                lcd_output("IM FLYER THAN AN", 0);
+                lcd_output("OSTRICH", 1);
                 break;
+
             case KEY_5:
+                lcdClear(lcd);
                 lcd_output("HEAD OF PI OPS", 0);
                 lcd_output("Zach Hoffmann", 1);
                 break;
+
             case KEY_6:
+                lcdClear(lcd);
                 lcd_output("LEET HACKERMANZ", 0);
                 lcd_output("Hunter Paulson", 1);
                 break;
+
             case KEY_7:
+                lcdClear(lcd);
                 lcd_output("Kill me now", 0);
                 break;
         }
@@ -328,10 +362,9 @@ int main(void)
         currentIrKey = read_ir_dat(); 
     }
 
+    lcdClear(lcd);
     lcd_output("Goodbye", 0);
 
     serialClose(fd);
     return(0);
-
-
 }
