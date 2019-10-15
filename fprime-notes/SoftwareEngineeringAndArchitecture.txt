@@ -1,0 +1,82 @@
+Flight Software System Engineering and Architecture
+
+Definition:
+    Designing the various fucntions of the flight software and their interactions wit the spacecraft and each other
+
+
+
+Software Architecture:
+    different than software design 
+    describes the skeleton and high level infrastructure of the software 
+        independent of the application domain
+
+    Types:
+        Pipes and Filters
+        Publish and Subscribe
+        client-server
+        blackboard
+        data-base
+        event-driven
+        component
+
+    classic JPL flight software architecture
+        multi threaded module-based architecture
+        modules only communicate througth events using message queues
+        static point to point connection
+        monolithic
+    
+    atributes
+        modularity
+            improves software quality and maintainability
+            decompose the software into a cillection of modules (components of libraries)
+
+            a module is...
+                a unit of work assigned to a dev 
+                has set requirements
+
+            module coupling
+                the extent that modules are related to each other
+                high coupling is bad 
+                    Ex. control coupling, data coupling, content coupling
+
+            module cohesion
+                the extent that data and functions inside a module belong to eachother
+                high cohesion is good
+            
+        portability
+            software that is portable to a desktop workstation is much easier to develop
+            avoid the use of scattered contitional compilations by creating different implementations of a class or function at the lowest level
+
+        reusability
+            frameworks, libraries, algorithms, and design patterns that are well tested and understood
+            Fprime framework with its core components are an example of good reusability
+            "Design Patterns" (book) by Gang of Four can teach you about reusability
+
+    software task view
+        tasks
+            are execution threads
+            communicate via event messages which are placed on the task input queue 
+            sleep until a message arrives and then processes events off their input queue
+            have execution priority
+            can be rate-group driven, data driven, background
+
+    software component excapsulation
+        a component encapsulates
+            a task
+            a state machine
+            an input queue 
+            input and output ports
+            
+    principles of software architecture
+        no dynamic memory allocation after initialization
+            deterministic behavior
+        no multiple class inheritance
+        limit class hierarchy
+        integrity checks
+            asserts (a simple statement that check software errors)
+        performance
+            the software shoud performe well in a resource constrained enviroment
+        keep it simple
+            if your code is complicated and ugly, it is probably wrong
+
+    

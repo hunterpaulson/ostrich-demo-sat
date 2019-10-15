@@ -1,0 +1,78 @@
+How to make a driver modules
+
+the numbers dont mean anything
+1. get to ~/coding/fprime/Drv
+2. we are using simple ports so copy a folder using 'cp <folder>' and name it what you want
+3. cd into that folder
+4. open the makefile and change the 'MODULE_DIR' to the one you are in 'Drv/<folder>
+5. open the mod.mk file and change the src line to the file you want to use usally '<folder>Ai.xml 
+    'Ai' stands for autoencoder input, you need this at the end of the file
+    'Ac' stands for autoencoder code 
+6. rename the xml file you want to use to the same as the one you just wrote into the mod.mk file
+7. remove any files you dont need
+    minimun needed is makefile, mod.mk, and <name>Ai.xml file
+8. open <name>Ai.xml file and change the 'interface name' to what you want
+9. change the args according to what you need for your task
+    try to decipher by looking at the file
+10. go back into root fprime directory
+11. open this file 'mk/configs/modules/modules.mk
+12. scrool down to 'LINUX_DRV_MODULES'
+13. add your driver module to the list make sure to include the '\' on the line above yours
+14. cd back into 'fprime/Drv/<folder>' you created 
+15. run 'make gen_make'
+16. run 'make'
+        get to directory 'fprime/RPI' if you get in error
+        in that dir run 'make rebuild_rpi_cross
+            that failed, talk to the boss man to fix that, you need to download a cross compiler to get it to work
+
+20. go to 'fprime/Ref/'
+21. run 'make rebuild'
+22. go to 'fprime/Drv/<folder>/'
+22. run 'make' , this creates your autoencoded code 'Ac' files. you can open them up and read them if you want to 
+
+
+now for making the component
+    we have to decide if we want it to be passive or active, think in terms of your system
+    if it is passive, then it doesnt need much or any telemetry, events, or commands
+    needs a port(s)
+        is it input or output
+            in this case it is an input, we are also guarding the port because in the demo 4 motor controlers are sending to one i2c port
+                guarded allows us to only reviece one message at a time
+                syntax: 'guarded_input'
+
+    go into 'fprime/Drv' and copy a dirver folder and name it what your driver will be
+    go into that folder and delete everything with '*.hpp' and '*.cpp'
+    open the '<somthing>ComponentAi.xml' and adjust according to your software archiceture, dont forget to rename the file keeping the ComponentAi.xml on the end
+    cd into 'fprime/mk/configs/modules/' and open 'moudles.mk'
+    go down to 'LINUX_DRV_MODULES' and add the path to the folder that holds your <somthing>ComponentAi.xml file ex: 'Drv/LinuxI2CDriver/'
+    cd into 'fprime/Drv/<folder>' and edit the Makefile
+    change 'MODULE_DIR' to the path to your folder
+    now open 'mod.mk', delete what you dont need and change the name of the xml file in the 'SRC' line according to your xml file
+    if all the above is done correctly, now you run 'make gen_make'
+    if that works run 'make' and your <somthing>ComponentAc.(cpp/hpp) will have been created
+    
+
+
+now to somthing
+    run 'make impl' in bash
+    rename those files using 'mv <somthing>ComponentImpl.cpp-template <somthing>ComponentImpl.cpp'
+    open 'mod.mk' and add '<somthing>ComponentImpl.cpp' to the SRC line
+    add '<somthing>ComponentImpl.hpp' to the 'HDR = ' line, add the line if it isnt there
+    run 'make get_make' and 'make'
+    cd into 'fprime/mk/configs/modules/'
+    open 'modules.mk' and scroll all the way to the bottom
+    under deployments, add the name of your deployment
+    because we are using a rasberrypi, scroll up and copy the 'RPI_MODULES', paste them below and rename them to '<projectname>_MODULES'
+        Delete 'RPI_APP_MODULES' form your new '<projectname>_MODULES' so that it doesnt compile with the wrong app modules   
+        make sure <projectname> stays the same case in 'DEPLOYMENTS' and '<projectname>_MODULES'
+    if you would like to create app modules, also create '<projectname>_APP_MODULES'
+    now you can delete or comment out 'RPI_MODULES' and 'RPI_APP_MODULES'
+        if you did, make sure you delete 'RPI' form 'DEPLOYMENTS'
+    cd to root 'fprime/'
+    mkdir <projectname> a directory
+    copy the Makefile form 'RPI' into your new directory, 'cp RPI/Makefile <projectdirectory>'
+    in the Makefile you just copied, change the 'DEPLOYMENT' to the correct <projectname>
+
+
+            
+
