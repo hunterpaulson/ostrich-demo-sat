@@ -1,0 +1,5 @@
+#!/bin/sh
+cd ${BUILD_ROOT}/RobotArm/ArmDemo/test/ut
+echo "Running ${BUILD_ROOT}/RobotArm/ArmDemo/test/ut/$1/test_ut"
+${BUILD_ROOT}/RobotArm/ArmDemo/test/ut/$1/test_ut
+

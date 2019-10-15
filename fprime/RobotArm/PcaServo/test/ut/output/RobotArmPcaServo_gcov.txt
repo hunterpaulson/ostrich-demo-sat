@@ -1,0 +1,17 @@
+File '/mnt/c/Users/tcanham/source2/fprime/branches/nasa-timcanham/fprime/RobotArm/PcaServo/PcaServoComponentImpl.cpp'
+Lines executed:100.00% of 75
+Creating 'PcaServoComponentImpl.cpp.gcov'
+
+File '/mnt/c/Users/tcanham/source2/fprime/branches/nasa-timcanham/fprime/Fw/Buffer/BufferSerializableAc.hpp'
+Lines executed:0.00% of 1
+Creating 'BufferSerializableAc.hpp.gcov'
+
+File '/usr/include/c++/7/iostream'
+Lines executed:100.00% of 1
+Creating 'iostream.gcov'
+
+File '/mnt/c/Users/tcanham/source2/fprime/branches/nasa-timcanham/fprime/RobotArm/PcaServo/PcaServoComponentAc.cpp'
+Lines executed:82.30% of 418
+Creating 'PcaServoComponentAc.cpp.gcov'
+
+Lines executed:84.85% of 495

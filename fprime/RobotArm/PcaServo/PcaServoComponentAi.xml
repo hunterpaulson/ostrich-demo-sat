@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?oxygen RNGSchema="file:../xml/ISF_Component_Schema.rnc" type="compact"?>
+
+<component name="PcaServo" kind="active" namespace="RobotArm">
+    <import_port_type>RobotArm/ServoPort/ServoPortAi.xml</import_port_type>
+    <import_port_type>Drv/I2cDriverPorts/I2cWritePortAi.xml</import_port_type>
+    <comment>Servo Component</comment>
+    <ports>
+        <port name="position" data_type="RobotArm::ServoSet" kind="async_input">
+            <comment>
+            servo position port
+            </comment>
+        </port>
+        <port name="i2c" data_type="Drv::I2cWrite" kind="output">
+            <comment>
+            I2C Port
+            </comment>
+        </port>
+    </ports>
+    <commands>
+        <!-- Angle command -->
+        <command kind="async" opcode="0x0" mnemonic="PS_ANG" >
+            <comment>
+            Servo angle command
+            </comment>
+            <args>
+                <arg name="angle" type="F32">
+                    <comment>The commanded angle</comment>
+                </arg>
+             </args>
+        </command>
+        <!-- Angle command -->
+        <command kind="async" opcode="0x1" mnemonic="PS_DIS" >
+            <comment>
+            Disable servo board
+            </comment>
+        </command>
+        <command kind="async" opcode="0x2" mnemonic="PS_EN" >
+            <comment>
+            Enable servo board
+            </comment>
+        </command>
+    </commands>
+    <events>
+	    <!-- Commanded angle event -->
+	    <event id="0" name="PS_AngleCmd" severity="ACTIVITY_HI" format_string = "Motor %d commanded to angle %f (0x%04X)"  >
+	        <comment>
+	        Angle commanded
+	        </comment>
+	        <args>
+	            <arg name="inst" type="U8">
+	                <comment>The motor instance</comment>
+	            </arg>
+	            <arg name="angle" type="F32">
+	                <comment>The commanded angle</comment>
+	            </arg>
+	            <arg name="reg" type="U16">
+	                <comment>The register value</comment>
+	            </arg>
+	        </args>
+	    </event>
+	</events>    
+    <telemetry>
+        <channel id="0" name="PS_Angle" data_type="F32">
+            <comment>
+            Commanded angle
+            </comment>
+        </channel>
+        <channel id="1" name="PS_Reg" data_type="U16" format_string = "0x%04X">
+            <comment>
+            Register value
+            </comment>
+        </channel>
+    </telemetry>
+    
+</component>
+

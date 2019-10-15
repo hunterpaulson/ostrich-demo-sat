@@ -1,0 +1,18 @@
+clawServo_PS_EN # Enable servos
+WAIT, 2 # sleep while enabling servos
+AA_CLAW_ANG, 45 # Open claw first
+AA_BASE_ANG, 25 # Straighten base
+AA_ARM_HEIGHT_ANG, -60 # Arm down
+AA_ARM_LENGTH_ANG, 80 # Arm out
+AA_CLAW_ANG, -30 # Close claw
+AA_BASE_ANG, 60 # Turn CCW
+AA_CLAW_ANG, 45 # Open claw
+AA_ARM_LENGTH_ANG, 20 # Arm IN
+#AA_ARM_HEIGHT_ANG, 20 # Arm up
+AA_BASE_ANG, 25 # Straighten base
+clawServo_PS_DIS # disable servos
+
+
+
+
+

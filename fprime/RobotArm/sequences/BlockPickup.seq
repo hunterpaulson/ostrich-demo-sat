@@ -1,0 +1,17 @@
+R00:00:00 clawServo_PS_EN ; Enable servos
+R00:00:02 AA_CLAW_ANG 45.0 ; Open claw first
+R00:00:01 AA_BASE_ANG 25.0 ; Straighten base
+R00:00:01 AA_ARM_HEIGHT_ANG -60.0 ; Arm down
+R00:00:01 AA_ARM_LENGTH_ANG 80.0 ; Arm out
+R00:00:01 AA_CLAW_ANG -30.0 ; Close claw
+R00:00:01 AA_BASE_ANG 60.0 ; Turn CCW
+R00:00:01 AA_CLAW_ANG 45.0 ; Open claw
+R00:00:01 AA_ARM_LENGTH_ANG 2.0 ; Arm IN
+R00:00:01 AA_ARM_HEIGHT_ANG 20.0 ; Arm up
+R00:00:01 AA_BASE_ANG 25.0 ; Straighten base
+R00:00:01 clawServo_PS_DIS ; disable servos
+
+
+
+
+

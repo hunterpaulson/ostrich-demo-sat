@@ -1,0 +1,195 @@
+        -:    0:Source:/mnt/c/Users/tcanham/source2/fprime/branches/nasa-timcanham/fprime/RobotArm/PcaServo/PcaServoComponentImpl.cpp
+        -:    0:Programs:30
+        -:    1:// ======================================================================
+        -:    2:// \title  PcaServoComponentImpl.cpp
+        -:    3:// \author tcanham
+        -:    4:// \brief  cpp file for PcaServo component implementation class
+        -:    5://
+        -:    6:// \copyright
+        -:    7:// Copyright 2009-2015, by the California Institute of Technology.
+        -:    8:// ALL RIGHTS RESERVED.  United States Government Sponsorship
+        -:    9:// acknowledged.
+        -:   10://
+        -:   11:// ======================================================================
+        -:   12:
+        -:   13:
+        -:   14:#include <RobotArm/PcaServo/PcaServoComponentImpl.hpp>
+        -:   15:#include "Fw/Types/BasicTypes.hpp"
+        -:   16:#include "Os/Task.hpp"
+        -:   17:
+        -:   18:namespace RobotArm {
+        -:   19:
+        -:   20:  // ----------------------------------------------------------------------
+        -:   21:  // Construction, initialization, and destruction
+        -:   22:  // ----------------------------------------------------------------------
+        -:   23:
+       24:   24:  PcaServoComponentImpl ::
+        -:   25:#if FW_OBJECT_NAMES == 1
+        -:   26:    PcaServoComponentImpl(
+        -:   27:        const char *const compName
+       24:   28:    ) :
+        -:   29:      PcaServoComponentBase(compName)
+        -:   30:#else
+        -:   31:    PcaServoComponentImpl(void)
+        -:   32:#endif
+       24:   33:	 ,m_instance(0), m_addr(0)
+        -:   34:  {
+       24:   35:	  this->m_buff.setbufferID(0);
+       24:   36:	  this->m_buff.setmanagerID(0);
+       24:   37:	  this->m_buff.setdata((U64)this->m_data);
+       24:   38:	  this->m_buff.setsize(I2C_BUFFER_SIZE);
+       24:   39:  }
+        -:   40:
+       24:   41:  void PcaServoComponentImpl ::
+        -:   42:    init(
+        -:   43:        const NATIVE_INT_TYPE queueDepth,
+        -:   44:        const NATIVE_INT_TYPE instance
+        -:   45:    )
+        -:   46:  {
+       24:   47:    PcaServoComponentBase::init(queueDepth, instance);
+       24:   48:  }
+        -:   49:
+       24:   50:  PcaServoComponentImpl ::
+       24:   51:    ~PcaServoComponentImpl(void)
+        -:   52:  {
+        -:   53:
+       24:   54:  }
+        -:   55:
+        -:   56:  // ----------------------------------------------------------------------
+        -:   57:  // Handler implementations for user-defined typed input ports
+        -:   58:  // ----------------------------------------------------------------------
+        -:   59:
+       27:   60:  void PcaServoComponentImpl ::
+        -:   61:    position_handler(
+        -:   62:        const NATIVE_INT_TYPE portNum,
+        -:   63:        F32 angle
+        -:   64:    )
+        -:   65:  {
+        -:   66:	  // call common handler
+       27:   67:	  this->setPos(angle);
+       27:   68:  }
+        -:   69:
+        3:   70:  void PcaServoComponentImpl ::
+        -:   71:    PS_ANG_cmdHandler(
+        -:   72:        const FwOpcodeType opCode,
+        -:   73:        const U32 cmdSeq,
+        -:   74:        F32 angle
+        -:   75:    )
+        -:   76:  {
+        -:   77:	  // call common handler
+        3:   78:	  this->setPos(angle);
+        -:   79:	  // return command status
+        3:   80:	  this->cmdResponse_out(opCode,cmdSeq,Fw::COMMAND_OK);
+        3:   81:  }
+        -:   82:
+        -:   83:
+       30:   84:  void PcaServoComponentImpl::setPos(F32 angle) {
+        -:   85:
+        -:   86:	  // See https://www.nxp.com/docs/en/data-sheet/PCA9685.pdf and
+        -:   87:	  // https://learn.sparkfun.com/tutorials/pi-servo-hat-hookup-guide#software---python
+        -:   88:	  // for scaling
+        -:   89:
+        -:   90:	  // set zero point. Pick the register set for this servo
+       30:   91:	  this->m_data[0] = 0x6 + 4*this->m_instance;
+       30:   92:	  this->m_data[1] = 0;
+       30:   93:	  this->m_buff.setsize(2);
+        -:   94:	  // call I2C port
+       30:   95:	  this->i2c_out(0,SERVO_BRD_ADDR,this->m_buff);
+        -:   96:
+        -:   97:	  // compute the PWM duty cycle for angle
+       30:   98:	  U16 reg = MINUS_90 + (PLUS_90 - MINUS_90)*((90.0+angle)/180.0);
+        -:   99:	  // put values in I2c buffer
+       30:  100:	  this->m_data[0] = 0x8 + 4*this->m_instance;
+       30:  101:	  this->m_data[1] = reg & 0xFF;
+       30:  102:	  this->m_data[2] = (reg >> 8) & 0xFF;
+       30:  103:	  this->m_buff.setsize(3);
+        -:  104:	  // call I2C port
+       30:  105:	  this->i2c_out(0,SERVO_BRD_ADDR,this->m_buff);
+        -:  106:
+        -:  107:	  // send event
+       30:  108:	  this->log_ACTIVITY_HI_PS_AngleCmd(this->m_instance,angle,reg);
+        -:  109:	  // send telemetry
+       30:  110:	  this->tlmWrite_PS_Angle(angle);
+       30:  111:	  this->tlmWrite_PS_Reg(reg);
+        -:  112:
+       30:  113:  }
+        -:  114:
+        -:  115:
+       24:  116:  void PcaServoComponentImpl::configure(
+        -:  117:		  U32 instance,  //!< servo instance on board
+        -:  118:		  U32 addr //!< servo board address
+        -:  119:		  ) {
+       24:  120:	  this->m_instance = instance;
+       24:  121:	  this->m_addr = addr;
+       24:  122:  }
+        -:  123:
+        8:  124:  void PcaServoComponentImpl::configChip(void) {
+        -:  125:
+        -:  126:	  // enable chip
+        8:  127:	  this->m_data[0] = 0;
+        8:  128:	  this->m_data[1] = 0x20; //!< enable PWM
+        8:  129:	  this->m_buff.setsize(2);
+        -:  130:	  // call I2C port
+        8:  131:	  this->i2c_out(0,SERVO_BRD_ADDR,this->m_buff);
+        -:  132:
+        -:  133:	  // enable prescale setting
+        8:  134:	  this->m_data[0] = 0;
+        8:  135:	  this->m_data[1] = 0x10; //!< put to sleep
+        8:  136:	  this->m_buff.setsize(2);
+        -:  137:	  // call I2C port
+        8:  138:	  this->i2c_out(0,SERVO_BRD_ADDR,this->m_buff);
+        -:  139:
+        -:  140:	  // delay for reset
+        8:  141:	  Os::Task::delay(500);
+        -:  142:
+        -:  143:	  // set prescale value
+        8:  144:	  this->m_data[0] = 0xfe;
+        8:  145:	  this->m_data[1] = 0x79; //!< enable PWM
+        8:  146:	  this->m_buff.setsize(2);
+        -:  147:	  // call I2C port
+        8:  148:	  this->i2c_out(0,SERVO_BRD_ADDR,this->m_buff);
+        -:  149:
+        -:  150:	  // re-enable chip
+        8:  151:	  this->m_data[0] = 0;
+        8:  152:	  this->m_data[1] = 0x20; //!< enable PWM
+        8:  153:	  this->m_buff.setsize(2);
+        -:  154:	  // call I2C port
+        8:  155:	  this->i2c_out(0,SERVO_BRD_ADDR,this->m_buff);
+        -:  156:
+        -:  157:	  // enable multi-byte
+        8:  158:	  this->m_data[0] = 0xfe;
+        8:  159:	  this->m_data[1] = 0x1e; //!< enable multi-byte
+        8:  160:	  this->m_buff.setsize(2);
+        -:  161:	  // call I2C port
+        8:  162:	  this->i2c_out(0,SERVO_BRD_ADDR,this->m_buff);
+        -:  163:
+        8:  164:  }
+        -:  165:
+        7:  166:  void PcaServoComponentImpl ::
+        -:  167:    PS_DIS_cmdHandler(
+        -:  168:        const FwOpcodeType opCode,
+        -:  169:        const U32 cmdSeq
+        -:  170:    )
+        -:  171:  {
+        -:  172:	  // enable prescale setting
+        7:  173:	  this->m_data[0] = 0;
+        7:  174:	  this->m_data[1] = 0x10; //!< put to sleep
+        7:  175:	  this->m_buff.setsize(2);
+        -:  176:	  // call I2C port
+        7:  177:	  this->i2c_out(0,SERVO_BRD_ADDR,this->m_buff);
+        7:  178:	  this->cmdResponse_out(opCode,cmdSeq,Fw::COMMAND_OK);
+        7:  179:  }
+        -:  180:
+        8:  181:  void PcaServoComponentImpl ::
+        -:  182:    PS_EN_cmdHandler(
+        -:  183:        const FwOpcodeType opCode,
+        -:  184:        const U32 cmdSeq
+        -:  185:    )
+        -:  186:  {
+        8:  187:		this->configChip();
+        8:  188:		this->cmdResponse_out(opCode,cmdSeq,Fw::COMMAND_OK);
+        8:  189:  }
+        -:  190:
+        -:  191:
+        -:  192:
+       27:  193:} // end namespace RobotArm
