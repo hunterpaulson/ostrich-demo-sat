@@ -1,0 +1,52 @@
+Fprime is a component architecture
+
+JUST LOOK AT SLIDES ON GITHUB
+https://github.com/fprime-community/fprime-course-materials/blob/master/Flight_Software_Workshop-June_2019/04_CFW_Fprime.pdf
+
+component characteristics
+    not aware of other components
+    encapsulates behavior
+    localized to one compute context
+    interfaces are via strongly typed ports
+        formally specified interfaces
+        no direct calls to other components
+    context for threads
+    executes commands and produces telemetry
+
+port characteristics 
+    the component xml specifies how the incoming port calls are handled
+    encapsulates typed interfaces in the architecture
+    point of the interconnection between input and output ports
+    connects to three things
+        another typed port
+        a component
+        a serialized port
+    all the arguments in the interface are serializable, or convertible to a data buffer. thse are built-in types are supported by the framework; suer can write custom types.
+    ports can have return values but that limits their use
+        only return data when component has synchronous interface
+        no serializable connections since serialization passes a data buffer but does not return on
+    pointers/refrences allowed for performance reasons
+    multimpe output ports can be connected to a single input 
+    input ports can have three atributes
+        synchronous
+        guarded
+        asynchronous
+        
+
+        
+component types (user specifies type of component in xml)
+    passive component  
+        no thread
+        port interface calls are made directly to user derived class meathods 
+    queued component
+        no thread
+        a queue is instantiated, and asynchronous port calls are serialized and placed in a queue
+        implementation class makes call to base class to dispatch calls to implementation class meathods for asynchronous ports
+    active component
+        has thread of execution as well as queue
+        thread dispaches port calls from queue as it executes based on the thread scheduler
+    
+serialization
+    takes a specific set of typed values or function arguments and converting them in a architecture-independent way into a data buffer    
+
+    
